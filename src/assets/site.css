@@ -102,8 +102,8 @@ button {
 
 .brand__mark svg {
   display: block;
-  width: 25.6px;
-  height: 25.6px;
+  width: 30.72px;
+  height: 30.72px;
 }
 
 .brand__copy {
@@ -928,6 +928,12 @@ button {
 .footer-brand__mark {
   display: flex;
   align-items: center;
+}
+
+.footer-brand__mark svg {
+  display: block;
+  width: 26.4px;
+  height: 26.4px;
 }
 
 .footer-brand strong {

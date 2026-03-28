@@ -784,7 +784,7 @@ function renderConsentUi() {
             <h2>🍪 We value your privacy</h2>
             <p>
               We use essential cookies to make this site work. With your consent, we also use analytics and advertising cookies to improve your experience.
-              <a href="/privacy/">Learn more</a>
+              <a href="/privacy/">Learn more about our cookie policy</a>
             </p>
           </div>
           <div class="button-row cookie-banner__actions">

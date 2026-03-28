@@ -902,8 +902,7 @@ function resetPanel(shell) {
     "[data-compare-conservative]": "--",
     "[data-compare-product]": "--",
     "[data-product-heading]": "Match the result to the right resin class",
-    "[data-product-copy]": "Use the estimate to narrow the resin class first. Then confirm product limits, cure behavior, and measurement assumptions before you make a buying decision.",
-    "[data-sticky-primary]": "--"
+    "[data-product-copy]": "Use the estimate to narrow the resin class first. Then confirm product limits, cure behavior, and measurement assumptions before you make a buying decision."
   };
 
   Object.entries(fallbacks).forEach(([selector, value]) => {
@@ -914,6 +913,15 @@ function resetPanel(shell) {
   const list = shell.querySelector("[data-breakdown-list]");
   if (list) {
     list.innerHTML = "<li>Enter the form values to see raw volume, buffer, and recommendation.</li>";
+  }
+
+  // Sticky bar is outside calculator-shell, search from parent section
+  const section = shell.closest(".section") || shell.parentElement;
+  if (section) {
+    const stickyPrimary = section.querySelector("[data-sticky-primary]");
+    if (stickyPrimary) stickyPrimary.textContent = "--";
+    const stickyCost = section.querySelector("[data-sticky-cost]");
+    if (stickyCost) stickyCost.textContent = "";
   }
 }
 
@@ -937,7 +945,15 @@ function updatePanel(form, result) {
   setText("[data-compare-product]", result.productText);
   setText("[data-product-heading]", result.product.heading);
   setText("[data-product-copy]", result.product.copy);
-  setText("[data-sticky-primary]", result.primary);
+
+  // Sticky bar is outside calculator-shell, search from parent section
+  const section = shell.closest(".section") || shell.parentElement;
+  if (section) {
+    const stickyPrimary = section.querySelector("[data-sticky-primary]");
+    if (stickyPrimary) stickyPrimary.textContent = result.primary;
+    const stickyCost = section.querySelector("[data-sticky-cost]");
+    if (stickyCost) stickyCost.textContent = result.costText;
+  }
 
   const breakdown = shell.querySelector("[data-breakdown-list]");
   if (breakdown) {

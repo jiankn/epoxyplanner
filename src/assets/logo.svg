@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 80">
+  <defs>
+    <linearGradient id="g2" x1="0" y1="0" x2="0.5" y2="1">
+      <stop offset="0%" stop-color="#2d6e8a"/>
+      <stop offset="100%" stop-color="#1a3d4d"/>
+    </linearGradient>
+  </defs>
+  <!-- Hexagon mark -->
+  <polygon points="36,6 62,20 62,48 36,62 10,48 10,20" fill="url(#g2)" stroke="#25556a" stroke-width="1.5"/>
+  <!-- Resin drop inside hexagon -->
+  <path d="M36,18 Q44,32 44,40 A8,8 0 1,1 28,40 Q28,32 36,18Z" fill="rgba(255,255,255,0.92)"/>
+  <!-- Wordmark -->
+  <text x="78" y="35" font-family="'IBM Plex Sans', sans-serif" font-weight="700" font-size="28" fill="#16222d" letter-spacing="-0.5">Epoxy</text>
+  <text x="168" y="35" font-family="'IBM Plex Sans', sans-serif" font-weight="300" font-size="28" fill="#25556a" letter-spacing="-0.5">Planner</text>
+  <text x="78" y="56" font-family="'IBM Plex Sans', sans-serif" font-weight="400" font-size="12" fill="#576574" letter-spacing="1.5">PRECISION RESIN PLANNING</text>
+</svg>

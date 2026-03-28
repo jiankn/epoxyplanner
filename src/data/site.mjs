@@ -136,6 +136,7 @@ function infoPage({
   description,
   eyebrow,
   intro,
+  heroActions,
   sections
 }) {
   return {
@@ -147,6 +148,7 @@ function infoPage({
     description,
     eyebrow,
     intro,
+    heroActions,
     sections
   };
 }
@@ -160,7 +162,13 @@ export const pages = [
       "Estimate epoxy resin volume, coverage, waste, cost, and project-specific needs for river tables, deep pours, coatings, void fills, and floor jobs.",
     eyebrow: "Precision Resin Planning",
     intro:
-      "Plan epoxy with enough detail to actually buy the right amount. This site goes beyond length-times-width-times-depth by showing waste, seepage, layer count, part A / part B split, cost, and the resin class that fits the job.",
+      "Calculate exactly how much epoxy resin you need — with waste, seepage, layer count, Part A / Part B split, cost, and product-fit guidance built in.",
+    heroActions: [
+      { label: "River Table", slug: "river-table-epoxy-calculator", icon: "🪵" },
+      { label: "Deep Pour", slug: "deep-pour-epoxy-calculator", icon: "🧊" },
+      { label: "Coverage & Coatings", slug: "epoxy-coverage-calculator", icon: "🖌️" },
+      { label: "General Calculator", slug: "epoxy-calculator", icon: "📐" }
+    ],
     sections: [
       {
         title: "Choose the calculator that matches the real job",
@@ -170,22 +178,26 @@ export const pages = [
           {
             title: "Epoxy Calculator",
             text: "Best first stop for regular shapes, quick planning, and broad resin estimates.",
-            slug: "epoxy-calculator"
+            slug: "epoxy-calculator",
+            primary: true
           },
           {
             title: "River Table Calculator",
             text: "Use quick mode or segment mode for live-edge rivers, plus seepage, seal-coat, and cost planning.",
-            slug: "river-table-epoxy-calculator"
+            slug: "river-table-epoxy-calculator",
+            primary: true
           },
           {
             title: "Deep Pour Calculator",
             text: "Plan thick casts with layer guidance, staged lifts, and deep-pour product fit.",
-            slug: "deep-pour-epoxy-calculator"
+            slug: "deep-pour-epoxy-calculator",
+            primary: true
           },
           {
             title: "Coverage Calculator",
             text: "Use surface area and coat thickness for tabletops, bar tops, and countertop finishes.",
-            slug: "epoxy-coverage-calculator"
+            slug: "epoxy-coverage-calculator",
+            primary: true
           }
         ]
       },
@@ -231,7 +243,7 @@ export const pages = [
       "Use this epoxy calculator to estimate resin volume, waste, part A/B split, and project cost for common epoxy jobs and regular shapes.",
     eyebrow: "Head-Term Hub",
     intro:
-      "Use this page when you need a broad epoxy estimate fast and the project shape is still regular enough for general geometry. It converts raw dimensions into an order-ready recommendation, then shows where a scenario-specific calculator would be safer.",
+      "This epoxy resin calculator handles how much epoxy you need for common shapes and projects. Enter dimensions, and it converts raw geometry into an order-ready recommendation with waste, Part A / Part B split, and cost guidance.",
     primaryKeyword: "epoxy calculator",
     supportingKeywords: ["epoxy resin calculator", "how much epoxy do i need"],
     calculatorType: "general",
@@ -378,7 +390,7 @@ export const pages = [
       "Estimate epoxy for river tables with quick mode, segment mode, seepage, seal-coat buffer, cost planning, and deep-pour recommendations.",
     eyebrow: "High-Value Scenario",
     intro:
-      "River tables are expensive enough that rough average-width math is often not good enough. This page gives you a fast mode for quick checks and a segment mode for irregular channels, then turns the result into a purchase plan with buffer, product-fit, and cost context.",
+      "Whether you call it an epoxy calculator for river table projects, a live edge epoxy calculator, or simply a river table resin calculator — this page has two modes: a fast average-width estimate and a segment mode for irregular channels, with seepage, seal-coat, and cost planning built in.",
     primaryKeyword: "river table epoxy calculator",
     supportingKeywords: ["epoxy calculator for river table", "live edge epoxy calculator", "river table resin calculator"],
     calculatorType: "river",

@@ -279,9 +279,11 @@ function renderCards(cards = []) {
       ${cards
         .map((card) => {
           const href = card.slug ? hrefFor(card.slug) : "#";
+          const primaryClass = card.primary ? " mini-card--primary" : "";
+          const icon = card.icon ? `<span class="hero-action__icon">${card.icon}</span>` : "";
           return `
-            <article class="mini-card">
-              <h3>${escapeHtml(card.title)}</h3>
+            <article class="mini-card${primaryClass}">
+              <h3>${icon}${escapeHtml(card.title)}</h3>
               <p>${escapeHtml(card.text)}</p>
               ${card.slug ? `<a class="text-link" href="${href}">Open page</a>` : ""}
             </article>
@@ -353,6 +355,20 @@ function renderGuideSections(sections = []) {
     .join("");
 }
 
+function renderHeroActions(page) {
+  if (!page.heroActions?.length) return "";
+  return `
+    <div class="hero-actions">
+      ${page.heroActions.map((action) => `
+        <a class="hero-action" href="${hrefFor(action.slug)}">
+          <span class="hero-action__icon">${action.icon || ""}</span>
+          <span>${escapeHtml(action.label)}</span>
+        </a>
+      `).join("")}
+    </div>
+  `;
+}
+
 function renderHero(page) {
   return `
     <section class="hero">
@@ -360,16 +376,7 @@ function renderHero(page) {
         <p class="eyebrow">${escapeHtml(page.eyebrow || "Epoxy Planner")}</p>
         <h1>${escapeHtml(page.h1)}</h1>
         <p class="hero__intro">${escapeHtml(page.intro || page.description)}</p>
-        ${
-          page.primaryKeyword
-            ? `
-              <div class="keyword-strip">
-                <span class="chip chip--strong">${escapeHtml(page.primaryKeyword)}</span>
-                ${(page.supportingKeywords || []).map((keyword) => `<span class="chip">${escapeHtml(keyword)}</span>`).join("")}
-              </div>
-            `
-            : ""
-        }
+        ${renderHeroActions(page)}
       </div>
     </section>
   `;
@@ -390,8 +397,11 @@ function renderCalculator(page) {
             <p class="field-note">${escapeHtml(page.note || "Results update as you type. Use the breakdown to compare raw math, planning buffers, and the order-ready recommendation.")}</p>
             <p class="form-error" role="alert" aria-live="polite" data-form-error></p>
           </form>
+          <div class="scroll-to-result">
+            <a href="#result-panel">↓ View result</a>
+          </div>
         </div>
-        <div class="result-panel" data-result-panel>
+        <div class="result-panel" id="result-panel" data-result-panel>
           <div class="result-panel__hero">
             <p class="eyebrow">${escapeHtml(page.resultEyebrow || "Recommended order")}</p>
             <div class="result-big" data-result-primary>--</div>
@@ -462,7 +472,8 @@ function renderCalculator(page) {
           <p class="sticky-summary__label">Current recommendation</p>
           <strong data-sticky-primary>--</strong>
         </div>
-        <a class="button button--small" href="#next-step">See next step</a>
+        <p class="sticky-summary__cost" data-sticky-cost></p>
+        <a class="button button--small" href="#result-panel">View details</a>
       </div>
     </section>
   `;
@@ -583,8 +594,8 @@ function renderPageBody(page, context) {
   if (page.pageType === "calculator") {
     return [
       renderHero(page),
-      renderBullets("Why this page exists", page.bullets),
       renderCalculator(page),
+      renderBullets("Why this page exists", page.bullets),
       renderBullets("How to measure or set the inputs", page.howTo),
       renderBullets("Common mistakes that cost money", page.mistakes),
       renderBullets("Project checklist before you buy", page.checklist),
@@ -629,7 +640,7 @@ function renderHeader(site) {
     <header class="site-header">
       <div class="site-header__inner">
         <a class="brand" href="/">
-          <span class="brand__mark">EP</span>
+          <span class="brand__mark"><svg viewBox="0 0 64 64" width="40" height="40" aria-hidden="true"><defs><linearGradient id="bm" x1="0" y1="0" x2=".5" y2="1"><stop offset="0%" stop-color="#2d6e8a"/><stop offset="100%" stop-color="#1a3d4d"/></linearGradient></defs><polygon points="32,2 58,17 58,47 32,62 6,47 6,17" fill="url(#bm)"/><path d="M32,16 Q41,30 41,38 A9,9 0 1,1 23,38 Q23,30 32,16Z" fill="rgba(255,255,255,.92)"/></svg></span>
           <span class="brand__copy">
             <strong>${escapeHtml(site.shortName)}</strong>
             <small>Precision resin planning</small>
@@ -681,6 +692,7 @@ export function renderPage(page, context) {
     <meta property="og:type" content="${page.pageType === "guide" ? "article" : "website"}" />
     <meta property="og:url" content="${escapeHtml(canonical)}" />
     <link rel="canonical" href="${escapeHtml(canonical)}" />
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />

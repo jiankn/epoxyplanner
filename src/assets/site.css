@@ -10,6 +10,8 @@
   --accent: #25556a;
   --accent-strong: #ea6a29;
   --accent-soft: rgba(37, 85, 106, 0.1);
+  --result-bg: rgba(37, 85, 106, 0.04);
+  --result-border: rgba(37, 85, 106, 0.22);
   --shadow: 0 20px 45px rgba(15, 27, 38, 0.08);
   --shadow-sm: 0 10px 24px rgba(15, 27, 38, 0.06);
   --radius: 26px;
@@ -59,6 +61,10 @@ button {
   cursor: pointer;
 }
 
+/* ============================================
+   HEADER
+   ============================================ */
+
 .site-header {
   position: sticky;
   top: 0;
@@ -88,15 +94,16 @@ button {
 }
 
 .brand__mark {
-  width: 2.8rem;
-  height: 2.8rem;
-  border-radius: 18px;
-  display: grid;
-  place-items: center;
-  background: linear-gradient(135deg, var(--accent), #112c39);
-  color: white;
-  font-family: "IBM Plex Mono", monospace;
-  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.brand__mark svg {
+  display: block;
+  width: 40px;
+  height: 40px;
 }
 
 .brand__copy {
@@ -141,6 +148,10 @@ button {
   padding: 0.5rem 0.9rem;
 }
 
+/* ============================================
+   PAGE SHELL
+   ============================================ */
+
 .page-shell {
   max-width: var(--container);
   margin: 0 auto;
@@ -157,8 +168,12 @@ button {
   overflow-wrap: anywhere;
 }
 
+/* ============================================
+   HERO — compact for calculator pages
+   ============================================ */
+
 .hero {
-  padding: 2.4rem clamp(1.2rem, 2.2vw, 2rem);
+  padding: 1.6rem clamp(1.2rem, 2.2vw, 2rem);
   border: 1px solid rgba(183, 190, 198, 0.7);
   border-radius: calc(var(--radius) + 4px);
   background:
@@ -168,11 +183,10 @@ button {
 }
 
 .hero h1 {
-  margin: 0.5rem 0 1rem;
-  font-size: clamp(2.4rem, 5vw, 4.9rem);
-  line-height: 0.96;
-  letter-spacing: -0.04em;
-  max-width: 11ch;
+  margin: 0.3rem 0 0.6rem;
+  font-size: clamp(1.8rem, 4vw, 3.2rem);
+  line-height: 1.04;
+  letter-spacing: -0.035em;
 }
 
 .hero__intro,
@@ -180,6 +194,7 @@ button {
   max-width: 68ch;
   font-size: clamp(1rem, 2vw, 1.14rem);
   color: var(--muted);
+  margin: 0;
 }
 
 .eyebrow {
@@ -191,29 +206,47 @@ button {
   font-weight: 600;
 }
 
-.keyword-strip {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.65rem;
+/* Hero quick-action buttons for homepage */
+.hero-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem;
   margin-top: 1.4rem;
 }
 
-.chip {
-  display: inline-flex;
+.hero-action {
+  display: flex;
   align-items: center;
-  min-height: 44px;
-  padding: 0.55rem 0.85rem;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.72);
-  color: var(--muted);
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line-strong);
+  background: var(--surface-strong);
+  color: var(--text);
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
+  text-decoration: none;
+  min-height: 56px;
 }
 
-.chip--strong {
-  color: var(--accent);
-  border-color: rgba(37, 85, 106, 0.26);
-  background: rgba(37, 85, 106, 0.08);
+.hero-action:hover,
+.hero-action:focus-visible {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+  box-shadow: 0 8px 20px rgba(37, 85, 106, 0.12);
+  outline: none;
 }
+
+.hero-action__icon {
+  font-size: 1.4rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+/* ============================================
+   SECTION & CARDS
+   ============================================ */
 
 .section {
   margin-top: 1.5rem;
@@ -271,6 +304,23 @@ button {
   border-radius: var(--radius-sm);
   background: var(--surface-strong);
   border: 1px solid var(--line);
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+
+/* Card hover micro-animation */
+.mini-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(15, 27, 38, 0.08);
+}
+
+/* Primary card variant for top calculators */
+.mini-card--primary {
+  border-left: 3px solid var(--accent);
+  background: linear-gradient(135deg, rgba(37, 85, 106, 0.03), var(--surface-strong));
+}
+
+.mini-card--primary h3 {
+  color: var(--accent);
 }
 
 .mini-card h3,
@@ -293,6 +343,10 @@ button {
   color: var(--accent);
   font-weight: 600;
 }
+
+/* ============================================
+   CALCULATOR — single-column flow
+   ============================================ */
 
 .calculator-shell {
   display: grid;
@@ -430,21 +484,45 @@ button {
   display: none !important;
 }
 
+/* Scroll anchor button for mobile */
+.scroll-to-result {
+  display: none;
+  margin-top: 0.75rem;
+  text-align: center;
+}
+
+.scroll-to-result a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.6rem 1rem;
+  border-radius: 999px;
+  background: rgba(37, 85, 106, 0.06);
+  border: 1px solid rgba(37, 85, 106, 0.14);
+}
+
+/* ============================================
+   RESULT PANEL — light theme, high contrast
+   ============================================ */
+
 .result-panel {
   position: relative;
   background:
-    linear-gradient(160deg, rgba(20, 32, 42, 0.98), rgba(18, 26, 34, 0.96)),
-    var(--surface-deep);
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+    linear-gradient(160deg, rgba(37, 85, 106, 0.06), rgba(37, 85, 106, 0.02)),
+    var(--surface-strong);
+  color: var(--text);
+  border: 2px solid var(--result-border);
   padding: 1.15rem;
 }
 
 .result-panel__hero {
   padding: 1rem;
   border-radius: 22px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--surface-strong);
+  border: 1px solid var(--result-border);
 }
 
 .result-big {
@@ -454,11 +532,13 @@ button {
   letter-spacing: -0.05em;
   font-family: "IBM Plex Mono", monospace;
   font-weight: 700;
+  color: var(--accent);
+  transition: opacity 150ms ease;
 }
 
 .result-caption {
   margin: 0.8rem 0 0;
-  color: rgba(255, 255, 255, 0.72);
+  color: var(--muted);
 }
 
 .stat-grid {
@@ -468,8 +548,8 @@ button {
 
 .stat-card,
 .compare-card {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.08);
+  background: var(--surface-strong);
+  border-color: var(--line);
 }
 
 .stat-card strong,
@@ -477,7 +557,7 @@ button {
   display: block;
   margin-top: 0.45rem;
   font-size: 1.14rem;
-  color: white;
+  color: var(--text);
   font-weight: 600;
 }
 
@@ -487,13 +567,21 @@ button {
   margin-top: 1rem;
   padding: 1rem;
   border-radius: 20px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--surface-strong);
+  border: 1px solid var(--line);
+}
+
+.result-panel .eyebrow {
+  color: var(--accent);
 }
 
 .stack-list {
   padding-left: 1rem;
 }
+
+/* ============================================
+   BUTTONS
+   ============================================ */
 
 .button-row {
   display: flex;
@@ -524,7 +612,13 @@ button {
 
 .button--ghost {
   background: transparent;
-  border-color: rgba(255, 255, 255, 0.15);
+  border-color: var(--line-strong);
+  color: var(--text);
+}
+
+.button--ghost:hover {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 .button--quiet {
@@ -538,6 +632,10 @@ button {
   font-size: 0.95rem;
 }
 
+/* ============================================
+   ANSWER GRID (guide pages)
+   ============================================ */
+
 .answer-grid {
   grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
 }
@@ -546,6 +644,10 @@ button {
   background:
     linear-gradient(145deg, rgba(37, 85, 106, 0.08), rgba(255, 255, 255, 0.96));
 }
+
+/* ============================================
+   FAQ — with transition
+   ============================================ */
 
 .faq-list {
   display: grid;
@@ -557,6 +659,11 @@ button {
   border: 1px solid var(--line);
   background: var(--surface-strong);
   padding: 0.25rem 1rem;
+  transition: border-color 200ms ease;
+}
+
+.faq[open] {
+  border-color: var(--accent);
 }
 
 .faq summary {
@@ -574,6 +681,10 @@ button {
   margin: 0 0 0.95rem;
   color: var(--muted);
 }
+
+/* ============================================
+   FOOTER
+   ============================================ */
 
 .site-footer {
   padding: 0 1rem 2rem;
@@ -597,40 +708,51 @@ button {
   color: var(--muted);
 }
 
+/* ============================================
+   STICKY SUMMARY BAR — always visible
+   ============================================ */
+
 .sticky-summary {
   position: sticky;
   bottom: 0.8rem;
   margin-top: 1rem;
-  display: none;
+  display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 0.85rem 1rem;
+  padding: 0.85rem 1.2rem;
   border-radius: 22px;
-  background: rgba(255, 255, 255, 0.94);
-  border: 1px solid rgba(183, 190, 198, 0.6);
-  box-shadow: var(--shadow-sm);
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid var(--result-border);
+  box-shadow: 0 8px 28px rgba(15, 27, 38, 0.1);
+  z-index: 40;
 }
 
 .sticky-summary__label {
   margin: 0;
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--muted);
 }
 
+.sticky-summary strong {
+  color: var(--accent);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 1.1rem;
+}
+
+.sticky-summary__cost {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
 @media (min-width: 900px) {
-  .calculator-shell {
-    grid-template-columns: minmax(0, 1.1fr) minmax(340px, 0.9fr);
-    align-items: start;
-  }
-
-  .result-panel {
-    position: sticky;
-    top: 6.7rem;
-  }
-
   .site-footer__grid {
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
@@ -688,8 +810,12 @@ button {
     flex-direction: column;
   }
 
-  .sticky-summary {
-    display: flex;
+  .scroll-to-result {
+    display: block;
+  }
+
+  .hero-actions {
+    grid-template-columns: 1fr 1fr;
   }
 }
 

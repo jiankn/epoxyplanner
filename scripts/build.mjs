@@ -61,6 +61,8 @@ function buildAssets() {
   copyFile(path.join(projectRoot, "src", "assets", "site.css"), path.join(distRoot, "assets", "site.css"));
   copyFile(path.join(projectRoot, "src", "assets", "site.js"), path.join(distRoot, "assets", "site.js"));
   copyFile(path.join(projectRoot, "src", "assets", "calculator.js"), path.join(distRoot, "assets", "calculator.js"));
+  copyFile(path.join(projectRoot, "src", "assets", "favicon.svg"), path.join(distRoot, "assets", "favicon.svg"));
+  copyFile(path.join(projectRoot, "src", "assets", "logo.svg"), path.join(distRoot, "assets", "logo.svg"));
 }
 
 function main() {

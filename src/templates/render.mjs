@@ -672,7 +672,7 @@ function renderHeader(site) {
             <small>Precision resin planning</small>
           </span>
         </a>
-        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-nav-toggle>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Toggle navigation menu" data-nav-toggle>
           <span class="nav-toggle__icon">
             <span></span>
             <span></span>

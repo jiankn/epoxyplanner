@@ -865,6 +865,7 @@ export function renderPage(page, context) {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
     <title>${escapeHtml(pageTitle)}</title>
     <meta name="description" content="${escapeHtml(page.description)}" />
     <meta property="og:title" content="${escapeHtml(page.title)}" />

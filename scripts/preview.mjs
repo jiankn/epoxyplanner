@@ -14,7 +14,9 @@ const contentTypes = {
   ".css": "text/css; charset=utf-8",
   ".js": "application/javascript; charset=utf-8",
   ".xml": "application/xml; charset=utf-8",
-  ".txt": "text/plain; charset=utf-8"
+  ".txt": "text/plain; charset=utf-8",
+  ".png": "image/png",
+  ".svg": "image/svg+xml"
 };
 
 function resolveRequestPath(urlPath) {
@@ -34,10 +36,16 @@ const server = http.createServer((req, res) => {
 
   try {
     const content = fs.readFileSync(filePath);
-    res.writeHead(200, { "Content-Type": contentType });
+    res.writeHead(200, {
+      "Content-Type": contentType,
+      "Referrer-Policy": "strict-origin-when-cross-origin"
+    });
     res.end(content);
   } catch {
-    res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
+    res.writeHead(404, {
+      "Content-Type": "text/plain; charset=utf-8",
+      "Referrer-Policy": "strict-origin-when-cross-origin"
+    });
     res.end("Not found");
   }
 });

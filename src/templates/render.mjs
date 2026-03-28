@@ -781,21 +781,16 @@ function renderConsentUi() {
       <div class="cookie-banner__surface">
         <div class="cookie-banner__layout">
           <div class="cookie-banner__copy">
-            <p class="eyebrow">Privacy Choices</p>
-            <h2>Cookies, local storage, and ads personalization</h2>
+            <h2>🍪 We value your privacy</h2>
             <p>
-              We use necessary storage to keep the calculator and core site features working. With your permission, we may also use analytics and advertising storage so that Google and other partners can measure traffic, support advertising, and deliver ads personalization.
-            </p>
-            <p class="cookie-banner__meta">
-              Choose <strong>Accept all</strong>, <strong>Reject non-essential</strong>, or manage your preferences.
-              Review our <a href="/privacy/">Privacy Policy</a> and
-              <a href="${googleBusinessDataUrl}" target="_blank" rel="noreferrer">Google Business Data Responsibility</a> page for more detail.
+              We use essential cookies to make this site work. With your consent, we also use analytics and advertising cookies to improve your experience.
+              <a href="/privacy/">Learn more</a>
             </p>
           </div>
           <div class="button-row cookie-banner__actions">
-            <button class="button button--ghost" type="button" data-cookie-reject>Reject non-essential</button>
-            <button class="button button--quiet" type="button" data-cookie-manage>Manage choices</button>
-            <button class="button" type="button" data-cookie-accept>Accept all</button>
+            <button class="button button--ghost button--small" type="button" data-cookie-reject>Reject all</button>
+            <button class="button button--quiet button--small" type="button" data-cookie-manage>Customize</button>
+            <button class="button button--small" type="button" data-cookie-accept>Accept all</button>
           </div>
         </div>
       </div>

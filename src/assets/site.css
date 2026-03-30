@@ -485,6 +485,9 @@ button {
 .calculator-panel,
 .result-panel {
   border-radius: calc(var(--radius) - 6px);
+}
+
+.result-panel {
   overflow: hidden;
 }
 

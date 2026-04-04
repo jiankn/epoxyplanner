@@ -249,42 +249,95 @@ button {
   font-weight: 600;
 }
 
-/* Hero quick-action buttons for homepage */
+/* Hero quick-action buttons for homepage — Scheme A: vertical cards */
 .hero-actions {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 0.75rem;
-  margin-top: 1.4rem;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.85rem;
+  margin-top: 1.8rem;
 }
 
 .hero-action {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.85rem 1rem;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--line-strong);
-  background: var(--surface-strong);
+  gap: 0.65rem;
+  padding: 1.4rem 1rem 1.15rem;
+  border-radius: 20px;
+  border: 1px solid rgba(183, 190, 198, 0.55);
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   color: var(--text);
   font-weight: 600;
-  font-size: 0.95rem;
-  transition: transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
+  font-size: 0.92rem;
   text-decoration: none;
-  min-height: 56px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(15, 27, 38, 0.05);
+  transition: transform 280ms cubic-bezier(.22,.61,.36,1),
+              box-shadow 280ms cubic-bezier(.22,.61,.36,1),
+              border-color 200ms ease;
+  position: relative;
 }
 
 .hero-action:hover,
 .hero-action:focus-visible {
-  transform: translateY(-2px);
+  transform: translateY(-5px);
   border-color: var(--accent);
-  box-shadow: 0 8px 20px rgba(37, 85, 106, 0.12);
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 12px 28px rgba(37, 85, 106, 0.16),
+              0 0 0 1px rgba(37, 85, 106, 0.08);
   outline: none;
 }
 
 .hero-action__icon {
-  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #2d6e8a, #1a3d4d);
+  font-size: 1.5rem;
   line-height: 1;
   flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(26, 61, 77, 0.28);
+  transition: transform 280ms cubic-bezier(.22,.61,.36,1),
+              box-shadow 280ms ease;
+}
+
+.hero-action:hover .hero-action__icon {
+  transform: scale(1.08);
+  box-shadow: 0 6px 18px rgba(26, 61, 77, 0.35);
+}
+
+.hero-action__text {
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--text);
+}
+
+.hero-action__arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(37, 85, 106, 0.1);
+  color: var(--accent);
+  font-size: 0.82rem;
+  font-weight: 700;
+  margin-top: 0.15rem;
+  transition: background 200ms ease, transform 200ms ease;
+}
+
+.hero-action:hover .hero-action__arrow,
+.hero-action:focus-visible .hero-action__arrow {
+  background: var(--accent);
+  color: #fff;
+  transform: translateX(2px);
 }
 
 /* ============================================
@@ -1339,7 +1392,28 @@ body[data-cookie-modal="open"] {
   }
 
   .hero-actions {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.65rem;
+  }
+
+  .hero-action {
+    padding: 1.15rem 0.75rem 1rem;
+  }
+
+  .hero-action__icon {
+    width: 46px;
+    height: 46px;
+    font-size: 1.35rem;
+  }
+
+  .hero-action__text {
+    font-size: 0.85rem;
+  }
+
+  .hero-action__arrow {
+    width: 24px;
+    height: 24px;
+    font-size: 0.75rem;
   }
 
   .sticky-summary {

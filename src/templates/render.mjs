@@ -388,7 +388,8 @@ function renderHeroActions(page) {
       ${page.heroActions.map((action) => `
         <a class="hero-action" href="${hrefFor(action.slug)}">
           <span class="hero-action__icon">${action.icon || ""}</span>
-          <span>${escapeHtml(action.label)}</span>
+          <span class="hero-action__text">${escapeHtml(action.label)}</span>
+          <span class="hero-action__arrow" aria-hidden="true">→</span>
         </a>
       `).join("")}
     </div>

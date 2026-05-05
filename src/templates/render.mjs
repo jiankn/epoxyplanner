@@ -458,7 +458,6 @@ function renderLanguageQuickLinks(page) {
       <div class="language-quick-links__items">
         ${page.languageActions.map((item) => `
           <a href="${hrefFor(item.slug)}" hreflang="${escapeHtml(item.hreflang || item.shortLabel || "")}">
-            <span class="language-quick-links__flag" aria-hidden="true">${escapeHtml(item.flag || "")}</span>
             <span>${escapeHtml(item.label)}</span>
             <strong>${escapeHtml(item.shortLabel || "")}</strong>
           </a>
@@ -824,8 +823,6 @@ function renderLanguageSwitcher(site, page = {}) {
       <div class="language-menu" role="list">
         ${items.map((item) => `
           <a href="${hrefFor(languageTargetSlug(page, item))}" hreflang="${escapeHtml(item.hreflang)}" lang="${escapeHtml(item.hreflang)}" role="listitem"${item.hreflang === currentLocale ? ` aria-current="page"` : ""}>
-            <span class="language-menu__flag" aria-hidden="true">${escapeHtml(item.flag || "")}</span>
-            <span class="language-menu__code">${escapeHtml(item.shortLabel)}</span>
             <span class="language-menu__name">${escapeHtml(item.label)}</span>
           </a>
         `).join("")}

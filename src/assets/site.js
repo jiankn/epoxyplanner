@@ -10,6 +10,7 @@ if (navToggle && nav) {
 }
 
 const languageSwitchers = Array.from(document.querySelectorAll(".language-switcher"));
+const navMoreMenus = Array.from(document.querySelectorAll(".nav-more"));
 
 function closeLanguageSwitchers(except = null) {
   languageSwitchers.forEach((switcher) => {
@@ -19,11 +20,20 @@ function closeLanguageSwitchers(except = null) {
   });
 }
 
+function closeNavMoreMenus(except = null) {
+  navMoreMenus.forEach((menu) => {
+    if (menu !== except) {
+      menu.removeAttribute("open");
+    }
+  });
+}
+
 if (languageSwitchers.length) {
   languageSwitchers.forEach((switcher) => {
     switcher.addEventListener("toggle", () => {
       if (switcher.open) {
         closeLanguageSwitchers(switcher);
+        closeNavMoreMenus();
       }
     });
   });
@@ -34,6 +44,25 @@ if (languageSwitchers.length) {
     }
 
     closeLanguageSwitchers();
+  });
+}
+
+if (navMoreMenus.length) {
+  navMoreMenus.forEach((menu) => {
+    menu.addEventListener("toggle", () => {
+      if (menu.open) {
+        closeNavMoreMenus(menu);
+        closeLanguageSwitchers();
+      }
+    });
+  });
+
+  document.addEventListener("click", (event) => {
+    if (navMoreMenus.some((menu) => menu.contains(event.target))) {
+      return;
+    }
+
+    closeNavMoreMenus();
   });
 }
 
@@ -244,6 +273,7 @@ cookieSaveButtons.forEach((button) => {
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
     closeLanguageSwitchers();
+    closeNavMoreMenus();
   }
 
   if (event.key === "Escape" && modal && !modal.hidden) {

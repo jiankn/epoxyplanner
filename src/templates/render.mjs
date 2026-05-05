@@ -753,6 +753,21 @@ function renderPageBody(page, context) {
   `;
 }
 
+function renderNavItem(item) {
+  if (item.children?.length) {
+    return `
+      <details class="nav-more">
+        <summary>${escapeHtml(item.label)}</summary>
+        <div class="nav-more__menu" role="list">
+          ${item.children.map((child) => `<a href="${hrefFor(child.slug)}" role="listitem">${escapeHtml(child.label)}</a>`).join("")}
+        </div>
+      </details>
+    `;
+  }
+
+  return `<a href="${hrefFor(item.slug)}">${escapeHtml(item.label)}</a>`;
+}
+
 function renderHeader(site, page = {}) {
   const navItems = page.nav || site.nav;
   return `
@@ -774,7 +789,7 @@ function renderHeader(site, page = {}) {
           <span class="nav-toggle__text">${escapeHtml(uiText(page, "menu", "Menu"))}</span>
         </button>
         <nav class="site-nav" id="site-nav" data-nav>
-          ${navItems.map((item) => `<a href="${hrefFor(item.slug)}">${escapeHtml(item.label)}</a>`).join("")}
+          ${navItems.map((item) => renderNavItem(item)).join("")}
         </nav>
         ${renderLanguageSwitcher(site, page)}
       </div>

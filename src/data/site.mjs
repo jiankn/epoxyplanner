@@ -20,10 +20,15 @@ export const site = {
     { label: "River Table", slug: "river-table-epoxy-calculator" },
     { label: "Deep Pour", slug: "deep-pour-epoxy-calculator" },
     { label: "Coverage", slug: "epoxy-coverage-calculator" },
-    { label: "Garage Floor", slug: "garage-floor-epoxy-calculator" },
-    { label: "Cost", slug: "epoxy-cost-calculator" },
-    { label: "Converter", slug: "epoxy-unit-converter" },
-    { label: "Guides", slug: "how-much-epoxy-do-i-need" }
+    {
+      label: "More",
+      children: [
+        { label: "Garage Floor", slug: "garage-floor-epoxy-calculator" },
+        { label: "Cost", slug: "epoxy-cost-calculator" },
+        { label: "Converter", slug: "epoxy-unit-converter" },
+        { label: "Guides", slug: "how-much-epoxy-do-i-need" }
+      ]
+    }
   ],
   languageNav: [
     { label: "English", shortLabel: "EN", hreflang: "en", slug: "", flag: "🇺🇸" },

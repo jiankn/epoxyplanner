@@ -450,6 +450,23 @@ function renderHeroActions(page) {
   `;
 }
 
+function renderLanguageQuickLinks(page) {
+  if (!page.languageActions?.length) return "";
+  return `
+    <div class="language-quick-links" aria-label="${escapeHtml(page.languageActionsHeading || "Localized calculators")}">
+      <span class="language-quick-links__label">${escapeHtml(page.languageActionsHeading || "Localized calculators")}</span>
+      <div class="language-quick-links__items">
+        ${page.languageActions.map((item) => `
+          <a href="${hrefFor(item.slug)}" hreflang="${escapeHtml(item.hreflang || item.shortLabel || "")}">
+            <span>${escapeHtml(item.label)}</span>
+            <strong>${escapeHtml(item.shortLabel || "")}</strong>
+          </a>
+        `).join("")}
+      </div>
+    </div>
+  `;
+}
+
 function renderHero(page) {
   return `
     <section class="hero">
@@ -457,6 +474,7 @@ function renderHero(page) {
         <p class="eyebrow">${escapeHtml(page.eyebrow || "Epoxy Planner")}</p>
         <h1>${escapeHtml(page.h1)}</h1>
         <p class="hero__intro">${escapeHtml(page.intro || page.description)}</p>
+        ${renderLanguageQuickLinks(page)}
         ${renderHeroActions(page)}
       </div>
     </section>
@@ -758,8 +776,46 @@ function renderHeader(site, page = {}) {
         <nav class="site-nav" id="site-nav" data-nav>
           ${navItems.map((item) => `<a href="${hrefFor(item.slug)}">${escapeHtml(item.label)}</a>`).join("")}
         </nav>
+        ${renderLanguageSwitcher(site, page)}
       </div>
     </header>
+  `;
+}
+
+const languageSwitchLabels = {
+  en: "Languages",
+  de: "Sprachen",
+  fr: "Langues",
+  "pt-BR": "Idiomas",
+  es: "Idiomas",
+  it: "Lingue"
+};
+
+function languageTargetSlug(page, item) {
+  if (page.alternates?.[item.hreflang]) return page.alternates[item.hreflang];
+  return item.slug;
+}
+
+function renderLanguageSwitcher(site, page = {}) {
+  const items = site.languageNav || [];
+  if (!items.length) return "";
+  const currentLocale = page.locale || "en";
+  const label = uiText(page, "languages", languageSwitchLabels[currentLocale] || "Languages");
+  return `
+    <details class="language-switcher">
+      <summary aria-label="${escapeHtml(label)}">
+        <span class="language-switcher__icon" aria-hidden="true">A</span>
+        <span class="language-switcher__label">${escapeHtml(label)}</span>
+      </summary>
+      <div class="language-menu" role="list">
+        ${items.map((item) => `
+          <a href="${hrefFor(languageTargetSlug(page, item))}" hreflang="${escapeHtml(item.hreflang)}" lang="${escapeHtml(item.hreflang)}" role="listitem">
+            <span>${escapeHtml(item.label)}</span>
+            <strong>${escapeHtml(item.shortLabel)}</strong>
+          </a>
+        `).join("")}
+      </div>
+    </details>
   `;
 }
 

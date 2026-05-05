@@ -1,7 +1,7 @@
 const FORM_TEMPLATES = {
-  general: () => `
+  general: ({ page }) => `
     <div class="field-grid field-grid--three">
-      ${unitToggle()}
+      ${unitToggle(page)}
       ${shapeSelect("Shape", "shape", [
         ["rectangle", "Rectangle"],
         ["round", "Round"]
@@ -17,11 +17,11 @@ const FORM_TEMPLATES = {
       ${numberField("Diameter", "diameter", "24", "0.1")}
       ${numberField("Depth", "depthRound", "0.5", "0.01")}
     </div>
-    ${priceField()}
+    ${priceField(page)}
   `,
-  coverage: () => `
+  coverage: ({ page }) => `
     <div class="field-grid field-grid--three">
-      ${unitToggle()}
+      ${unitToggle(page)}
       ${numberField("Waste buffer (%)", "wastePct", "10", "0.1")}
       ${numberField("Thickness", "depth", "0.125", "0.001")}
     </div>
@@ -29,11 +29,11 @@ const FORM_TEMPLATES = {
       ${numberField("Length", "length", "72", "0.1")}
       ${numberField("Width", "width", "30", "0.1")}
     </div>
-    ${priceField()}
+    ${priceField(page)}
   `,
-  volume: () => `
+  volume: ({ page }) => `
     <div class="field-grid field-grid--three">
-      ${unitToggle()}
+      ${unitToggle(page)}
       ${shapeSelect("Shape", "shape", [
         ["rectangle", "Rectangle"],
         ["round", "Round"]
@@ -49,11 +49,11 @@ const FORM_TEMPLATES = {
       ${numberField("Diameter", "diameter", "18", "0.1")}
       ${numberField("Depth", "depthRound", "1.25", "0.01")}
     </div>
-    ${priceField()}
+    ${priceField(page)}
   `,
-  river: () => `
+  river: ({ page }) => `
     <div class="field-grid field-grid--four">
-      ${unitToggle()}
+      ${unitToggle(page)}
       ${shapeSelect("Mode", "riverMode", [
         ["quick", "Quick"],
         ["segment", "Segment"]
@@ -82,9 +82,9 @@ const FORM_TEMPLATES = {
       </div>
     </div>
   `,
-  "deep-pour": () => `
+  "deep-pour": ({ page }) => `
     <div class="field-grid field-grid--four">
-      ${unitToggle()}
+      ${unitToggle(page)}
       ${numberField("Waste buffer (%)", "wastePct", "10", "0.1")}
       ${numberField("Max layer depth", "maxDepth", "2", "0.01")}
       ${numberField("Price / gallon", "pricePerGallon", "105", "0.01")}
@@ -95,9 +95,9 @@ const FORM_TEMPLATES = {
       ${numberField("Total depth", "depth", "2.5", "0.01")}
     </div>
   `,
-  surface: () => `
+  surface: ({ page }) => `
     <div class="field-grid field-grid--four">
-      ${unitToggle()}
+      ${unitToggle(page)}
       ${numberField("Waste buffer (%)", "wastePct", "8", "0.1")}
       ${numberField("Thickness", "depth", "0.125", "0.001")}
       ${numberField("Price / gallon", "pricePerGallon", "78", "0.01")}
@@ -107,9 +107,9 @@ const FORM_TEMPLATES = {
       ${numberField("Width", "width", "24", "0.1")}
     </div>
   `,
-  "garage-floor": () => `
+  "garage-floor": ({ page }) => `
     <div class="field-grid field-grid--four">
-      ${unitToggle()}
+      ${unitToggle(page)}
       ${numberField("Coats", "coats", "2", "1")}
       ${numberField("Coverage / gallon (sq ft)", "coverageRate", "160", "1")}
       ${numberField("Waste buffer (%)", "wastePct", "7", "0.1")}
@@ -120,9 +120,9 @@ const FORM_TEMPLATES = {
       ${numberField("Price / gallon", "pricePerGallon", "62", "0.01")}
     </div>
   `,
-  "void-fill": () => `
+  "void-fill": ({ page }) => `
     <div class="field-grid field-grid--four">
-      ${unitToggle()}
+      ${unitToggle(page)}
       ${numberField("Length", "length", "6", "0.1")}
       ${numberField("Width", "width", "2.5", "0.1")}
       ${numberField("Depth", "depth", "1", "0.01")}
@@ -133,35 +133,35 @@ const FORM_TEMPLATES = {
       ${checkboxField("Overfill for sanding", "includeSeal", true)}
     </div>
   `,
-  round: () => `
+  round: ({ page }) => `
     <div class="field-grid field-grid--four">
-      ${unitToggle()}
+      ${unitToggle(page)}
       ${numberField("Diameter", "diameter", "28", "0.1")}
       ${numberField("Depth", "depth", "0.75", "0.01")}
       ${numberField("Waste buffer (%)", "wastePct", "8", "0.1")}
     </div>
-    ${priceField()}
+    ${priceField(page)}
   `,
-  sphere: () => `
+  sphere: ({ page }) => `
     <div class="field-grid field-grid--four">
-      ${unitToggle()}
+      ${unitToggle(page)}
       ${numberField("Diameter", "diameter", "4", "0.1")}
       ${numberField("Waste buffer (%)", "wastePct", "10", "0.1")}
       ${numberField("Price / gallon", "pricePerGallon", "90", "0.01")}
     </div>
   `,
-  cylinder: () => `
+  cylinder: ({ page }) => `
     <div class="field-grid field-grid--four">
-      ${unitToggle()}
+      ${unitToggle(page)}
       ${numberField("Diameter", "diameter", "3", "0.1")}
       ${numberField("Height", "depth", "5", "0.1")}
       ${numberField("Waste buffer (%)", "wastePct", "10", "0.1")}
     </div>
-    ${priceField()}
+    ${priceField(page)}
   `,
-  cube: () => `
+  cube: ({ page }) => `
     <div class="field-grid field-grid--four">
-      ${unitToggle()}
+      ${unitToggle(page)}
       ${numberField("Side length", "length", "1.5", "0.1")}
       ${numberField("Waste buffer (%)", "wastePct", "12", "0.1")}
       ${numberField("Price / gallon", "pricePerGallon", "90", "0.01")}
@@ -218,18 +218,46 @@ function hrefFor(slug) {
   return slug ? `/${slug}/` : "/";
 }
 
-function shapeSelect(label, name, options) {
+function uiText(page, key, fallback) {
+  return page?.ui?.[key] || fallback;
+}
+
+function categoryLabel(page) {
+  if (page.pageType === "guide") return uiText(page, "guides", "Guides");
+  if (page.pageType === "calculator") return uiText(page, "calculators", "Calculators");
+  return uiText(page, "site", "Site");
+}
+
+function localizeFormMarkup(markup, page) {
+  const replacements = page?.ui?.formReplacements || {};
+  let localized = Object.entries(replacements).reduce(
+    (current, [source, replacement]) => current.split(source).join(escapeHtml(replacement)),
+    markup
+  );
+
+  if (page?.priceUnit === "liter") {
+    localized = localized
+      .replace(/name="pricePerGallon" value="[\d.]+"/g, 'name="pricePerGallon" value="28"')
+      .replace('name="coverageRate" value="160" step="1"', 'name="coverageRate" value="8" step="0.1"')
+      .replace('name="length" value="22" step="0.1"', 'name="length" value="6" step="0.1"')
+      .replace('name="width" value="20" step="0.1"', 'name="width" value="3" step="0.1"');
+  }
+
+  return localized;
+}
+
+function shapeSelect(label, name, options, defaultValue = options[0]?.[0]) {
   if (options.length <= 3) {
     const buttons = options
       .map(([value, text], i) =>
-        `<button type="button" class="pill-toggle__btn${i === 0 ? " is-active" : ""}" data-value="${escapeHtml(value)}">${escapeHtml(text)}</button>`
+        `<button type="button" class="pill-toggle__btn${value === defaultValue ? " is-active" : ""}" data-value="${escapeHtml(value)}">${escapeHtml(text)}</button>`
       )
       .join("");
     return `
       <div class="field">
         <span>${escapeHtml(label)}</span>
         <div class="pill-toggle" data-pill-toggle data-pill-name="${escapeHtml(name)}">
-          <input type="hidden" name="${escapeHtml(name)}" value="${escapeHtml(options[0][0])}" />
+          <input type="hidden" name="${escapeHtml(name)}" value="${escapeHtml(defaultValue)}" />
           ${buttons}
         </div>
       </div>
@@ -237,7 +265,7 @@ function shapeSelect(label, name, options) {
   }
 
   const opts = options
-    .map(([value, text]) => `<option value="${escapeHtml(value)}">${escapeHtml(text)}</option>`)
+    .map(([value, text]) => `<option value="${escapeHtml(value)}" ${value === defaultValue ? "selected" : ""}>${escapeHtml(text)}</option>`)
     .join("");
   return `
     <label class="field">
@@ -267,17 +295,18 @@ function checkboxField(label, name, checked = false) {
   `;
 }
 
-function unitToggle() {
+function unitToggle(page = {}) {
   return shapeSelect("Unit system", "unit", [
     ["imperial", "Imperial"],
     ["metric", "Metric"]
-  ]);
+  ], page.defaultUnit || "imperial");
 }
 
-function priceField() {
+function priceField(page = {}) {
+  const priceLabel = page.priceUnit === "liter" ? "Price / gallon" : "Price / gallon";
   return `
     <div class="field-grid field-grid--one">
-      ${numberField("Price / gallon", "pricePerGallon", "85", "0.01")}
+      ${numberField(priceLabel, "pricePerGallon", page.priceUnit === "liter" ? "28" : "85", "0.01")}
     </div>
   `;
 }
@@ -291,13 +320,13 @@ function segmentField(index, value) {
   `;
 }
 
-function renderFaqs(faqs = []) {
+function renderFaqs(faqs = [], page = {}) {
   if (!faqs.length) return "";
   return `
     <section class="section">
       <div class="section-heading">
-        <p class="eyebrow">FAQ</p>
-        <h2>Questions people ask before buying epoxy</h2>
+        <p class="eyebrow">${escapeHtml(uiText(page, "faqEyebrow", "FAQ"))}</p>
+        <h2>${escapeHtml(uiText(page, "faqHeading", "Questions people ask before buying epoxy"))}</h2>
       </div>
       <div class="faq-list">
         ${faqs
@@ -315,7 +344,7 @@ function renderFaqs(faqs = []) {
   `;
 }
 
-function renderCards(cards = []) {
+function renderCards(cards = [], page = {}) {
   if (!cards?.length) return "";
   return `
     <div class="card-grid">
@@ -331,7 +360,7 @@ function renderCards(cards = []) {
               </div>
               <div class="mini-card__body">
                 <p>${escapeHtml(card.text)}</p>
-                ${card.slug ? `<a class="text-link" href="${href}">Open page</a>` : ""}
+                ${card.slug ? `<a class="text-link" href="${href}">${escapeHtml(uiText(page, "openPage", "Open page"))}</a>` : ""}
               </div>
             </article>
           `;
@@ -351,8 +380,8 @@ function renderRelated(page, pageMap) {
   return `
     <section class="section">
       <div class="section-heading">
-        <p class="eyebrow">Related Pages</p>
-        <h2>Keep moving through the same intent cluster</h2>
+        <p class="eyebrow">${escapeHtml(uiText(page, "relatedEyebrow", "Related Pages"))}</p>
+        <h2>${escapeHtml(uiText(page, "relatedHeading", "Keep moving through the same intent cluster"))}</h2>
       </div>
       <div class="card-grid">
         ${relatedPages
@@ -364,7 +393,7 @@ function renderRelated(page, pageMap) {
               </div>
               <div class="mini-card__body">
                 <p>${escapeHtml(relatedPage.description)}</p>
-                <a class="text-link" href="${hrefFor(relatedPage.slug)}">Open page</a>
+                <a class="text-link" href="${hrefFor(relatedPage.slug)}">${escapeHtml(uiText(page, "openPage", "Open page"))}</a>
               </div>
             </article>
           `
@@ -389,7 +418,7 @@ function renderBullets(title, bullets = [], className = "") {
   `;
 }
 
-function renderGuideSections(sections = []) {
+function renderGuideSections(sections = [], page = {}) {
   return sections
     .map((section) => `
       <section class="section">
@@ -398,8 +427,8 @@ function renderGuideSections(sections = []) {
         </div>
         ${section.body ? `<p class="lead">${escapeHtml(section.body)}</p>` : ""}
         ${section.points ? `<ul class="bullet-list">${section.points.map((point) => `<li>${escapeHtml(point)}</li>`).join("")}</ul>` : ""}
-        ${section.faqs ? renderFaqs(section.faqs) : ""}
-        ${section.cards ? renderCards(section.cards) : ""}
+        ${section.faqs ? renderFaqs(section.faqs, page) : ""}
+        ${section.cards ? renderCards(section.cards, page) : ""}
         ${section.contactEmail ? `<p><a class="text-link" href="mailto:${escapeHtml(section.contactEmail)}">${escapeHtml(section.contactEmail)}</a></p>` : ""}
       </section>
     `)
@@ -435,97 +464,99 @@ function renderHero(page) {
 }
 
 function renderCalculator(page) {
-  const formMarkup = FORM_TEMPLATES[page.calculatorType] ? FORM_TEMPLATES[page.calculatorType]({ page }) : "";
+  const formMarkup = FORM_TEMPLATES[page.calculatorType]
+    ? localizeFormMarkup(FORM_TEMPLATES[page.calculatorType]({ page }), page)
+    : "";
   return `
     <section class="section">
       <div class="calculator-shell">
         <div class="calculator-panel">
           <div class="section-heading section-heading--compact">
-            <p class="eyebrow">Calculator</p>
-            <h2>Plan the project in one pass</h2>
+            <p class="eyebrow">${escapeHtml(uiText(page, "calculatorEyebrow", "Calculator"))}</p>
+            <h2>${escapeHtml(uiText(page, "calculatorHeading", "Plan the project in one pass"))}</h2>
           </div>
-          <form class="calculator-root" data-calculator-type="${escapeHtml(page.calculatorType)}" novalidate>
+          <form class="calculator-root" data-calculator-type="${escapeHtml(page.calculatorType)}" data-locale="${escapeHtml(page.locale || "en")}" data-number-locale="${escapeHtml(page.numberLocale || "en-US")}" data-currency="${escapeHtml(page.currency || "USD")}" data-price-unit="${escapeHtml(page.priceUnit || "gallon")}" novalidate>
             ${formMarkup}
-            <p class="field-note">${escapeHtml(page.note || "Results update as you type. Use the breakdown to compare raw math, planning buffers, and the order-ready recommendation.")}</p>
+            <p class="field-note">${escapeHtml(page.note || uiText(page, "fieldNote", "Results update as you type. Use the breakdown to compare raw math, planning buffers, and the order-ready recommendation."))}</p>
             <p class="form-error" role="alert" aria-live="polite" data-form-error></p>
           </form>
           <div class="scroll-to-result">
-            <a href="#result-panel">↓ View result</a>
+            <a href="#result-panel">${escapeHtml(uiText(page, "viewDetails", "View result"))}</a>
           </div>
         </div>
         <div class="result-panel" id="result-panel" data-result-panel>
           <div class="result-panel__hero">
-            <p class="eyebrow">${escapeHtml(page.resultEyebrow || "Recommended order")}</p>
+            <p class="eyebrow">${escapeHtml(page.resultEyebrow || uiText(page, "resultEyebrow", "Recommended order"))}</p>
             <div class="result-big" data-result-primary>--</div>
-            <p class="result-caption" data-result-secondary>Start with the inputs to generate an order-ready estimate.</p>
+            <p class="result-caption" data-result-secondary>${escapeHtml(uiText(page, "resultFallback", "Start with the inputs to generate an order-ready estimate."))}</p>
           </div>
           <div class="stat-grid">
             <article class="stat-card">
-              <p>${escapeHtml(page.statLabels?.raw || "Raw volume")}</p>
+              <p>${escapeHtml(page.statLabels?.raw || uiText(page, "rawVolume", "Raw volume"))}</p>
               <strong data-stat-raw>--</strong>
             </article>
             <article class="stat-card">
-              <p>${escapeHtml(page.statLabels?.split || "Part A / Part B")}</p>
+              <p>${escapeHtml(page.statLabels?.split || uiText(page, "split", "Part A / Part B"))}</p>
               <strong data-stat-split>--</strong>
             </article>
             <article class="stat-card">
-              <p>${escapeHtml(page.statLabels?.cost || "Projected cost")}</p>
+              <p>${escapeHtml(page.statLabels?.cost || uiText(page, "cost", "Projected cost"))}</p>
               <strong data-stat-cost>--</strong>
             </article>
             <article class="stat-card">
-              <p>${escapeHtml(page.statLabels?.layers || "Layer guidance")}</p>
+              <p>${escapeHtml(page.statLabels?.layers || uiText(page, "layers", "Layer guidance"))}</p>
               <strong data-stat-layers>--</strong>
             </article>
           </div>
           <div class="result-panel__why">
             <div class="section-heading section-heading--compact">
-              <p class="eyebrow">Why This Estimate Changed</p>
-              <h3>What moved the number</h3>
+              <p class="eyebrow">${escapeHtml(uiText(page, "whyChangedEyebrow", "Why This Estimate Changed"))}</p>
+              <h3>${escapeHtml(uiText(page, "whyChangedHeading", "What moved the number"))}</h3>
             </div>
             <ul class="stack-list" data-breakdown-list>
-              <li>Enter the form values to see raw volume, buffer, and recommendation.</li>
+              <li>${escapeHtml(uiText(page, "breakdownFallback", "Enter the form values to see raw volume, buffer, and recommendation."))}</li>
             </ul>
           </div>
           <div class="result-panel__compare">
             <div class="section-heading section-heading--compact">
-              <p class="eyebrow">Compare Scenarios</p>
+              <p class="eyebrow">${escapeHtml(uiText(page, "compareEyebrow", "Compare Scenarios"))}</p>
               <h3>${escapeHtml(page.compareLabel || "Baseline vs conservative")}</h3>
             </div>
             <div class="compare-grid">
               <article class="compare-card">
-                <p>Standard</p>
+                <p>${escapeHtml(uiText(page, "standard", "Standard"))}</p>
                 <strong data-compare-standard>--</strong>
               </article>
               <article class="compare-card">
-                <p>Conservative</p>
+                <p>${escapeHtml(uiText(page, "conservative", "Conservative"))}</p>
                 <strong data-compare-conservative>--</strong>
               </article>
               <article class="compare-card">
-                <p>Product fit</p>
+                <p>${escapeHtml(uiText(page, "productFit", "Product fit"))}</p>
                 <strong data-compare-product>--</strong>
               </article>
             </div>
           </div>
           <div class="buy-box" id="next-step">
             <div class="section-heading section-heading--compact">
-              <p class="eyebrow">Next Step</p>
-              <h3 data-product-heading>Match the result to the right resin class</h3>
+              <p class="eyebrow">${escapeHtml(uiText(page, "nextStepEyebrow", "Next Step"))}</p>
+              <h3 data-product-heading>${escapeHtml(uiText(page, "nextStepHeading", "Match the result to the right resin class"))}</h3>
             </div>
-            <p data-product-copy>Use the estimate to narrow the resin class first. Then confirm product limits, cure behavior, and measurement assumptions before you make a buying decision.</p>
+            <p data-product-copy>${escapeHtml(uiText(page, "nextStepCopy", "Use the estimate to narrow the resin class first. Then confirm product limits, cure behavior, and measurement assumptions before you make a buying decision."))}</p>
             <div class="button-row">
-              <a class="button" href="/deep-pour-vs-table-top-epoxy/">Compare Resin Types</a>
-              <a class="button button--ghost" href="/methodology/">See Methodology</a>
+              <a class="button" href="/deep-pour-vs-table-top-epoxy/">${escapeHtml(uiText(page, "compareResinTypes", "Compare Resin Types"))}</a>
+              <a class="button button--ghost" href="/methodology/">${escapeHtml(uiText(page, "seeMethodology", "See Methodology"))}</a>
             </div>
           </div>
         </div>
       </div>
       <div class="sticky-summary" data-sticky-summary>
         <div>
-          <p class="sticky-summary__label">Current recommendation</p>
+          <p class="sticky-summary__label">${escapeHtml(uiText(page, "currentRecommendation", "Current recommendation"))}</p>
           <strong data-sticky-primary>--</strong>
         </div>
-        <p class="sticky-summary__cost" data-sticky-cost><span class="sticky-summary__cost-label">Est. cost</span><strong data-sticky-cost-value></strong></p>
-        <a class="button button--small" href="#result-panel">View details</a>
+        <p class="sticky-summary__cost" data-sticky-cost><span class="sticky-summary__cost-label">${escapeHtml(uiText(page, "estimatedCost", "Est. cost"))}</span><strong data-sticky-cost-value></strong></p>
+        <a class="button button--small" href="#result-panel">${escapeHtml(uiText(page, "viewDetails", "View details"))}</a>
       </div>
     </section>
   `;
@@ -543,18 +574,18 @@ function renderInfoSections(page) {
           ${section.points.map((point) => `<li>${escapeHtml(point)}</li>`).join("")}
         </ul>
       ` : ""}
-      ${section.cards ? renderCards(section.cards) : ""}
-      ${section.faqs ? renderFaqs(section.faqs) : ""}
+      ${section.cards ? renderCards(section.cards, page) : ""}
+      ${section.faqs ? renderFaqs(section.faqs, page) : ""}
       ${section.contactEmail ? `<p><a class="text-link" href="mailto:${escapeHtml(section.contactEmail)}">${escapeHtml(section.contactEmail)}</a></p>` : ""}
     </section>
   `).join("");
 }
 
 function breadcrumb(page) {
-  const current = page.pageType === "guide" ? "Guides" : page.pageType === "calculator" ? "Calculators" : "Site";
+  const current = categoryLabel(page);
   return `
     <nav class="breadcrumb" aria-label="Breadcrumb">
-      <a href="/">Home</a>
+      <a href="${hrefFor(page.localeRootSlug || "")}">${escapeHtml(uiText(page, "home", "Home"))}</a>
       <span>/</span>
       <span>${escapeHtml(current)}</span>
       ${page.slug ? `<span>/</span><span aria-current="page">${escapeHtml(page.h1)}</span>` : ""}
@@ -596,7 +627,7 @@ function jsonLd(page, { site, urlForPath }) {
       {
         "@type": "ListItem",
         position: 2,
-        name: page.pageType === "guide" ? "Guides" : page.pageType === "calculator" ? "Calculators" : "Site",
+        name: categoryLabel(page),
         item: currentUrl
       }
     ]
@@ -664,11 +695,11 @@ function renderPageBody(page, context) {
     return [
       renderHero(page),
       renderCalculator(page),
-      renderBullets("Why this page exists", page.bullets),
-      renderBullets("How to measure or set the inputs", page.howTo),
-      renderBullets("Common mistakes that cost money", page.mistakes),
-      renderBullets("Project checklist before you buy", page.checklist),
-      renderFaqs(page.faq),
+      renderBullets(uiText(page, "whyTitle", "Why this page exists"), page.bullets),
+      renderBullets(uiText(page, "howToTitle", "How to measure or set the inputs"), page.howTo),
+      renderBullets(uiText(page, "mistakesTitle", "Common mistakes that cost money"), page.mistakes),
+      renderBullets(uiText(page, "checklistTitle", "Project checklist before you buy"), page.checklist),
+      renderFaqs(page.faq, page),
       renderRelated(page, pageMap)
     ].join("");
   }
@@ -679,20 +710,20 @@ function renderPageBody(page, context) {
       <section class="section answer-section">
         <div class="answer-grid">
           <article class="answer-card answer-card--lead">
-            <p class="eyebrow">Direct Answer</p>
-            <h2>Start with the shortest correct answer</h2>
+            <p class="eyebrow">${escapeHtml(uiText(page, "directAnswerEyebrow", "Direct Answer"))}</p>
+            <h2>${escapeHtml(uiText(page, "directAnswerHeading", "Start with the shortest correct answer"))}</h2>
             <p class="lead">${escapeHtml(page.answer)}</p>
           </article>
           <article class="answer-card">
-            <p class="eyebrow">Takeaways</p>
+            <p class="eyebrow">${escapeHtml(uiText(page, "takeaways", "Takeaways"))}</p>
             <ul class="bullet-list">
               ${(page.takeaways || []).map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
             </ul>
           </article>
         </div>
       </section>
-      ${renderGuideSections(page.sections)}
-      ${renderFaqs(page.faq)}
+      ${renderGuideSections(page.sections, page)}
+      ${renderFaqs(page.faq, page)}
       ${renderRelated(page, pageMap)}
     `;
   }
@@ -704,15 +735,16 @@ function renderPageBody(page, context) {
   `;
 }
 
-function renderHeader(site) {
+function renderHeader(site, page = {}) {
+  const navItems = page.nav || site.nav;
   return `
     <header class="site-header">
       <div class="site-header__inner">
-        <a class="brand" href="/">
+        <a class="brand" href="${hrefFor(page.localeRootSlug || "")}">
           <span class="brand__mark"><svg viewBox="0 0 64 64" width="40" height="40" aria-hidden="true"><defs><linearGradient id="bm" x1="0" y1="0" x2=".5" y2="1"><stop offset="0%" stop-color="#2d6e8a"/><stop offset="100%" stop-color="#1a3d4d"/></linearGradient></defs><polygon points="32,2 58,17 58,47 32,62 6,47 6,17" fill="url(#bm)"/><path d="M32,16 Q41,30 41,38 A9,9 0 1,1 23,38 Q23,30 32,16Z" fill="rgba(255,255,255,.92)"/></svg></span>
           <span class="brand__copy">
             <strong>${escapeHtml(site.shortName)}</strong>
-            <small>Precision resin planning</small>
+            <small>${escapeHtml(page.brandTagline || "Precision resin planning")}</small>
           </span>
         </a>
         <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Toggle navigation menu" data-nav-toggle>
@@ -721,30 +753,31 @@ function renderHeader(site) {
             <span></span>
             <span></span>
           </span>
-          <span class="nav-toggle__text">Menu</span>
+          <span class="nav-toggle__text">${escapeHtml(uiText(page, "menu", "Menu"))}</span>
         </button>
         <nav class="site-nav" id="site-nav" data-nav>
-          ${site.nav.map((item) => `<a href="${hrefFor(item.slug)}">${escapeHtml(item.label)}</a>`).join("")}
+          ${navItems.map((item) => `<a href="${hrefFor(item.slug)}">${escapeHtml(item.label)}</a>`).join("")}
         </nav>
       </div>
     </header>
   `;
 }
 
-function renderFooter(site) {
+function renderFooter(site, page = {}) {
+  const footerItems = page.footerNav || site.footerNav;
   return `
     <footer class="site-footer">
       <div class="site-footer__grid">
         <div class="site-footer__top">
-          <a class="footer-brand" href="/">
+          <a class="footer-brand" href="${hrefFor(page.localeRootSlug || "")}">
             <span class="footer-brand__mark"><svg viewBox="0 0 64 64" width="22" height="22" aria-hidden="true"><defs><linearGradient id="fm" x1="0" y1="0" x2=".5" y2="1"><stop offset="0%" stop-color="#2d6e8a"/><stop offset="100%" stop-color="#1a3d4d"/></linearGradient></defs><polygon points="32,2 58,17 58,47 32,62 6,47 6,17" fill="url(#fm)"/><path d="M32,16 Q41,30 41,38 A9,9 0 1,1 23,38 Q23,30 32,16Z" fill="rgba(255,255,255,.92)"/></svg></span>
             <span class="footer-brand__copy">
               <strong>${escapeHtml(site.shortName)}</strong>
-              <small>Precision resin planning</small>
+              <small>${escapeHtml(page.brandTagline || "Precision resin planning")}</small>
             </span>
           </a>
           <nav class="footer-links">
-            ${site.footerNav.map((item) => `<a href="${hrefFor(item.slug)}">${escapeHtml(item.label)}</a>`).join("")}
+            ${footerItems.map((item) => `<a href="${hrefFor(item.slug)}">${escapeHtml(item.label)}</a>`).join("")}
           </nav>
         </div>
         <div class="site-footer__bottom">
@@ -896,6 +929,17 @@ function renderConsentUi() {
   `;
 }
 
+function renderAlternateLinks(page, { urlForPath }) {
+  const alternates = page.alternates || {
+    [page.locale || "en"]: page.slug,
+    "x-default": page.slug
+  };
+
+  return Object.entries(alternates)
+    .map(([hreflang, slug]) => `<link rel="alternate" href="${escapeHtml(urlForPath(slug))}" hreflang="${escapeHtml(hreflang)}" />`)
+    .join("\n    ");
+}
+
 export function renderPage(page, context) {
   const { site, urlForPath } = context;
   const canonical = urlForPath(page.slug);
@@ -905,7 +949,7 @@ export function renderPage(page, context) {
   const robots = page.indexable === false ? "noindex, follow" : "index, follow";
 
   return `<!DOCTYPE html>
-<html lang="en">
+<html lang="${escapeHtml(page.htmlLang || "en")}">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -915,8 +959,7 @@ export function renderPage(page, context) {
     ${page.primaryKeyword ? `<meta name="keywords" content="${escapeHtml([page.primaryKeyword, ...(page.supportingKeywords || [])].join(", "))}" />` : ""}
     <title>${escapeHtml(pageTitle)}</title>
     <meta name="description" content="${escapeHtml(page.description)}" />
-    <link rel="alternate" href="${escapeHtml(canonical)}" hreflang="en" />
-    <link rel="alternate" href="${escapeHtml(canonical)}" hreflang="x-default" />
+    ${renderAlternateLinks(page, context)}
     <meta property="og:title" content="${escapeHtml(page.title)}" />
     <meta property="og:description" content="${escapeHtml(page.description)}" />
     <meta property="og:type" content="${page.pageType === "guide" ? "article" : "website"}" />
@@ -940,13 +983,13 @@ export function renderPage(page, context) {
     ${renderConsentBootstrap()}
     ${jsonLd(page, context)}
   </head>
-  <body data-page-type="${escapeHtml(page.pageType)}" data-page-slug="${escapeHtml(page.slug)}">
-    ${renderHeader(site)}
+  <body data-page-type="${escapeHtml(page.pageType)}" data-page-slug="${escapeHtml(page.slug)}" data-locale="${escapeHtml(page.locale || "en")}">
+    ${renderHeader(site, page)}
     <main class="page-shell">
       ${breadcrumb(page)}
       ${pageBody}
     </main>
-    ${renderFooter(site)}
+    ${renderFooter(site, page)}
     ${renderConsentUi()}
     <script type="module" src="/assets/site.js"></script>
     ${calculatorScript}

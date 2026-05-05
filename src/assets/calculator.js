@@ -10,12 +10,6 @@ const NUMBER_FORMAT = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 2
 });
 
-const MONEY_FORMAT = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-  maximumFractionDigits: 0
-});
-
 function formatNumber(value, digits = 2) {
   return new Intl.NumberFormat("en-US", {
     maximumFractionDigits: digits,
@@ -23,9 +17,13 @@ function formatNumber(value, digits = 2) {
   }).format(value);
 }
 
-function formatMoney(value) {
+function formatMoney(value, locale = "en-US", currency = "USD") {
   if (!Number.isFinite(value)) return "Add price / gallon";
-  return MONEY_FORMAT.format(value);
+  return new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency,
+    maximumFractionDigits: 0
+  }).format(value);
 }
 
 function roundForInput(value) {
@@ -35,6 +33,15 @@ function roundForInput(value) {
 function toNumber(value) {
   const number = Number(value);
   return Number.isFinite(number) ? number : 0;
+}
+
+function runtimeOptions(data) {
+  return {
+    locale: data.locale || "en",
+    numberLocale: data.numberLocale || "en-US",
+    currency: data.currency || "USD",
+    priceUnit: data.priceUnit || "gallon"
+  };
 }
 
 function toInches(value, unit) {
@@ -152,6 +159,113 @@ function parseVolumeUnit(unit) {
   }
 }
 
+const FORM_TEXT_REPLACEMENTS = {
+  de: {
+    Length: "Länge",
+    Width: "Breite",
+    Depth: "Tiefe",
+    Diameter: "Durchmesser",
+    Thickness: "Schichtdicke",
+    Height: "Höhe",
+    "Side length": "Kantenlänge",
+    "Target depth": "Zieltiefe",
+    "Average width": "Durchschnittsbreite",
+    "Max layer depth": "Max. Schichtdicke",
+    "Total depth": "Gesamttiefe",
+    "Coverage / gallon": "Reichweite pro L",
+    "Segment": "Segment",
+    "width": "Breite",
+    "sq m": "m²",
+    "sq ft": "sq ft"
+  },
+  fr: {
+    Length: "Longueur",
+    Width: "Largeur",
+    Depth: "Profondeur",
+    Diameter: "Diamètre",
+    Thickness: "Épaisseur",
+    Height: "Hauteur",
+    "Side length": "Côté",
+    "Target depth": "Profondeur cible",
+    "Average width": "Largeur moyenne",
+    "Max layer depth": "Épaisseur max.",
+    "Total depth": "Profondeur totale",
+    "Coverage / gallon": "Rendement par L",
+    "Segment": "Segment",
+    "width": "largeur",
+    "sq m": "m²",
+    "sq ft": "sq ft"
+  },
+  "pt-BR": {
+    Length: "Comprimento",
+    Width: "Largura",
+    Depth: "Profundidade",
+    Diameter: "Diâmetro",
+    Thickness: "Espessura",
+    Height: "Altura",
+    "Side length": "Lado",
+    "Target depth": "Profundidade alvo",
+    "Average width": "Largura média",
+    "Max layer depth": "Camada máxima",
+    "Total depth": "Profundidade total",
+    "Coverage / gallon": "Rendimento por L",
+    "Segment": "Segmento",
+    "width": "largura",
+    "sq m": "m²",
+    "sq ft": "sq ft"
+  },
+  es: {
+    Length: "Largo",
+    Width: "Ancho",
+    Depth: "Profundidad",
+    Diameter: "Diámetro",
+    Thickness: "Espesor",
+    Height: "Altura",
+    "Side length": "Lado",
+    "Target depth": "Profundidad objetivo",
+    "Average width": "Ancho medio",
+    "Max layer depth": "Capa máxima",
+    "Total depth": "Profundidad total",
+    "Coverage / gallon": "Rendimiento por L",
+    "Segment": "Segmento",
+    "width": "ancho",
+    "sq m": "m²",
+    "sq ft": "sq ft"
+  },
+  it: {
+    Length: "Lunghezza",
+    Width: "Larghezza",
+    Depth: "Profondità",
+    Diameter: "Diametro",
+    Thickness: "Spessore",
+    Height: "Altezza",
+    "Side length": "Lato",
+    "Target depth": "Profondità target",
+    "Average width": "Larghezza media",
+    "Max layer depth": "Strato massimo",
+    "Total depth": "Profondità totale",
+    "Coverage / gallon": "Resa per L",
+    "Segment": "Segmento",
+    "width": "larghezza",
+    "sq m": "m²",
+    "sq ft": "sq ft"
+  }
+};
+
+function applyFormTranslations(form) {
+  const replacements = FORM_TEXT_REPLACEMENTS[form.dataset.locale || "en"];
+  if (!replacements) return;
+
+  const ordered = Object.entries(replacements).sort((a, b) => b[0].length - a[0].length);
+  form.querySelectorAll(".field span, .check span").forEach((node) => {
+    let value = node.textContent || "";
+    ordered.forEach(([source, target]) => {
+      value = value.split(source).join(target);
+    });
+    node.textContent = value;
+  });
+}
+
 function setFieldLabel(form, name, label) {
   const field = form.querySelector(`[name="${name}"]`)?.closest(".field");
   const span = field?.querySelector("span");
@@ -209,6 +323,7 @@ function updateUnitLabels(form) {
     setFieldLabel(form, "length", `Length (${linearSuffix})`);
     setFieldLabel(form, "width", `Width (${linearSuffix})`);
     setFieldLabel(form, "coverageRate", `Coverage / gallon (${areaSuffix})`);
+    applyFormTranslations(form);
     return;
   }
 
@@ -266,10 +381,16 @@ function updateUnitLabels(form) {
   });
 
   setSegmentLabels(form, unit);
+  applyFormTranslations(form);
 }
 
 function serializeForm(form) {
-  const data = {};
+  const data = {
+    locale: form.dataset.locale || "en",
+    numberLocale: form.dataset.numberLocale || "en-US",
+    currency: form.dataset.currency || "USD",
+    priceUnit: form.dataset.priceUnit || "gallon"
+  };
   form.querySelectorAll("input, select, textarea").forEach((element) => {
     if (!element.name) return;
     if (element.type === "checkbox") {
@@ -287,7 +408,51 @@ function buildBreakdown(items) {
   return items.filter(Boolean);
 }
 
-function productRecommendation(type, depthInches, recommendedCubicInches) {
+const LOCAL_PRODUCT_COPY = {
+  de: {
+    coverage: ["Tisch- oder Beschichtungsharz", "Nutze ein Harz für dünne Beschichtungen", "Diese Schätzung passt zu einer flachen Beschichtung. Prüfe ein Produkt mit passender Reichweite, Topfzeit und Schichtdicke."],
+    floor: ["Bodenbeschichtungssystem", "Nutze ein Bodenbeschichtungssystem", "Bodenprojekte hängen von Reichweite, Untergrund und Schichten ab. Vergleiche Systeme nach Herstellerangabe."],
+    casting: ["Gießharz", "Nutze ein Gießharz", "Die Tiefe passt eher zu einem Guss. Prüfe maximale Schichtdicke und Wärmeentwicklung vor dem Kauf."],
+    general: ["Allzweck- oder Beschichtungsharz", "Nutze ein passendes Epoxidharz", "Die Menge ist eine Einkaufsbasis. Entscheidend sind Produktklasse, Datenblatt und realistische Reserve."]
+  },
+  fr: {
+    coverage: ["Résine de finition / flood coat", "Utiliser une résine de finition", "Cette estimation correspond à une application mince. Vérifiez le rendement, le temps de travail et l’épaisseur maximale."],
+    floor: ["Système de sol époxy", "Utiliser un système pour sol", "Un sol dépend du rendement, du support et du nombre de couches. Comparez les systèmes avec les données fabricant."],
+    casting: ["Résine de coulée", "Utiliser une résine de coulée", "La profondeur ressemble à une coulée. Vérifiez l’épaisseur maximale et le risque d’échauffement."],
+    general: ["Résine époxy adaptée", "Choisir le bon type de résine", "La quantité est une base d’achat. Le produit, la fiche technique et la marge restent déterminants."]
+  },
+  "pt-BR": {
+    coverage: ["Resina de revestimento", "Use resina para camada fina", "A estimativa combina com revestimento fino. Confira rendimento, tempo de trabalho e espessura máxima."],
+    floor: ["Sistema de piso epóxi", "Use sistema próprio para piso", "Piso depende de rendimento, preparo do concreto e demãos. Compare sistemas pela ficha do fabricante."],
+    casting: ["Resina de fundição", "Use resina para molde ou fundição", "A profundidade parece trabalho de molde. Confira limite de espessura e aquecimento antes de comprar."],
+    general: ["Resina epóxi adequada", "Escolha o tipo certo de resina", "A quantidade é base de compra. Produto, ficha técnica e sobra realista continuam essenciais."]
+  },
+  es: {
+    coverage: ["Resina de recubrimiento", "Usa resina para capa fina", "La estimación encaja con recubrimiento fino. Revisa rendimiento, tiempo de trabajo y grosor máximo."],
+    floor: ["Sistema de suelo epoxi", "Usa un sistema para suelo", "El suelo depende de rendimiento, soporte y capas. Compara sistemas con datos del fabricante."],
+    casting: ["Resina de colada", "Usa resina de colada", "La profundidad parece una colada. Revisa grosor máximo y riesgo de calentamiento."],
+    general: ["Resina epoxi adecuada", "Elige el tipo correcto de resina", "La cantidad es una base de compra. Producto, ficha técnica y margen siguen siendo clave."]
+  },
+  it: {
+    coverage: ["Resina da rivestimento", "Usa una resina per strato sottile", "La stima è adatta a un rivestimento sottile. Verifica resa, tempo di lavoro e spessore massimo."],
+    floor: ["Sistema per pavimento epossidico", "Usa un sistema per pavimento", "Il pavimento dipende da resa, supporto e strati. Confronta i sistemi con i dati del produttore."],
+    casting: ["Resina da colata", "Usa una resina da colata", "La profondità sembra una colata. Verifica spessore massimo e rischio di surriscaldamento."],
+    general: ["Resina epossidica adatta", "Scegli il tipo corretto di resina", "La quantità è una base di acquisto. Prodotto, scheda tecnica e margine restano decisivi."]
+  }
+};
+
+function localizedProduct(type, depthInches, locale) {
+  const copy = LOCAL_PRODUCT_COPY[locale];
+  if (!copy) return null;
+  const key = type === "garage-floor" ? "floor" : ["coverage", "surface", "round"].includes(type) ? "coverage" : depthInches > 0.75 ? "casting" : "general";
+  const [label, heading, body] = copy[key];
+  return { label, heading, copy: body, ratio: type === "garage-floor" ? null : depthInches > 0.75 ? { a: 2, b: 1 } : { a: 1, b: 1 } };
+}
+
+function productRecommendation(type, depthInches, recommendedCubicInches, locale = "en") {
+  const translated = localizedProduct(type, depthInches, locale);
+  if (translated) return translated;
+
   const totalGallons = gallonsFromCubicInches(recommendedCubicInches);
 
   switch (type) {
@@ -396,12 +561,16 @@ function finalizeResult({
   costTextOverride,
   compareStandard,
   compareConservative,
-  compareProduct
+  compareProduct,
+  locale = "en",
+  numberLocale = "en-US",
+  currency = "USD",
+  priceUnit = "gallon"
 }) {
-  const product = productRecommendation(type, depthInches, recommendedCubicInches);
+  const product = productRecommendation(type, depthInches, recommendedCubicInches, locale);
   const projectedCost =
     Number.isFinite(pricePerGallon) && pricePerGallon > 0
-      ? gallonsFromCubicInches(recommendedCubicInches) * pricePerGallon
+      ? (priceUnit === "liter" ? litersFromCubicInches(recommendedCubicInches) : gallonsFromCubicInches(recommendedCubicInches)) * pricePerGallon
       : Number.NaN;
 
   return {
@@ -411,7 +580,7 @@ function finalizeResult({
       `Recommended order quantity based on raw volume plus planning buffer. Equivalent to ${displayVolumeDual(recommendedCubicInches)}.`,
     rawText: displayVolumeDual(rawCubicInches),
     splitText: splitTextOverride || displaySplit(recommendedCubicInches, unit, product.ratio),
-    costText: costTextOverride || formatMoney(projectedCost),
+    costText: costTextOverride || formatMoney(projectedCost, numberLocale, currency),
     layersText,
     breakdown,
     standardText: compareStandard || displayVolume(recommendedCubicInches, unit),
@@ -428,6 +597,7 @@ function requirePositive(fields, message) {
 }
 
 function computeGeneral(data) {
+  const runtime = runtimeOptions(data);
   const unit = data.unit || "imperial";
   const wastePct = toNumber(data.wastePct);
   const pricePerGallon = toNumber(data.pricePerGallon);
@@ -458,6 +628,7 @@ function computeGeneral(data) {
     depthInches <= 0.25 ? "Single coat / shallow pour" : depthInches <= 2 ? "Single lift if product allows" : `${Math.ceil(depthInches / 2)} staged lifts`;
 
   return finalizeResult({
+    ...runtime,
     type: "general",
     unit,
     rawCubicInches,
@@ -476,6 +647,7 @@ function computeGeneral(data) {
 }
 
 function computeCoverage(data) {
+  const runtime = runtimeOptions(data);
   const unit = data.unit || "imperial";
   const wastePct = toNumber(data.wastePct);
   const pricePerGallon = toNumber(data.pricePerGallon);
@@ -495,6 +667,7 @@ function computeCoverage(data) {
   const layersText = depthInches <= 0.125 ? "1 flood coat" : "Thick coat, confirm product spec";
 
   return finalizeResult({
+    ...runtime,
     type: "coverage",
     unit,
     rawCubicInches,
@@ -514,6 +687,7 @@ function computeCoverage(data) {
 }
 
 function computeVolume(data) {
+  const runtime = runtimeOptions(data);
   const unit = data.unit || "imperial";
   const wastePct = toNumber(data.wastePct);
   const pricePerGallon = toNumber(data.pricePerGallon);
@@ -542,6 +716,7 @@ function computeVolume(data) {
   const conservativeCubicInches = rawCubicInches * (1 + wastePct / 100 + 0.08);
 
   return finalizeResult({
+    ...runtime,
     type: "volume",
     unit,
     rawCubicInches,
@@ -560,6 +735,7 @@ function computeVolume(data) {
 }
 
 function computeRiver(data) {
+  const runtime = runtimeOptions(data);
   const unit = data.unit || "imperial";
   const wastePct = toNumber(data.wastePct);
   const pricePerGallon = toNumber(data.pricePerGallon);
@@ -602,6 +778,7 @@ function computeRiver(data) {
     depthInches <= 2 ? "1 lift if product allows" : `${Math.ceil(depthInches / 2)} staged lifts at about 2 in max`;
 
   return finalizeResult({
+    ...runtime,
     type: "river",
     unit,
     rawCubicInches,
@@ -621,6 +798,7 @@ function computeRiver(data) {
 }
 
 function computeDeepPour(data) {
+  const runtime = runtimeOptions(data);
   const unit = data.unit || "imperial";
   const wastePct = toNumber(data.wastePct);
   const pricePerGallon = toNumber(data.pricePerGallon);
@@ -636,6 +814,7 @@ function computeDeepPour(data) {
   const layers = Math.max(1, Math.ceil(depthInches / maxDepthInches));
 
   return finalizeResult({
+    ...runtime,
     type: "deep-pour",
     unit,
     rawCubicInches,
@@ -654,6 +833,7 @@ function computeDeepPour(data) {
 }
 
 function computeSurface(data) {
+  const runtime = runtimeOptions(data);
   const unit = data.unit || "imperial";
   const wastePct = toNumber(data.wastePct);
   const pricePerGallon = toNumber(data.pricePerGallon);
@@ -673,6 +853,7 @@ function computeSurface(data) {
   const layersText = depthInches <= 0.125 ? "1 flood coat" : "May need multiple thin coats";
 
   return finalizeResult({
+    ...runtime,
     type: "surface",
     unit,
     rawCubicInches,
@@ -692,6 +873,7 @@ function computeSurface(data) {
 }
 
 function computeGarageFloor(data) {
+  const runtime = runtimeOptions(data);
   const unit = data.unit || "imperial";
   const coats = Math.max(1, Math.round(toNumber(data.coats)));
   const coverageRate = toNumber(data.coverageRate);
@@ -702,12 +884,13 @@ function computeGarageFloor(data) {
   requirePositive([length, width, coverageRate], "Enter positive floor dimensions and coverage rate.");
 
   const area = length * width;
-  const rawGallons = (area * coats) / coverageRate;
-  const rawCubicInches = cubicInchesFromGallons(rawGallons);
+  const rawCoverageVolume = (area * coats) / coverageRate;
+  const rawCubicInches = runtime.priceUnit === "liter" ? cubicInchesFromLiters(rawCoverageVolume) : cubicInchesFromGallons(rawCoverageVolume);
   const recommendedCubicInches = rawCubicInches * (1 + wastePct / 100);
   const conservativeCubicInches = rawCubicInches * (1 + wastePct / 100 + 0.05);
 
   return finalizeResult({
+    ...runtime,
     type: "garage-floor",
     unit,
     rawCubicInches,
@@ -719,7 +902,7 @@ function computeGarageFloor(data) {
     secondary: `Coverage-based floor estimate for ${displayArea(area, unit, "garage-floor")} across ${coats} coats.`,
     breakdown: buildBreakdown([
       `Floor area: ${displayArea(area, unit, "garage-floor")}.`,
-      `Coverage rate: ${NUMBER_FORMAT.format(coverageRate)} ${unit === "metric" ? "sq m" : "sq ft"} per gallon.`,
+      `Coverage rate: ${NUMBER_FORMAT.format(coverageRate)} ${unit === "metric" ? "sq m" : "sq ft"} per ${runtime.priceUnit === "liter" ? "L" : "gallon"}.`,
       `Coats planned: ${coats}.`,
       `Waste buffer: +${formatNumber(wastePct, 1)}%.`
     ])
@@ -727,6 +910,7 @@ function computeGarageFloor(data) {
 }
 
 function computeVoidFill(data) {
+  const runtime = runtimeOptions(data);
   const unit = data.unit || "imperial";
   const wastePct = toNumber(data.wastePct);
   const pricePerGallon = toNumber(data.pricePerGallon);
@@ -743,6 +927,7 @@ function computeVoidFill(data) {
     depthInches <= 2 ? "Single fill if product allows" : `${Math.ceil(depthInches / 2)} staged fills`;
 
   return finalizeResult({
+    ...runtime,
     type: "void-fill",
     unit,
     rawCubicInches,
@@ -761,6 +946,7 @@ function computeVoidFill(data) {
 }
 
 function computeRound(data) {
+  const runtime = runtimeOptions(data);
   const unit = data.unit || "imperial";
   const wastePct = toNumber(data.wastePct);
   const pricePerGallon = toNumber(data.pricePerGallon);
@@ -773,6 +959,7 @@ function computeRound(data) {
   const conservativeCubicInches = rawCubicInches * (1 + wastePct / 100 + 0.05);
 
   return finalizeResult({
+    ...runtime,
     type: "round",
     unit,
     rawCubicInches,
@@ -790,6 +977,7 @@ function computeRound(data) {
 }
 
 function computeSphere(data) {
+  const runtime = runtimeOptions(data);
   const unit = data.unit || "imperial";
   const wastePct = toNumber(data.wastePct);
   const pricePerGallon = toNumber(data.pricePerGallon);
@@ -801,6 +989,7 @@ function computeSphere(data) {
   const conservativeCubicInches = rawCubicInches * (1 + wastePct / 100 + 0.08);
 
   return finalizeResult({
+    ...runtime,
     type: "sphere",
     unit,
     rawCubicInches,
@@ -819,6 +1008,7 @@ function computeSphere(data) {
 }
 
 function computeCylinder(data) {
+  const runtime = runtimeOptions(data);
   const unit = data.unit || "imperial";
   const wastePct = toNumber(data.wastePct);
   const pricePerGallon = toNumber(data.pricePerGallon);
@@ -831,6 +1021,7 @@ function computeCylinder(data) {
   const conservativeCubicInches = rawCubicInches * (1 + wastePct / 100 + 0.08);
 
   return finalizeResult({
+    ...runtime,
     type: "cylinder",
     unit,
     rawCubicInches,
@@ -849,6 +1040,7 @@ function computeCylinder(data) {
 }
 
 function computeCube(data) {
+  const runtime = runtimeOptions(data);
   const unit = data.unit || "imperial";
   const wastePct = toNumber(data.wastePct);
   const pricePerGallon = toNumber(data.pricePerGallon);
@@ -860,6 +1052,7 @@ function computeCube(data) {
   const conservativeCubicInches = rawCubicInches * (1 + wastePct / 100 + 0.08);
 
   return finalizeResult({
+    ...runtime,
     type: "cube",
     unit,
     rawCubicInches,
@@ -878,6 +1071,7 @@ function computeCube(data) {
 }
 
 function computeCost(data) {
+  const runtime = runtimeOptions(data);
   const quantity = toNumber(data.quantity);
   const wastePct = toNumber(data.wastePct);
   const pricePerGallon = toNumber(data.pricePerGallon);
@@ -890,6 +1084,7 @@ function computeCost(data) {
   const conservativeCubicInches = rawCubicInches * (1 + wastePct / 100 + 0.05);
 
   return finalizeResult({
+    ...runtime,
     type: "cost",
     unit,
     rawCubicInches,
@@ -909,6 +1104,7 @@ function computeCost(data) {
 }
 
 function computeConverter(data) {
+  const runtime = runtimeOptions(data);
   const quantity = toNumber(data.quantity);
   requirePositive([quantity], "Enter a positive value to convert.");
 

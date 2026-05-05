@@ -1,4 +1,9 @@
 import { createFirstBatchPages } from "./seo-batch-2026-05.mjs";
+import {
+  applyMultilingualAlternates,
+  createLanguageMarketCards,
+  createMultilingualWave1Pages
+} from "./multilingual-wave-1.mjs";
 
 const siteOrigin = process.env.SITE_ORIGIN || "https://epoxyplanner.com";
 const contactEmail = process.env.CONTACT_EMAIL || "hello@epoxyplanner.com";
@@ -75,9 +80,13 @@ function calculatorPage({
   statLabels,
   lastmod = "2026-04-04",
   indexable = true,
-  includeInSitemap = true
+  includeInSitemap = true,
+  generalFaq: pageGeneralFaq = generalFaq,
+  checklist = scenarioChecklist,
+  ...metadata
 }) {
   return {
+    ...metadata,
     slug,
     category,
     pageType: "calculator",
@@ -92,9 +101,9 @@ function calculatorPage({
     bullets,
     howTo,
     mistakes,
-    faq: [...faq, ...generalFaq],
+    faq: [...faq, ...pageGeneralFaq],
     related,
-    checklist: scenarioChecklist,
+    checklist,
     note,
     compareLabel,
     resultEyebrow,
@@ -121,9 +130,12 @@ function guidePage({
   related,
   lastmod = "2026-04-04",
   indexable = true,
-  includeInSitemap = true
+  includeInSitemap = true,
+  generalFaq: pageGeneralFaq = generalFaq,
+  ...metadata
 }) {
   return {
+    ...metadata,
     slug,
     category: "guide",
     pageType: "guide",
@@ -137,7 +149,7 @@ function guidePage({
     answer,
     takeaways,
     sections,
-    faq: [...faq, ...generalFaq],
+    faq: [...faq, ...pageGeneralFaq],
     related,
     lastmod,
     indexable,
@@ -157,9 +169,11 @@ function infoPage({
   related = [],
   lastmod = "2026-04-04",
   indexable = true,
-  includeInSitemap = false
+  includeInSitemap = false,
+  ...metadata
 }) {
   return {
+    ...metadata,
     slug,
     category: "info",
     pageType: "info",
@@ -178,8 +192,10 @@ function infoPage({
 }
 
 const firstBatchPages = createFirstBatchPages({ calculatorPage, guidePage });
+const multilingualWave1Pages = createMultilingualWave1Pages({ calculatorPage, infoPage });
+const languageMarketCards = createLanguageMarketCards();
 
-export const pages = [
+const basePages = [
   infoPage({
     slug: "",
     title: "Epoxy Calculator for River Tables, Deep Pours & Coatings",
@@ -272,6 +288,12 @@ export const pages = [
             primary: true
           }
         ]
+      },
+      {
+        title: "Localized metric calculators for non-English searches",
+        body:
+          "The first multilingual rollout adds native-language calculator paths for German, French, Brazilian Portuguese, Spanish, and Italian. These pages are not direct translations: they start from local search wording, metric units, and local price expectations.",
+        cards: languageMarketCards
       },
       {
         title: "What every estimate gives you",
@@ -1648,5 +1670,8 @@ export const pages = [
       }
     ],
     indexable: false
-  })
+  }),
+  ...multilingualWave1Pages
 ];
+
+export const pages = applyMultilingualAlternates(basePages);

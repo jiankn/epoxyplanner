@@ -877,6 +877,7 @@ export function renderPage(page, context) {
   const pageTitle = `${page.title} | ${site.shortName}`;
   const pageBody = renderPageBody(page, context);
   const calculatorScript = page.pageType === "calculator" ? `<script type="module" src="/assets/calculator.js"></script>` : "";
+  const robots = page.indexable === false ? "noindex, follow" : "index, follow";
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -884,7 +885,7 @@ export function renderPage(page, context) {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
-    <meta name="robots" content="index, follow" />
+    <meta name="robots" content="${robots}" />
     <meta name="author" content="${escapeHtml(site.name)}" />
     ${page.primaryKeyword ? `<meta name="keywords" content="${escapeHtml([page.primaryKeyword, ...(page.supportingKeywords || [])].join(", "))}" />` : ""}
     <title>${escapeHtml(pageTitle)}</title>
@@ -928,6 +929,41 @@ export function renderPage(page, context) {
 </html>`;
 }
 
+export function renderNotFound(site) {
+  const title = `Page Not Found | ${site.shortName}`;
+  return `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, follow" />
+    <title>${escapeHtml(title)}</title>
+    <meta name="description" content="This Epoxy Planner page does not exist. Use the calculators and guides to find the right epoxy estimate." />
+    <link rel="canonical" href="${site.origin}/404.html" />
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/assets/site.css" />
+  </head>
+  <body data-page-type="error" data-page-slug="404">
+    ${renderHeader(site)}
+    <main class="page-shell">
+      <section class="hero">
+        <div class="hero__copy">
+          <p class="eyebrow">404</p>
+          <h1>Page Not Found</h1>
+          <p class="hero__intro">The page you requested is not part of the Epoxy Planner calculator and guide library.</p>
+          <div class="hero-actions">
+            <a class="hero-action" href="/epoxy-calculator/"><span class="hero-action__text">Epoxy Calculator</span><span class="hero-action__arrow" aria-hidden="true">→</span></a>
+            <a class="hero-action" href="/epoxy-coverage-calculator/"><span class="hero-action__text">Coverage Calculator</span><span class="hero-action__arrow" aria-hidden="true">→</span></a>
+            <a class="hero-action" href="/epoxy-cost-calculator/"><span class="hero-action__text">Cost Calculator</span><span class="hero-action__arrow" aria-hidden="true">→</span></a>
+          </div>
+        </div>
+      </section>
+    </main>
+    ${renderFooter(site)}
+  </body>
+</html>`;
+}
+
 export function renderRobots(site) {
   return `User-agent: *
 Allow: /
@@ -937,10 +973,11 @@ Sitemap: ${site.origin}/sitemap-index.xml
 }
 
 export function renderSitemapSection(pages, site) {
-  const lastmod = new Date().toISOString().split("T")[0];
   const urls = pages
+    .filter((page) => page.indexable !== false && page.includeInSitemap !== false)
     .map((page) => {
       const href = page.slug ? `${site.origin}/${page.slug}/` : `${site.origin}/`;
+      const lastmod = page.lastmod || "2026-04-04";
       let priority = "0.8";
       let changefreq = "weekly";
       if (page.slug === "") {

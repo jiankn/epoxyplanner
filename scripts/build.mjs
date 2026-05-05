@@ -92,7 +92,7 @@ function buildAssets() {
 async function main() {
   loadDotEnv(path.join(projectRoot, ".env"));
 
-  const [{ site, pages }, { renderPage, renderRobots, renderSitemapIndex, renderSitemapSection }] = await Promise.all([
+  const [{ site, pages }, { renderPage, renderNotFound, renderRobots, renderSitemapIndex, renderSitemapSection }] = await Promise.all([
     import("../src/data/site.mjs"),
     import("../src/templates/render.mjs")
   ]);
@@ -102,11 +102,15 @@ async function main() {
   buildAssets();
   buildPages({ site, pages, renderPage });
   buildSitemaps({ site, pages, renderSitemapIndex, renderSitemapSection });
+  writeFile(path.join(distRoot, "404.html"), renderNotFound(site));
   writeFile(path.join(distRoot, "robots.txt"), renderRobots(site));
   writeFile(path.join(distRoot, ".nojekyll"), "");
 
-  // Cloudflare Pages _redirects: force www → non-www (301)
-  const redirectsContent = `https://www.epoxyplanner.com/* https://epoxyplanner.com/:splat 301\n`;
+  // Path-level fallback for static hosts. Cloudflare host redirects are handled by functions/_middleware.js.
+  const redirectsContent = `http://epoxyplanner.com/* https://epoxyplanner.com/:splat 301
+http://www.epoxyplanner.com/* https://epoxyplanner.com/:splat 301
+https://www.epoxyplanner.com/* https://epoxyplanner.com/:splat 301
+`;
   writeFile(path.join(distRoot, "_redirects"), redirectsContent);
   console.log(`Built ${pages.length} pages into ${distRoot}`);
 }

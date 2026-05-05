@@ -9,6 +9,34 @@ if (navToggle && nav) {
   });
 }
 
+const languageSwitchers = Array.from(document.querySelectorAll(".language-switcher"));
+
+function closeLanguageSwitchers(except = null) {
+  languageSwitchers.forEach((switcher) => {
+    if (switcher !== except) {
+      switcher.removeAttribute("open");
+    }
+  });
+}
+
+if (languageSwitchers.length) {
+  languageSwitchers.forEach((switcher) => {
+    switcher.addEventListener("toggle", () => {
+      if (switcher.open) {
+        closeLanguageSwitchers(switcher);
+      }
+    });
+  });
+
+  document.addEventListener("click", (event) => {
+    if (languageSwitchers.some((switcher) => switcher.contains(event.target))) {
+      return;
+    }
+
+    closeLanguageSwitchers();
+  });
+}
+
 const CONSENT_KEY = window.epoxyConsentKey || "epoxy_consent_v1";
 const banner = document.querySelector("[data-cookie-banner]");
 const modal = document.querySelector("[data-cookie-modal]");
@@ -214,6 +242,10 @@ cookieSaveButtons.forEach((button) => {
 });
 
 document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    closeLanguageSwitchers();
+  }
+
   if (event.key === "Escape" && modal && !modal.hidden) {
     closeCookieModal();
   }

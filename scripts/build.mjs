@@ -52,6 +52,15 @@ function urlForPath(site, slug = "") {
   return slug ? `${site.origin}/${slug}/` : `${site.origin}/`;
 }
 
+function buildFunctionRoutes({ pages }) {
+  const routes = pages
+    .map((page) => (page.slug ? `/${page.slug}/` : "/"))
+    .sort((a, b) => a.localeCompare(b));
+  const routeList = routes.map((route) => `  ${JSON.stringify(route)}`).join(",\n");
+  const contents = `export const HTML_ROUTES = new Set([\n${routeList}\n]);\n`;
+  writeFile(path.join(projectRoot, "functions", "_generated-routes.js"), contents);
+}
+
 function buildSitemaps({ site, pages, renderSitemapIndex, renderSitemapSection }) {
   const calculatorPages = pages.filter((page) => page.category === "calculator" || page.category === "converter");
   const guidePages = pages.filter((page) => page.category === "guide");
@@ -99,6 +108,7 @@ async function main() {
 
   fs.rmSync(distRoot, { recursive: true, force: true });
   ensureDir(distRoot);
+  buildFunctionRoutes({ pages });
   buildAssets();
   buildPages({ site, pages, renderPage });
   buildSitemaps({ site, pages, renderSitemapIndex, renderSitemapSection });

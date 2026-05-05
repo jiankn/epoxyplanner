@@ -1,35 +1,6 @@
-const CANONICAL_HOST = "epoxyplanner.com";
+import { HTML_ROUTES } from "./_generated-routes.js";
 
-const HTML_ROUTES = new Set([
-  "/",
-  "/about/",
-  "/authors/",
-  "/bar-top-epoxy-calculator/",
-  "/contact/",
-  "/countertop-epoxy-calculator/",
-  "/deep-pour-epoxy-calculator/",
-  "/deep-pour-vs-table-top-epoxy/",
-  "/epoxy-calculator/",
-  "/epoxy-cost-calculator/",
-  "/epoxy-coverage-calculator/",
-  "/epoxy-coverage-chart/",
-  "/epoxy-mixing-ratio-guide/",
-  "/epoxy-unit-converter/",
-  "/epoxy-volume-calculator/",
-  "/epoxy-waste-factor-guide/",
-  "/faq/",
-  "/garage-floor-epoxy-calculator/",
-  "/how-much-epoxy-do-i-need/",
-  "/how-much-epoxy-do-i-need-for-a-river-table/",
-  "/how-to-measure-a-river-table-for-epoxy/",
-  "/methodology/",
-  "/privacy/",
-  "/river-table-epoxy-calculator/",
-  "/round-epoxy-table-calculator/",
-  "/table-top-epoxy-calculator/",
-  "/terms/",
-  "/void-fill-epoxy-calculator/"
-]);
+const CANONICAL_HOST = "epoxyplanner.com";
 
 const STATIC_ROOT_FILES = new Set([
   "/404.html",

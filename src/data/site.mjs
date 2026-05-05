@@ -1,3 +1,5 @@
+import { createFirstBatchPages } from "./seo-batch-2026-05.mjs";
+
 const siteOrigin = process.env.SITE_ORIGIN || "https://epoxyplanner.com";
 const contactEmail = process.env.CONTACT_EMAIL || "hello@epoxyplanner.com";
 
@@ -9,9 +11,11 @@ export const site = {
     "A high-trust epoxy calculator and resin planning site for river tables, deep pours, coatings, void fills, conversions, and project cost planning.",
   nav: [
     { label: "Epoxy Calculator", slug: "epoxy-calculator" },
+    { label: "Resin", slug: "resin-calculator" },
     { label: "River Table", slug: "river-table-epoxy-calculator" },
     { label: "Deep Pour", slug: "deep-pour-epoxy-calculator" },
     { label: "Coverage", slug: "epoxy-coverage-calculator" },
+    { label: "Garage Floor", slug: "garage-floor-epoxy-calculator" },
     { label: "Cost", slug: "epoxy-cost-calculator" },
     { label: "Converter", slug: "epoxy-unit-converter" },
     { label: "Guides", slug: "how-much-epoxy-do-i-need" }
@@ -173,6 +177,8 @@ function infoPage({
   };
 }
 
+const firstBatchPages = createFirstBatchPages({ calculatorPage, guidePage });
+
 export const pages = [
   infoPage({
     slug: "",
@@ -188,8 +194,10 @@ export const pages = [
       { label: "Deep Pour", slug: "deep-pour-epoxy-calculator", icon: "🧊" },
       { label: "Coverage & Coatings", slug: "epoxy-coverage-calculator", icon: "🖌️" },
       { label: "General Calculator", slug: "epoxy-calculator", icon: "📐" },
+      { label: "Resin Calculator", slug: "resin-calculator", icon: "🧪" },
       { label: "Cost Planner", slug: "epoxy-cost-calculator", icon: "💵" },
-      { label: "Void Fill", slug: "void-fill-epoxy-calculator", icon: "🧩" }
+      { label: "Void Fill", slug: "void-fill-epoxy-calculator", icon: "🧩" },
+      { label: "Mold Calculator", slug: "resin-mold-calculator", icon: "▣" }
     ],
     sections: [
       {
@@ -238,6 +246,30 @@ export const pages = [
             text: "Plan floor coatings from square footage, coats, kit coverage, and waste.",
             slug: "garage-floor-epoxy-calculator",
             primary: true
+          },
+          {
+            title: "Resin Calculator",
+            text: "Use the broader resin quantity page before choosing a specific scenario.",
+            slug: "resin-calculator",
+            primary: true
+          },
+          {
+            title: "Square Foot Calculator",
+            text: "Estimate coating material from area, thickness, and edge runoff.",
+            slug: "epoxy-square-foot-calculator",
+            primary: true
+          },
+          {
+            title: "Garage Floor Cost",
+            text: "Turn square footage and kit coverage into a material budget.",
+            slug: "epoxy-garage-floor-cost-calculator",
+            primary: true
+          },
+          {
+            title: "Resin Mold Calculator",
+            text: "Plan silicone molds, craft cavities, cube, cylinder, and sphere casts.",
+            slug: "resin-mold-calculator",
+            primary: true
           }
         ]
       },
@@ -263,7 +295,11 @@ export const pages = [
           { title: "Deep Pour vs Table Top Epoxy", text: "Know when the resin class is the real bottleneck.", slug: "deep-pour-vs-table-top-epoxy" },
           { title: "Waste Factor Guide", text: "Decide how much extra resin to buy and why.", slug: "epoxy-waste-factor-guide" },
           { title: "Coverage Chart", text: "Quick square-foot reference before using the detailed calculator.", slug: "epoxy-coverage-chart" },
-          { title: "Mixing Ratio Guide", text: "Plan Part A / Part B and batch size after the quantity is known.", slug: "epoxy-mixing-ratio-guide" }
+          { title: "Mixing Ratio Guide", text: "Plan Part A / Part B and batch size after the quantity is known.", slug: "epoxy-mixing-ratio-guide" },
+          { title: "How Much Epoxy Per Square Foot?", text: "Answer coverage by thickness before choosing a kit.", slug: "how-much-epoxy-per-square-foot" },
+          { title: "One Gallon Coverage", text: "Understand why a gallon covers different areas at different thicknesses.", slug: "how-much-does-a-gallon-of-epoxy-cover" },
+          { title: "Kit Size Guide", text: "Match calculated quantity to real gallons, liters, and kit listings.", slug: "epoxy-kit-size-guide" },
+          { title: "Seal Coat vs Flood Coat", text: "Decide whether the first coat and finish coat need separate estimates.", slug: "seal-coat-vs-flood-coat" }
         ]
       },
       {
@@ -325,17 +361,23 @@ export const pages = [
       }
     ],
     related: [
+      "resin-calculator",
+      "epoxy-amount-calculator",
+      "epoxy-calculator-metric",
       "river-table-epoxy-calculator",
       "deep-pour-epoxy-calculator",
       "epoxy-coverage-calculator",
       "epoxy-volume-calculator",
+      "epoxy-circle-calculator",
+      "epoxy-rectangle-calculator",
       "round-epoxy-table-calculator",
       "void-fill-epoxy-calculator",
       "garage-floor-epoxy-calculator",
       "how-much-epoxy-do-i-need",
       "epoxy-cost-calculator",
       "epoxy-unit-converter",
-      "epoxy-mixing-ratio-guide"
+      "epoxy-mixing-ratio-guide",
+      "epoxy-kit-size-guide"
     ],
     note: "Use this page for regular shapes and fast planning. If the job is a river table, deep cast, or floor coating, switch to the scenario page before buying.",
     compareLabel: "Raw math vs order-ready planning",
@@ -385,10 +427,16 @@ export const pages = [
       }
     ],
     related: [
+      "epoxy-square-foot-calculator",
+      "epoxy-flood-coat-calculator",
+      "epoxy-seal-coat-calculator",
+      "how-much-epoxy-per-square-foot",
+      "how-much-does-a-gallon-of-epoxy-cover",
       "table-top-epoxy-calculator",
       "bar-top-epoxy-calculator",
       "countertop-epoxy-calculator",
       "garage-floor-epoxy-calculator",
+      "epoxy-floor-coverage-calculator",
       "epoxy-volume-calculator",
       "epoxy-cost-calculator",
       "epoxy-coverage-chart",
@@ -433,6 +481,11 @@ export const pages = [
       }
     ],
     related: [
+      "epoxy-rectangle-calculator",
+      "resin-mold-calculator",
+      "sphere-resin-calculator",
+      "cylinder-resin-calculator",
+      "cube-resin-calculator",
       "round-epoxy-table-calculator",
       "void-fill-epoxy-calculator",
       "epoxy-unit-converter",
@@ -486,6 +539,7 @@ export const pages = [
       }
     ],
     related: [
+      "river-table-epoxy-cost",
       "how-much-epoxy-do-i-need-for-a-river-table",
       "how-to-measure-a-river-table-for-epoxy",
       "deep-pour-epoxy-calculator",
@@ -639,6 +693,7 @@ export const pages = [
       }
     ],
     related: [
+      "epoxy-bar-top-cost",
       "table-top-epoxy-calculator",
       "countertop-epoxy-calculator",
       "epoxy-coverage-calculator",
@@ -690,6 +745,7 @@ export const pages = [
       }
     ],
     related: [
+      "epoxy-countertop-cost",
       "epoxy-coverage-calculator",
       "table-top-epoxy-calculator",
       "bar-top-epoxy-calculator",
@@ -735,6 +791,11 @@ export const pages = [
       }
     ],
     related: [
+      "epoxy-floor-coverage-calculator",
+      "epoxy-garage-floor-cost-calculator",
+      "two-car-garage-epoxy-calculator",
+      "epoxy-garage-floor-cost",
+      "epoxy-cost-per-square-foot",
       "epoxy-coverage-calculator",
       "epoxy-cost-calculator",
       "epoxy-coverage-chart",
@@ -1206,6 +1267,13 @@ export const pages = [
     ],
     related: [
       "epoxy-calculator",
+      "resin-art-pricing-calculator",
+      "epoxy-garage-floor-cost-calculator",
+      "epoxy-garage-floor-cost",
+      "river-table-epoxy-cost",
+      "epoxy-countertop-cost",
+      "epoxy-bar-top-cost",
+      "epoxy-cost-per-square-foot",
       "river-table-epoxy-calculator",
       "deep-pour-epoxy-calculator",
       "epoxy-unit-converter",
@@ -1271,10 +1339,15 @@ export const pages = [
     ],
     related: [
       "epoxy-calculator",
+      "epoxy-calculator-metric",
+      "epoxy-kit-size-guide",
+      "epoxy-mix-ratio-by-volume-vs-weight",
       "epoxy-volume-calculator",
       "epoxy-cost-calculator",
       "void-fill-epoxy-calculator",
-      "round-epoxy-table-calculator"
+      "round-epoxy-table-calculator",
+      "resin-calculator",
+      "cylinder-resin-calculator"
     ],
     checklist: scenarioChecklist,
     note: "One strong converter page covers many unit-pair searches. Do not split every conversion pair into thin near-duplicate pages.",
@@ -1288,6 +1361,7 @@ export const pages = [
     },
     lastmod: "2026-05-05"
   },
+  ...firstBatchPages,
   infoPage({
     slug: "methodology",
     title: "Epoxy Calculator Methodology",

@@ -66,6 +66,11 @@ function volumeFromRound(diameter, depth) {
   return Math.PI * radius * radius * depth;
 }
 
+function volumeFromSphere(diameter) {
+  const radius = diameter / 2;
+  return (4 / 3) * Math.PI * radius * radius * radius;
+}
+
 function pluralize(count, singular, plural = `${singular}s`) {
   return count === 1 ? singular : plural;
 }
@@ -234,6 +239,16 @@ function updateUnitLabels(form) {
       diameter: "Diameter",
       depth: "Depth"
     },
+    sphere: {
+      diameter: "Diameter"
+    },
+    cylinder: {
+      diameter: "Diameter",
+      depth: "Height"
+    },
+    cube: {
+      length: "Side length"
+    },
     default: {
       length: "Length",
       width: "Width",
@@ -284,6 +299,15 @@ function productRecommendation(type, depthInches, recommendedCubicInches) {
         heading: "Use a table-top or flood-coat epoxy",
         copy: `This estimate behaves like a shallow surface application. Start by comparing coating-style products that can realistically cover about ${formatNumber(totalGallons)} gallons mixed.`,
         ratio: { a: 1, b: 1 }
+      };
+    case "sphere":
+    case "cylinder":
+    case "cube":
+      return {
+        label: "Casting epoxy",
+        heading: "Use a casting epoxy for mold work",
+        copy: `This estimate behaves like a mold or casting project. Compare casting-friendly products around ${formatNumber(totalGallons)} gallons mixed and confirm the product depth and mass limits before pouring.`,
+        ratio: depthInches > 1 ? { a: 2, b: 1 } : { a: 1, b: 1 }
       };
     case "river":
       if (depthInches > 0.5) {
@@ -765,6 +789,94 @@ function computeRound(data) {
   });
 }
 
+function computeSphere(data) {
+  const unit = data.unit || "imperial";
+  const wastePct = toNumber(data.wastePct);
+  const pricePerGallon = toNumber(data.pricePerGallon);
+  const diameterInches = toInches(toNumber(data.diameter), unit);
+  requirePositive([diameterInches], "Enter a positive sphere diameter.");
+
+  const rawCubicInches = volumeFromSphere(diameterInches);
+  const recommendedCubicInches = rawCubicInches * (1 + wastePct / 100);
+  const conservativeCubicInches = rawCubicInches * (1 + wastePct / 100 + 0.08);
+
+  return finalizeResult({
+    type: "sphere",
+    unit,
+    rawCubicInches,
+    recommendedCubicInches,
+    conservativeCubicInches,
+    pricePerGallon,
+    depthInches: diameterInches,
+    layersText: diameterInches <= 2 ? "Single cast if product allows" : "Confirm mass and depth limit",
+    breakdown: buildBreakdown([
+      `Sphere diameter: ${displayDepth(diameterInches, unit)}.`,
+      `Raw sphere volume: ${displayVolumeDual(rawCubicInches)}.`,
+      `Waste buffer: +${formatNumber(wastePct, 1)}%.`,
+      "Use a conservative margin for sprues, trimming, and overflow."
+    ])
+  });
+}
+
+function computeCylinder(data) {
+  const unit = data.unit || "imperial";
+  const wastePct = toNumber(data.wastePct);
+  const pricePerGallon = toNumber(data.pricePerGallon);
+  const diameterInches = toInches(toNumber(data.diameter), unit);
+  const heightInches = toInches(toNumber(data.depth), unit);
+  requirePositive([diameterInches, heightInches], "Enter a positive cylinder diameter and height.");
+
+  const rawCubicInches = volumeFromRound(diameterInches, heightInches);
+  const recommendedCubicInches = rawCubicInches * (1 + wastePct / 100);
+  const conservativeCubicInches = rawCubicInches * (1 + wastePct / 100 + 0.08);
+
+  return finalizeResult({
+    type: "cylinder",
+    unit,
+    rawCubicInches,
+    recommendedCubicInches,
+    conservativeCubicInches,
+    pricePerGallon,
+    depthInches: heightInches,
+    layersText: heightInches <= 2 ? "Single cast if product allows" : `${Math.ceil(heightInches / 2)} staged lifts if needed`,
+    breakdown: buildBreakdown([
+      `Cylinder diameter: ${displayDepth(diameterInches, unit)}.`,
+      `Filled height: ${displayDepth(heightInches, unit)}.`,
+      `Raw cylinder volume: ${displayVolumeDual(rawCubicInches)}.`,
+      `Waste buffer: +${formatNumber(wastePct, 1)}%.`
+    ])
+  });
+}
+
+function computeCube(data) {
+  const unit = data.unit || "imperial";
+  const wastePct = toNumber(data.wastePct);
+  const pricePerGallon = toNumber(data.pricePerGallon);
+  const sideInches = toInches(toNumber(data.length), unit);
+  requirePositive([sideInches], "Enter a positive cube side length.");
+
+  const rawCubicInches = sideInches * sideInches * sideInches;
+  const recommendedCubicInches = rawCubicInches * (1 + wastePct / 100);
+  const conservativeCubicInches = rawCubicInches * (1 + wastePct / 100 + 0.08);
+
+  return finalizeResult({
+    type: "cube",
+    unit,
+    rawCubicInches,
+    recommendedCubicInches,
+    conservativeCubicInches,
+    pricePerGallon,
+    depthInches: sideInches,
+    layersText: sideInches <= 2 ? "Single cube cast if product allows" : `${Math.ceil(sideInches / 2)} staged lifts if needed`,
+    breakdown: buildBreakdown([
+      `Cube side length: ${displayDepth(sideInches, unit)}.`,
+      `Raw cube volume: ${displayVolumeDual(rawCubicInches)}.`,
+      `Waste buffer: +${formatNumber(wastePct, 1)}%.`,
+      "Use extra buffer for sprues, overflow, and trimming."
+    ])
+  });
+}
+
 function computeCost(data) {
   const quantity = toNumber(data.quantity);
   const wastePct = toNumber(data.wastePct);
@@ -836,6 +948,9 @@ const COMPUTERS = {
   "garage-floor": computeGarageFloor,
   "void-fill": computeVoidFill,
   round: computeRound,
+  sphere: computeSphere,
+  cylinder: computeCylinder,
+  cube: computeCube,
   cost: computeCost,
   converter: computeConverter
 };

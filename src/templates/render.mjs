@@ -142,6 +142,31 @@ const FORM_TEMPLATES = {
     </div>
     ${priceField()}
   `,
+  sphere: () => `
+    <div class="field-grid field-grid--four">
+      ${unitToggle()}
+      ${numberField("Diameter", "diameter", "4", "0.1")}
+      ${numberField("Waste buffer (%)", "wastePct", "10", "0.1")}
+      ${numberField("Price / gallon", "pricePerGallon", "90", "0.01")}
+    </div>
+  `,
+  cylinder: () => `
+    <div class="field-grid field-grid--four">
+      ${unitToggle()}
+      ${numberField("Diameter", "diameter", "3", "0.1")}
+      ${numberField("Height", "depth", "5", "0.1")}
+      ${numberField("Waste buffer (%)", "wastePct", "10", "0.1")}
+    </div>
+    ${priceField()}
+  `,
+  cube: () => `
+    <div class="field-grid field-grid--four">
+      ${unitToggle()}
+      ${numberField("Side length", "length", "1.5", "0.1")}
+      ${numberField("Waste buffer (%)", "wastePct", "12", "0.1")}
+      ${numberField("Price / gallon", "pricePerGallon", "90", "0.01")}
+    </div>
+  `,
   cost: () => `
     <div class="field-grid field-grid--four">
       ${shapeSelect("Quantity unit", "costUnit", [

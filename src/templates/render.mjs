@@ -458,6 +458,7 @@ function renderLanguageQuickLinks(page) {
       <div class="language-quick-links__items">
         ${page.languageActions.map((item) => `
           <a href="${hrefFor(item.slug)}" hreflang="${escapeHtml(item.hreflang || item.shortLabel || "")}">
+            <span class="language-quick-links__flag" aria-hidden="true">${escapeHtml(item.flag || "")}</span>
             <span>${escapeHtml(item.label)}</span>
             <strong>${escapeHtml(item.shortLabel || "")}</strong>
           </a>
@@ -792,8 +793,20 @@ const languageSwitchLabels = {
 };
 
 function languageTargetSlug(page, item) {
+  if (item.hreflang === (page.locale || "en")) return page.slug || item.slug;
   if (page.alternates?.[item.hreflang]) return page.alternates[item.hreflang];
   return item.slug;
+}
+
+function currentLanguageItem(site, page = {}) {
+  const currentLocale = page.locale || "en";
+  return (site.languageNav || []).find((item) => item.hreflang === currentLocale) || {
+    label: "English",
+    shortLabel: "EN",
+    hreflang: "en",
+    slug: "",
+    flag: "🇺🇸"
+  };
 }
 
 function renderLanguageSwitcher(site, page = {}) {
@@ -801,17 +814,19 @@ function renderLanguageSwitcher(site, page = {}) {
   if (!items.length) return "";
   const currentLocale = page.locale || "en";
   const label = uiText(page, "languages", languageSwitchLabels[currentLocale] || "Languages");
+  const currentItem = currentLanguageItem(site, page);
   return `
     <details class="language-switcher">
-      <summary aria-label="${escapeHtml(label)}">
-        <span class="language-switcher__icon" aria-hidden="true">A</span>
-        <span class="language-switcher__label">${escapeHtml(label)}</span>
+      <summary aria-label="${escapeHtml(`${label}: ${currentItem.label}`)}">
+        <span class="language-switcher__globe" aria-hidden="true">🌐</span>
+        <span class="language-switcher__code">${escapeHtml(currentItem.shortLabel)}</span>
       </summary>
       <div class="language-menu" role="list">
         ${items.map((item) => `
-          <a href="${hrefFor(languageTargetSlug(page, item))}" hreflang="${escapeHtml(item.hreflang)}" lang="${escapeHtml(item.hreflang)}" role="listitem">
-            <span>${escapeHtml(item.label)}</span>
-            <strong>${escapeHtml(item.shortLabel)}</strong>
+          <a href="${hrefFor(languageTargetSlug(page, item))}" hreflang="${escapeHtml(item.hreflang)}" lang="${escapeHtml(item.hreflang)}" role="listitem"${item.hreflang === currentLocale ? ` aria-current="page"` : ""}>
+            <span class="language-menu__flag" aria-hidden="true">${escapeHtml(item.flag || "")}</span>
+            <span class="language-menu__code">${escapeHtml(item.shortLabel)}</span>
+            <span class="language-menu__name">${escapeHtml(item.label)}</span>
           </a>
         `).join("")}
       </div>

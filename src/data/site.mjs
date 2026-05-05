@@ -26,11 +26,12 @@ export const site = {
     { label: "Guides", slug: "how-much-epoxy-do-i-need" }
   ],
   languageNav: [
-    { label: "Deutsch", shortLabel: "DE", hreflang: "de", slug: "de" },
-    { label: "Français", shortLabel: "FR", hreflang: "fr", slug: "fr" },
-    { label: "Português BR", shortLabel: "PT-BR", hreflang: "pt-BR", slug: "pt-br" },
-    { label: "Español", shortLabel: "ES", hreflang: "es", slug: "es" },
-    { label: "Italiano", shortLabel: "IT", hreflang: "it", slug: "it" }
+    { label: "English", shortLabel: "EN", hreflang: "en", slug: "", flag: "🇺🇸" },
+    { label: "Deutsch", shortLabel: "DE", hreflang: "de", slug: "de", flag: "🇩🇪" },
+    { label: "Français", shortLabel: "FR", hreflang: "fr", slug: "fr", flag: "🇫🇷" },
+    { label: "Português BR", shortLabel: "PT-BR", hreflang: "pt-BR", slug: "pt-br", flag: "🇧🇷" },
+    { label: "Español", shortLabel: "ES", hreflang: "es", slug: "es", flag: "🇪🇸" },
+    { label: "Italiano", shortLabel: "IT", hreflang: "it", slug: "it", flag: "🇮🇹" }
   ],
   footerNav: [
     { label: "Calculators", slug: "epoxy-calculator" },
@@ -213,7 +214,7 @@ const basePages = [
     intro:
       "Calculate exactly how much epoxy resin you need — with waste, seepage, layer count, Part A / Part B split, cost, and product-fit guidance built in.",
     languageActionsHeading: "Metric calculators in 5 languages",
-    languageActions: site.languageNav,
+    languageActions: site.languageNav.filter((item) => item.hreflang !== "en"),
     heroActions: [
       { label: "River Table", slug: "river-table-epoxy-calculator", icon: "🪵" },
       { label: "Deep Pour", slug: "deep-pour-epoxy-calculator", icon: "🧊" },

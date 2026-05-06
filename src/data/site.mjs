@@ -218,8 +218,6 @@ const basePages = [
     eyebrow: "Precision Resin Planning",
     intro:
       "Calculate exactly how much epoxy resin you need — with waste, seepage, layer count, Part A / Part B split, cost, and product-fit guidance built in.",
-    languageActionsHeading: "Metric calculators in 5 languages",
-    languageActions: site.languageNav.filter((item) => item.hreflang !== "en"),
     heroActions: [
       { label: "River Table", slug: "river-table-epoxy-calculator", icon: "🪵" },
       { label: "Deep Pour", slug: "deep-pour-epoxy-calculator", icon: "🧊" },

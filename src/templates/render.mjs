@@ -450,23 +450,6 @@ function renderHeroActions(page) {
   `;
 }
 
-function renderLanguageQuickLinks(page) {
-  if (!page.languageActions?.length) return "";
-  return `
-    <div class="language-quick-links" aria-label="${escapeHtml(page.languageActionsHeading || "Localized calculators")}">
-      <span class="language-quick-links__label">${escapeHtml(page.languageActionsHeading || "Localized calculators")}</span>
-      <div class="language-quick-links__items">
-        ${page.languageActions.map((item) => `
-          <a href="${hrefFor(item.slug)}" hreflang="${escapeHtml(item.hreflang || item.shortLabel || "")}">
-            <span>${escapeHtml(item.label)}</span>
-            <strong>${escapeHtml(item.shortLabel || "")}</strong>
-          </a>
-        `).join("")}
-      </div>
-    </div>
-  `;
-}
-
 function renderHero(page) {
   return `
     <section class="hero">
@@ -474,7 +457,6 @@ function renderHero(page) {
         <p class="eyebrow">${escapeHtml(page.eyebrow || "Epoxy Planner")}</p>
         <h1>${escapeHtml(page.h1)}</h1>
         <p class="hero__intro">${escapeHtml(page.intro || page.description)}</p>
-        ${renderLanguageQuickLinks(page)}
         ${renderHeroActions(page)}
       </div>
     </section>

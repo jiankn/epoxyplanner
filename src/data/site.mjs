@@ -331,6 +331,75 @@ const floorCostContent = {
   ]
 };
 
+// ---- /epoxy-calculator/：用量表和算例按体积公式现算（1 US gal = 231 cu in，1 fl oz = 1.8046875 cu in）----
+const CU_IN_PER_GAL = 231;
+const CU_IN_PER_FL_OZ = 1.8046875;
+const CU_IN_PER_L = 61.0237440947;
+const fmtNum = (value, digits = 1) => new Intl.NumberFormat("en-US", { maximumFractionDigits: digits }).format(value);
+// 不到半加仑用液盎司 + 毫升，更大的量用加仑 + 升
+const resinAmount = (cuIn) =>
+  cuIn / CU_IN_PER_GAL < 0.5
+    ? `${fmtNum(cuIn / CU_IN_PER_FL_OZ)} fl oz (${fmtNum((cuIn / CU_IN_PER_L) * 1000, 0)} ml)`
+    : `${fmtNum(cuIn / CU_IN_PER_GAL, 2)} gal (${fmtNum(cuIn / CU_IN_PER_L)} L)`;
+const generalWaste = 1.08; // 与通用计算器表单的默认余量一致
+const commonProjects = [
+  ["Round coaster", "4 in diameter × 1/4 in", Math.PI * 2 ** 2 * 0.25],
+  ["Serving tray", "12 × 18 in × 1/8 in", 12 * 18 * 0.125],
+  ["Tabletop flood coat", "2 × 4 ft × 1/8 in", 24 * 48 * 0.125],
+  ["Bar top flood coat", "2 × 8 ft × 1/8 in", 24 * 96 * 0.125],
+  ["River table channel", "6 ft × 6 in wide × 1.5 in deep", 72 * 6 * 1.5],
+  ["Slab or cavity fill", "48 × 18 in × 1.25 in", 48 * 18 * 1.25]
+];
+const exampleCuIn = 48 * 18 * 1.25;
+
+const epoxyCalculatorContent = {
+  answerHeading: "How much epoxy do I need?",
+  answer: `Multiply length × width × depth in inches, then divide by 231 for gallons or by 1.805 for fluid ounces. A 2 × 4 ft tabletop at 1/8 in needs about ${resinAmount(144)}; a 6 ft river channel 6 in wide and 1.5 in deep needs about ${resinAmount(648)}. The calculator adds 8% for waste by default.`,
+  answerTable: {
+    headers: ["Project", "Size", "Resin needed", "With 8% waste"],
+    rows: commonProjects.map(([project, size, cuIn]) => [project, size, resinAmount(cuIn), resinAmount(cuIn * generalWaste)]),
+    note: "Mixed resin (Part A + Part B together). Flood coats are the top surface only; add the edges if they get coated."
+  },
+  sections: [
+    {
+      title: "Worked example: a 48 × 18 in slab poured 1.25 in deep",
+      points: [
+        `Volume: 48 × 18 × 1.25 = ${fmtNum(exampleCuIn, 0)} cubic inches.`,
+        `Gallons: ${fmtNum(exampleCuIn, 0)} ÷ 231 = ${fmtNum(exampleCuIn / CU_IN_PER_GAL, 2)} gal (${fmtNum(exampleCuIn / CU_IN_PER_L)} L) of mixed resin.`,
+        `Waste: × 1.08 = ${fmtNum((exampleCuIn * generalWaste) / CU_IN_PER_GAL, 2)} gal to order.`,
+        `Mix split: at 2:1 that is ${fmtNum(((exampleCuIn * generalWaste) / CU_IN_PER_GAL) * (2 / 3), 2)} gal of Part A and ${fmtNum(((exampleCuIn * generalWaste) / CU_IN_PER_GAL) / 3, 2)} gal of Part B; at 1:1, half of each.`,
+        "Depth check: 1.25 in is far beyond a tabletop epoxy's 1/8 – 1/4 in per coat, so this job needs a deep-pour or casting resin, poured in as many layers as its data sheet requires."
+      ]
+    },
+    {
+      title: "How deep can you pour epoxy in one layer?",
+      body: "The limit comes from heat: thicker pours cure hotter. Use the number on your product's data sheet; these are typical published limits.",
+      table: {
+        headers: ["Resin type", "Typical max per pour", "Published examples"],
+        rows: [
+          ["Tabletop / bar top (flood coat)", "1/8 in, some up to 1/4 in", "TotalBoat TableTop: 1/8 – 1/4 in per coat; Primaloc Bar & Table Top: 1/8 in layers"],
+          ["Deep pour / casting", "1/2 – 1 in", "MAS Deep Pour: 1/2 in for slabs and river tables, up to 1 in in small molds"],
+          ["Extra-slow deep pour", "2 – 3 in", "MAS Deep Pour X: 2 – 3 in per pour"]
+        ],
+        note: "Large pours run hotter than small ones, so a big river table may need thinner layers than a small mold of the same depth."
+      },
+      links: [
+        { label: "TotalBoat TableTop Epoxy technical data sheet", url: "https://www.totalboat.com/cdn/shop/files/totalboat-tabletop-epoxy-tds-instructions-03.08.22_57516faf-f569-46ce-8724-286d0272ed35.pdf" },
+        { label: "Primaloc: maximum thickness for a single layer", url: "https://primaloc.helpscoutdocs.com/article/789-maximum-thickness-depth" },
+        { label: "MAS Epoxies: Deep Pour", url: "https://masepoxies.com/product/deep-pour-epoxy" },
+        { label: "MAS Epoxies: Deep Pour X", url: "https://masepoxies.com/product/deep-pour-x-epoxy-resin" }
+      ],
+      cards: [
+        {
+          title: "Deep Pour Epoxy Calculator",
+          text: "Enter total depth and your resin's max layer depth to plan the number of pours.",
+          slug: "deep-pour-epoxy-calculator"
+        }
+      ]
+    }
+  ]
+};
+
 const firstBatchPages = createFirstBatchPages({ calculatorPage, guidePage });
 const multilingualWave1Pages = createMultilingualWave1Pages({ calculatorPage, infoPage });
 const languageMarketCards = createLanguageMarketCards();
@@ -483,66 +552,62 @@ const basePages = [
   }),
   calculatorPage({
     slug: "epoxy-calculator",
-    title: "Epoxy Resin Calculator: Volume in Gallons or Liters, Waste & Cost",
+    title: "Epoxy Resin Calculator: How Much Epoxy You Need (oz, gal, L)",
     h1: "Epoxy Resin Calculator",
     description:
-      "Free epoxy resin calculator: enter length, width, and depth in inches or cm to get resin volume in gallons or liters, a waste buffer, Part A/B split, and cost.",
+      "Free epoxy resin calculator: enter length, width, and depth in inches or cm to see how much epoxy you need in ounces, gallons, or liters, with waste and cost.",
     eyebrow: "Epoxy & Resin Calculator",
     intro:
-      "This epoxy resin calculator handles how much epoxy you need for common shapes and projects. Enter dimensions, and it converts raw geometry into an order-ready recommendation with waste, Part A / Part B split, and cost guidance.",
+      "Enter the length, width, and depth of the area you are filling or coating. The calculator turns it into mixed resin in ounces, gallons, or liters, adds a waste buffer, splits Part A and Part B, and estimates the cost.",
     primaryKeyword: "epoxy calculator",
-    supportingKeywords: ["epoxy resin calculator", "resin calculator", "epoxy amount calculator", "epoxy calculator metric", "epoxy calculator circle"],
+    supportingKeywords: ["epoxy resin calculator", "resin calculator", "epoxy volume calculator", "how much epoxy do i need"],
     calculatorType: "general",
+    ...epoxyCalculatorContent,
     bullets: [
-      "Best for regular shapes, simple slabs, basic fills, and fast sanity checks.",
-      "Shows raw volume, recommended order quantity, part A / Part B split, and budget.",
-      "Helps you decide when to stay here and when to move to a more specific calculator.",
-      "Covers rectangular and round inputs, including metric entries for people searching for a circle or resin volume calculator."
+      "Rectangles and circles, measured in inches or centimeters.",
+      "Mixed resin in fluid ounces, gallons, and liters, plus the Part A / Part B split.",
+      "A waste buffer and cost per gallon, so the order is not just raw geometry.",
+      "Layer guidance when the depth is too much for a single pour."
     ],
     howTo: [
-      "Pick the shape that most closely matches the cavity or pour area you are planning.",
-      "Enter finished dimensions, not rough board size or mold outside dimensions.",
-      "Use round mode for circular pours, round table estimates, and epoxy calculator circle searches.",
+      "Pick rectangle or round to match the area you are filling or coating.",
+      "Enter finished inside dimensions, not the rough board size or the outside of the mold.",
+      "Use round mode for circular tables, trays, and molds.",
       "Switch the unit toggle before entering values if your notes are in metric.",
-      "Increase the waste buffer if the project has porous edges, cup loss, runoff, or uncertain measurements."
+      "Raise the waste buffer for porous wood, many edges, runoff, or uncertain measurements."
     ],
     mistakes: [
-      "Using the general page for river tables, garage floors, or other jobs with their own constraints.",
-      "Treating raw geometric volume as the amount you should order.",
-      "Choosing a resin before checking whether the job needs casting, deep-pour, or coating behavior."
+      "Using the general calculator for river tables or garage floors, which have their own seepage and coverage rules.",
+      "Ordering the raw volume with no allowance for cup loss, edges, and soak-in.",
+      "Pouring a tabletop epoxy deeper than its 1/8 – 1/4 in per-coat limit."
     ],
     faq: [
       {
-        q: "When should I switch to a more specific calculator?",
-        a: "Use a scenario-specific page when the project introduces unique measurement or product constraints, such as river tables, garage floors, or countertop coatings."
+        q: "How many ounces of epoxy do I need per square foot?",
+        a: "At the common 1/8 in flood-coat thickness, about 10 fl oz per square foot (one gallon covers about 12.8 sq ft). At 1/16 in it is about 5 fl oz per square foot. Add the edges and 5–10% for waste."
       },
       {
-        q: "Is this the right page for a first pass estimate?",
-        a: "Yes. This page is intended to be the fastest broad estimate for standard shapes. Once you know the project is irregular or product-limited, switch to the matching scenario page."
+        q: "How do I split resin and hardener?",
+        a: "Divide the total by the ratio on your product. At 1:1, half is Part A and half is Part B. At 2:1, two thirds is Part A and one third is Part B. Check whether the ratio is by volume or by weight; weight ratios need a scale."
       },
       {
-        q: "Why does this page show more resin than the raw math?",
-        a: "Because a buying decision is not the same as a pure geometry problem. Waste, mixing loss, and small measuring errors are normal, so the recommendation is intentionally more conservative than the raw volume."
+        q: "When should I use a different calculator?",
+        a: "Use the river table calculator for live-edge channels with seepage, the coverage calculator for thin coats measured in square feet, and the floor cost calculator for garage and basement floors."
+      },
+      {
+        q: "Why does the calculator show more resin than the raw math?",
+        a: "Because some resin always stays in cups, on edges, and in the wood. The recommendation adds a waste buffer so you do not run short mid-pour."
       }
     ],
     related: [
-      "epoxy-calculator-metric",
-      "river-table-epoxy-calculator",
-      "deep-pour-epoxy-calculator",
-      "epoxy-coverage-calculator",
-      "epoxy-volume-calculator",
-      "epoxy-circle-calculator",
-      "epoxy-rectangle-calculator",
-      "round-epoxy-table-calculator",
-      "void-fill-epoxy-calculator",
-      "garage-floor-epoxy-calculator",
       "how-much-epoxy-do-i-need",
-      "epoxy-cost-calculator",
-      "epoxy-unit-converter",
+      "river-table-epoxy-calculator",
+      "epoxy-coverage-calculator",
+      "deep-pour-epoxy-calculator",
       "epoxy-mixing-ratio-guide",
-      "epoxy-kit-size-guide"
+      "epoxy-unit-converter"
     ],
-    note: "Use this page for regular shapes and fast planning. If the job is a river table, deep cast, or floor coating, switch to the scenario page before buying.",
+    note: "Use this calculator for regular shapes. For a river table, deep cast, or floor coating, switch to the matching calculator before buying.",
     compareLabel: "Raw math vs order-ready planning",
     lastmod: "2026-10-03"
   }),
@@ -610,52 +675,6 @@ const basePages = [
     lastmod: "2026-05-05"
   }),
   calculatorPage({
-    slug: "epoxy-volume-calculator",
-    title: "Epoxy Volume Calculator for Tables, Voids & Slabs",
-    h1: "Epoxy Volume Calculator",
-    description:
-      "Calculate epoxy volume for rectangular, round, and simple slab projects with unit conversion, waste guidance, and practical examples.",
-    eyebrow: "Volume Intent",
-    intro:
-      "This page focuses on pure volume math for regular shapes. It is the best choice when you know the cavity shape and simply want the conversion and waste planning handled cleanly.",
-    primaryKeyword: "epoxy volume calculator",
-    supportingKeywords: ["epoxy resin volume calculator", "calculate epoxy volume"],
-    calculatorType: "volume",
-    bullets: [
-      "Handles rectangular and round volume calculations.",
-      "Converts instantly into gallons, quarts, ounces, and liters.",
-      "Best for regular shapes that do not need advanced scenario logic."
-    ],
-    howTo: [
-      "Choose a shape first so you only see the inputs that matter.",
-      "Use the deepest planned fill point when the cavity is uniform.",
-      "If the shape is irregular, move to a scenario page instead."
-    ],
-    mistakes: [
-      "Using regular-shape formulas on irregular live-edge voids.",
-      "Not converting depth correctly when switching units.",
-      "Treating raw volume as the purchase quantity."
-    ],
-    faq: [
-      {
-        q: "What is the difference between the volume and coverage calculators?",
-        a: "The volume calculator is for cavities and poured depth. The coverage calculator is for surface area and thin coats."
-      }
-    ],
-    related: [
-      "epoxy-rectangle-calculator",
-      "resin-mold-calculator",
-      "sphere-resin-calculator",
-      "cylinder-resin-calculator",
-      "cube-resin-calculator",
-      "round-epoxy-table-calculator",
-      "void-fill-epoxy-calculator",
-      "epoxy-unit-converter",
-      "epoxy-calculator"
-    ],
-    compareLabel: "Raw volume vs recommended amount"
-  }),
-  calculatorPage({
     slug: "river-table-epoxy-calculator",
     title: "River Table Epoxy Calculator: Resin Volume, Waste & Cost",
     h1: "River Table Epoxy Calculator",
@@ -663,7 +682,7 @@ const basePages = [
       "Estimate epoxy for river tables with quick mode, segment mode, seepage, seal-coat buffer, cost planning, and deep-pour recommendations.",
     eyebrow: "High-Value Scenario",
     intro:
-      "Whether you call it an epoxy calculator for river table projects, a live edge epoxy calculator, or simply a river table resin calculator — this page has two modes: a fast average-width estimate and a segment mode for irregular channels, with seepage, seal-coat, and cost planning built in.",
+      "Estimate resin for a live-edge river table in one of two modes: a fast average-width estimate, or segment mode for irregular channels. Seepage, the seal coat, and cost are built in.",
     primaryKeyword: "river table epoxy calculator",
     supportingKeywords: ["epoxy calculator for river table", "live edge epoxy calculator", "river table resin calculator"],
     calculatorType: "river",
@@ -1075,7 +1094,7 @@ const basePages = [
   }),
   guidePage({
     slug: "how-much-epoxy-do-i-need",
-    title: "How Much Epoxy Do I Need? Formula, Chart & Calculator",
+    title: "How Much Epoxy Do I Need? Formula, Chart & Examples",
     h1: "How Much Epoxy Do I Need?",
     description:
       "Learn how to calculate epoxy needs by volume, coverage, thickness, and waste, then use the right calculator for your project.",
@@ -1096,7 +1115,7 @@ const basePages = [
         title: "Choose the right planning model",
         points: [
           "Use the coverage calculator for top coats and thin finish applications.",
-          "Use the volume calculator for regular cavities and slabs.",
+          "Use the epoxy resin calculator for regular cavities, slabs, and molds.",
           "Use the river table and deep pour pages when project geometry or product type introduces more risk."
         ]
       },
@@ -1110,10 +1129,17 @@ const basePages = [
       },
       {
         title: "Fast route by project type",
+        cards: [
+          {
+            title: "Epoxy Resin Calculator",
+            text: "Enter length, width, and depth to get mixed resin in ounces, gallons, or liters, with waste and the Part A / Part B split.",
+            slug: "epoxy-calculator"
+          }
+        ],
         points: [
           "Use the general calculator for rectangles, circles, and quick metric or imperial checks.",
           "Use the cost calculator when the quantity is known and the real question is how many kits you can afford.",
-          "Use the coverage chart when the search starts as a square-foot question rather than a cavity-volume question."
+          "Use the coverage chart when you know the square footage and coat thickness rather than a cavity volume."
         ]
       }
     ],
@@ -1126,7 +1152,7 @@ const basePages = [
       "epoxy-cost-calculator",
       "epoxy-coverage-chart"
     ],
-    lastmod: "2026-05-05"
+    lastmod: "2026-10-03"
   }),
   guidePage({
     slug: "how-much-epoxy-do-i-need-for-a-river-table",
@@ -1881,6 +1907,7 @@ const basePages = [
 // 按 GSC 数据合并的重复意图页：旧地址 301 到保留页，站内所有链接在构建时改写到新地址。
 const englishRedirects = {
   "resin-calculator": "epoxy-calculator",
+  "epoxy-volume-calculator": "epoxy-calculator",
   "epoxy-amount-calculator": "epoxy-calculator",
   "epoxy-square-foot-calculator": "epoxy-coverage-calculator",
   "epoxy-garage-floor-cost-calculator": "garage-floor-epoxy-calculator",

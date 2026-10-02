@@ -616,7 +616,7 @@ const intentGroups = [
   },
   {
     key: "volume",
-    enSlug: "epoxy-volume-calculator",
+    enSlug: null,
     byLocale: {
       de: "de/epoxidharz-volumen-rechner",
       fr: "fr/calculateur-volume-resine-epoxy",

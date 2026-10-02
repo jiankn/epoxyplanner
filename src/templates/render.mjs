@@ -426,7 +426,7 @@ function renderRelated(page, pageMap) {
     <section class="section">
       <div class="section-heading">
         <p class="eyebrow">${escapeHtml(uiText(page, "relatedEyebrow", "Related Pages"))}</p>
-        <h2>${escapeHtml(uiText(page, "relatedHeading", "Keep moving through the same intent cluster"))}</h2>
+        <h2>${escapeHtml(uiText(page, "relatedHeading", "Related calculators and guides"))}</h2>
       </div>
       <div class="card-grid">
         ${relatedPages
@@ -786,7 +786,7 @@ function renderPageBody(page, context) {
       renderAnswerBlock(page),
       renderCalculator(page),
       page.sections ? renderInfoSections(page) : "",
-      renderBullets(uiText(page, "whyTitle", "Why this page exists"), page.bullets),
+      renderBullets(uiText(page, "whyTitle", "What this calculator covers"), page.bullets),
       renderBullets(uiText(page, "howToTitle", "How to measure or set the inputs"), page.howTo),
       renderBullets(uiText(page, "mistakesTitle", "Common mistakes that cost money"), page.mistakes),
       renderBullets(uiText(page, "checklistTitle", "Project checklist before you buy"), page.checklist),

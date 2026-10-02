@@ -2,6 +2,7 @@ import { createFirstBatchPages } from "./seo-batch-2026-05.mjs";
 import {
   applyMultilingualAlternates,
   createLanguageMarketCards,
+  createMultilingualRedirects,
   createMultilingualWave1Pages
 } from "./multilingual-wave-1.mjs";
 
@@ -16,7 +17,6 @@ export const site = {
     "A high-trust epoxy calculator and resin planning site for river tables, deep pours, coatings, void fills, conversions, and project cost planning.",
   nav: [
     { label: "Epoxy Calculator", slug: "epoxy-calculator" },
-    { label: "Resin", slug: "resin-calculator" },
     { label: "River Table", slug: "river-table-epoxy-calculator" },
     { label: "Deep Pour", slug: "deep-pour-epoxy-calculator" },
     { label: "Coverage", slug: "epoxy-coverage-calculator" },
@@ -211,10 +211,10 @@ const languageMarketCards = createLanguageMarketCards();
 const basePages = [
   infoPage({
     slug: "",
-    title: "Epoxy Calculator for River Tables, Deep Pours & Coatings",
-    h1: "Epoxy Calculator and Resin Project Planner",
+    title: "Resin Project Planner for River Tables, Deep Pours & Floors",
+    h1: "Plan Your Epoxy Resin Project",
     description:
-      "Estimate epoxy resin volume, coverage, waste, cost, and project-specific needs for river tables, deep pours, coatings, void fills, and floor jobs.",
+      "Pick the calculator that matches your epoxy job (river table, deep pour, tabletop coat, garage floor, mold, or void fill) and get volume, waste, kit size, and cost.",
     eyebrow: "Precision Resin Planning",
     intro:
       "Calculate exactly how much epoxy resin you need — with waste, seepage, layer count, Part A / Part B split, cost, and product-fit guidance built in.",
@@ -222,8 +222,7 @@ const basePages = [
       { label: "River Table", slug: "river-table-epoxy-calculator", icon: "🪵" },
       { label: "Deep Pour", slug: "deep-pour-epoxy-calculator", icon: "🧊" },
       { label: "Coverage & Coatings", slug: "epoxy-coverage-calculator", icon: "🖌️" },
-      { label: "General Calculator", slug: "epoxy-calculator", icon: "📐" },
-      { label: "Resin Calculator", slug: "resin-calculator", icon: "🧪" },
+      { label: "Epoxy Resin Calculator", slug: "epoxy-calculator", icon: "📐" },
       { label: "Cost Planner", slug: "epoxy-cost-calculator", icon: "💵" },
       { label: "Void Fill", slug: "void-fill-epoxy-calculator", icon: "🧩" },
       { label: "Mold Calculator", slug: "resin-mold-calculator", icon: "▣" }
@@ -235,8 +234,8 @@ const basePages = [
           "The fastest way to get a trustworthy estimate is to start from the actual project type. River tables, deep pours, coatings, floor jobs, and void fills do not share the same measurement logic or product constraints.",
         cards: [
           {
-            title: "Epoxy Calculator",
-            text: "Best first stop for regular shapes, quick planning, and broad resin estimates.",
+            title: "Epoxy Resin Calculator",
+            text: "Best first stop for regular shapes, quick planning, and broad resin estimates in gallons or liters.",
             slug: "epoxy-calculator",
             primary: true
           },
@@ -271,27 +270,9 @@ const basePages = [
             primary: true
           },
           {
-            title: "Garage Floor Calculator",
-            text: "Plan floor coatings from square footage, coats, kit coverage, and waste.",
+            title: "Garage Floor Epoxy Calculator",
+            text: "Plan floor coatings from square footage, coats, kit coverage, waste, and material cost.",
             slug: "garage-floor-epoxy-calculator",
-            primary: true
-          },
-          {
-            title: "Resin Calculator",
-            text: "Use the broader resin quantity page before choosing a specific scenario.",
-            slug: "resin-calculator",
-            primary: true
-          },
-          {
-            title: "Square Foot Calculator",
-            text: "Estimate coating material from area, thickness, and edge runoff.",
-            slug: "epoxy-square-foot-calculator",
-            primary: true
-          },
-          {
-            title: "Garage Floor Cost",
-            text: "Turn square footage and kit coverage into a material budget.",
-            slug: "epoxy-garage-floor-cost-calculator",
             primary: true
           },
           {
@@ -329,7 +310,7 @@ const basePages = [
           { title: "How to Measure a River Table", text: "A practical segment method for irregular channels.", slug: "how-to-measure-a-river-table-for-epoxy" },
           { title: "Deep Pour vs Table Top Epoxy", text: "Know when the resin class is the real bottleneck.", slug: "deep-pour-vs-table-top-epoxy" },
           { title: "Waste Factor Guide", text: "Decide how much extra resin to buy and why.", slug: "epoxy-waste-factor-guide" },
-          { title: "Coverage Chart", text: "Quick square-foot reference before using the detailed calculator.", slug: "epoxy-coverage-chart" },
+          { title: "Epoxy Thickness & Coverage Chart", text: "Typical thickness by job and square feet per gallon at each thickness.", slug: "epoxy-coverage-chart" },
           { title: "Mixing Ratio Guide", text: "Plan Part A / Part B and batch size after the quantity is known.", slug: "epoxy-mixing-ratio-guide" },
           { title: "How Much Epoxy Per Square Foot?", text: "Answer coverage by thickness before choosing a kit.", slug: "how-much-epoxy-per-square-foot" },
           { title: "One Gallon Coverage", text: "Understand why a gallon covers different areas at different thicknesses.", slug: "how-much-does-a-gallon-of-epoxy-cover" },
@@ -353,15 +334,15 @@ const basePages = [
   }),
   calculatorPage({
     slug: "epoxy-calculator",
-    title: "Epoxy Calculator: Resin Volume, Waste, Cost & Coverage",
-    h1: "Epoxy Calculator",
+    title: "Epoxy Resin Calculator: Volume in Gallons or Liters, Waste & Cost",
+    h1: "Epoxy Resin Calculator",
     description:
-      "Use this epoxy calculator to estimate resin volume, waste, part A/B split, and project cost for common epoxy jobs and regular shapes.",
-    eyebrow: "Head-Term Hub",
+      "Free epoxy resin calculator: enter length, width, and depth in inches or cm to get resin volume in gallons or liters, a waste buffer, Part A/B split, and cost.",
+    eyebrow: "Epoxy & Resin Calculator",
     intro:
       "This epoxy resin calculator handles how much epoxy you need for common shapes and projects. Enter dimensions, and it converts raw geometry into an order-ready recommendation with waste, Part A / Part B split, and cost guidance.",
     primaryKeyword: "epoxy calculator",
-    supportingKeywords: ["epoxy resin calculator", "how much epoxy do i need", "epoxy calculator metric", "epoxy calculator circle"],
+    supportingKeywords: ["epoxy resin calculator", "resin calculator", "epoxy amount calculator", "epoxy calculator metric", "epoxy calculator circle"],
     calculatorType: "general",
     bullets: [
       "Best for regular shapes, simple slabs, basic fills, and fast sanity checks.",
@@ -396,8 +377,6 @@ const basePages = [
       }
     ],
     related: [
-      "resin-calculator",
-      "epoxy-amount-calculator",
       "epoxy-calculator-metric",
       "river-table-epoxy-calculator",
       "deep-pour-epoxy-calculator",
@@ -416,19 +395,19 @@ const basePages = [
     ],
     note: "Use this page for regular shapes and fast planning. If the job is a river table, deep cast, or floor coating, switch to the scenario page before buying.",
     compareLabel: "Raw math vs order-ready planning",
-    lastmod: "2026-05-05"
+    lastmod: "2026-10-03"
   }),
   calculatorPage({
     slug: "epoxy-coverage-calculator",
-    title: "Epoxy Coverage Calculator: Surface Area, Thickness & Resin",
+    title: "Epoxy Coverage Calculator: Square Feet, Thickness & Gallons",
     h1: "Epoxy Coverage Calculator",
     description:
-      "Estimate epoxy coverage by surface area and target coat thickness, with runoff, edge soak-in, waste, and resin-class guidance for finish coats and surface pours.",
+      "Enter square feet (or m²) and coat thickness to see how many gallons of epoxy you need, with edge runoff, waste, and cost for tabletops, bar tops, and countertops.",
     eyebrow: "Coverage Intent",
     intro:
       "Use this page when the real question is coverage, not cavity volume. It is built for top coats, flood coats, tabletops, countertops, and other thin resin layers where surface area, coat thickness, runoff, and edge behavior matter more than block volume math.",
     primaryKeyword: "epoxy coverage calculator",
-    supportingKeywords: ["epoxy resin coverage calculator", "epoxy coverage estimator", "how much epoxy do i need per square foot", "epoxy resin coverage"],
+    supportingKeywords: ["epoxy resin coverage calculator", "epoxy square foot calculator", "epoxy coverage estimator", "epoxy resin coverage"],
     calculatorType: "coverage",
     bullets: [
       "Best for tabletops, countertops, bar tops, and other surface-finish jobs.",
@@ -462,7 +441,6 @@ const basePages = [
       }
     ],
     related: [
-      "epoxy-square-foot-calculator",
       "epoxy-flood-coat-calculator",
       "epoxy-seal-coat-calculator",
       "how-much-epoxy-per-square-foot",
@@ -792,15 +770,15 @@ const basePages = [
   }),
   calculatorPage({
     slug: "garage-floor-epoxy-calculator",
-    title: "Garage Floor Epoxy Calculator: Coverage & Kits",
-    h1: "Garage Floor Epoxy Calculator",
+    title: "Garage Floor Epoxy Calculator: Gallons, Kits & Cost Estimate",
+    h1: "Garage Floor Epoxy Calculator and Cost Estimator",
     description:
-      "Estimate epoxy coverage, kit size, waste, and floor area for garage floor coatings with practical project planning guidance.",
+      "Estimate garage floor epoxy: enter floor size, coats, and kit coverage to get gallons, kit count, and material cost for a one-, two-, or three-car garage.",
     eyebrow: "Floor Coating Calculator",
     intro:
-      "Garage floors behave differently from woodworking pours. This page focuses on floor area, coats, and kit sizing rather than cavity volume or live-edge seepage.",
+      "Garage floors behave differently from woodworking pours. This page turns floor area, number of coats, and the kit's coverage rate into gallons to buy and a material budget, so you can compare kits before you order.",
     primaryKeyword: "garage floor epoxy calculator",
-    supportingKeywords: ["epoxy floor calculator", "floor epoxy calculator", "epoxy flooring calculator", "garage epoxy coverage calculator"],
+    supportingKeywords: ["epoxy garage floor cost calculator", "epoxy flooring cost calculator", "epoxy floor calculator", "garage epoxy coverage calculator"],
     calculatorType: "garage-floor",
     bullets: [
       "Floor-area-first coverage planning.",
@@ -821,15 +799,21 @@ const basePages = [
     ],
     faq: [
       {
+        q: "How much does the epoxy for a garage floor cost?",
+        a: "Material cost is gallons needed times price per gallon. Gallons are floor area times coats divided by the kit's coverage per gallon. A 20 x 22 ft two-car garage (440 sq ft) with 2 coats at 160 sq ft per gallon needs 5.5 gallons before waste, so roughly $340 at $62 per gallon. Professional installation, crack repair, and flake or topcoat systems cost extra."
+      },
+      {
+        q: "How many coats of epoxy does a garage floor need?",
+        a: "Most DIY garage floor kits are built around two coats: a base coat and a second coat or clear topcoat. Enter the number your kit specifies, because each coat uses the full coverage rate again."
+      },
+      {
         q: "Why is the garage floor page separate from the coverage page?",
         a: "The coverage page handles general coatings, but garage floors introduce a different product context, area assumptions, and commercial buying logic."
       }
     ],
     related: [
       "epoxy-floor-coverage-calculator",
-      "epoxy-garage-floor-cost-calculator",
       "two-car-garage-epoxy-calculator",
-      "epoxy-garage-floor-cost",
       "epoxy-cost-per-square-foot",
       "epoxy-coverage-calculator",
       "epoxy-cost-calculator",
@@ -838,7 +822,7 @@ const basePages = [
       "epoxy-waste-factor-guide"
     ],
     compareLabel: "Baseline coat vs kit buffer",
-    lastmod: "2026-05-05"
+    lastmod: "2026-10-03"
   }),
   calculatorPage({
     slug: "void-fill-epoxy-calculator",
@@ -1165,24 +1149,58 @@ const basePages = [
   }),
   guidePage({
     slug: "epoxy-coverage-chart",
-    title: "Epoxy Coverage Chart: Sq Ft, Thickness & Volume",
-    h1: "Epoxy Coverage Chart",
+    title: "Epoxy Thickness & Coverage Chart: Mils, Inches, Sq Ft per Gallon",
+    h1: "Epoxy Thickness and Coverage Chart",
     description:
-      "Use this epoxy coverage chart to estimate resin by square footage, thickness, and volume, then move to a detailed calculator.",
-    eyebrow: "Reference Guide",
+      "How thick is epoxy? Typical thickness for garage floors (10-20 mils), tabletops (1/8 inch), and deep pours, plus square feet per gallon at every thickness.",
+    eyebrow: "Reference Chart",
     intro:
-      "Coverage charts are useful when you need a fast planning reference. The chart gets you close quickly, and the coverage calculator gets you from quick estimate to purchase-ready number.",
-    primaryKeyword: "epoxy coverage chart",
-    supportingKeywords: ["epoxy coverage table", "epoxy coverage reference", "how much epoxy do i need per square foot", "how much does a gallon of epoxy cover"],
+      "Thickness is the number that decides how far a gallon of epoxy goes. Find the typical thickness for your job first, then read across to see how many square feet one gallon covers at that thickness.",
+    primaryKeyword: "epoxy thickness",
+    supportingKeywords: ["epoxy coating thickness", "how thick is epoxy flooring", "epoxy coverage chart", "epoxy coverage per gallon"],
     answer:
-      "A coverage chart is the fastest way to estimate resin for standard finish thicknesses across known surface areas. Use it as a starting point, then move to the detailed calculator for waste and edge planning.",
+      "Epoxy thickness depends on the job: garage floor coatings go on at about 10 to 20 mils per coat (0.25 to 0.5 mm), a tabletop flood coat self-levels at about 1/8 inch (3 mm) per pour, and deep-pour casting resin goes in at 1/2 inch to 2 inches per layer, depending on the product. Coverage drops as thickness rises: one gallon covers about 160 sq ft at 10 mils but only about 12.8 sq ft at 1/8 inch.",
     takeaways: [
-      "Charts are good for quick checks but not a replacement for project-specific planning.",
-      "Coat thickness changes the number dramatically.",
-      "The more edges and runoff you expect, the less a simple chart is enough.",
-      "One gallon covers very different square footage at 1/16 inch, 1/8 inch, and 1/4 inch."
+      "1 mil is 0.001 inch (0.0254 mm). Floor coatings are measured in mils, tabletop and casting resin in fractions of an inch.",
+      "One US gallon is 231 cubic inches, so coverage in sq ft = 231 / (thickness in inches x 144).",
+      "Doubling the thickness halves the square feet one gallon covers.",
+      "Chart values are raw coverage. Add 10-15% for runoff, edges, and mixing loss."
     ],
     sections: [
+      {
+        title: "How thick is epoxy? Typical thickness by application",
+        body:
+          "These are common planning ranges. The product data sheet always wins, especially for floor coatings and deep-pour resins with a stated maximum pour depth.",
+        table: {
+          headers: ["Application", "Typical thickness per coat", "Metric", "Notes"],
+          rows: [
+            ["Seal coat on wood", "Thin brushed coat, 1/32 in or less", "Under 0.8 mm", "Seals pores and edges so the flood coat does not bubble or drain."],
+            ["Garage floor coating (100% solids)", "10-20 mils", "0.25-0.5 mm", "Usually 2 coats. Water-based kits build less film per coat."],
+            ["Tabletop or bar top flood coat", "About 1/8 in", "About 3 mm", "Most tabletop epoxies self-level near 1/8 in per pour."],
+            ["Countertop coating", "1/16-1/8 in per coat", "1.5-3 mm", "Budget extra for edges, drips, and a second coat."],
+            ["Deep pour or river table", "1/2-2 in per pour", "13-50 mm", "Maximum depth per layer is product-specific."]
+          ]
+        }
+      },
+      {
+        title: "Epoxy coverage chart: square feet per gallon by thickness",
+        body:
+          "Raw coverage for one US gallon of 100% solids epoxy with no waste. For metric, 1 liter covers 1 m² at 1 mm.",
+        table: {
+          headers: ["Thickness", "Inches", "Millimeters", "Sq ft per gallon"],
+          rows: [
+            ["5 mils", "0.005", "0.13", "321"],
+            ["10 mils", "0.010", "0.25", "160"],
+            ["20 mils", "0.020", "0.51", "80"],
+            ["1/32 inch", "0.031", "0.79", "51"],
+            ["1/16 inch", "0.063", "1.59", "25.7"],
+            ["1/8 inch", "0.125", "3.18", "12.8"],
+            ["1/4 inch", "0.250", "6.35", "6.4"],
+            ["1/2 inch", "0.500", "12.7", "3.2"],
+            ["1 inch", "1.000", "25.4", "1.6"]
+          ]
+        }
+      },
       {
         title: "How to use a coverage chart well",
         points: [
@@ -1203,12 +1221,15 @@ const basePages = [
     faq: [],
     related: [
       "epoxy-coverage-calculator",
+      "how-much-epoxy-per-square-foot",
+      "how-much-does-a-gallon-of-epoxy-cover",
       "table-top-epoxy-calculator",
       "countertop-epoxy-calculator",
       "garage-floor-epoxy-calculator",
+      "maximum-epoxy-pour-depth",
       "epoxy-cost-calculator"
     ],
-    lastmod: "2026-05-05"
+    lastmod: "2026-10-03"
   }),
   guidePage({
     slug: "epoxy-mixing-ratio-guide",
@@ -1687,4 +1708,50 @@ const basePages = [
   ...multilingualWave1Pages
 ];
 
-export const pages = applyMultilingualAlternates(basePages);
+// 按 GSC 数据合并的重复意图页：旧地址 301 到保留页，站内所有链接在构建时改写到新地址。
+const englishRedirects = {
+  "resin-calculator": "epoxy-calculator",
+  "epoxy-amount-calculator": "epoxy-calculator",
+  "epoxy-square-foot-calculator": "epoxy-coverage-calculator",
+  "epoxy-garage-floor-cost-calculator": "garage-floor-epoxy-calculator",
+  "epoxy-garage-floor-cost": "garage-floor-epoxy-calculator"
+};
+
+export const redirects = { ...englishRedirects, ...createMultilingualRedirects() };
+
+function resolveSlug(slug) {
+  return Object.hasOwn(redirects, slug) ? redirects[slug] : slug;
+}
+
+function uniqueBySlug(items) {
+  const seen = new Set();
+  return items.filter((item) => {
+    if (!item.slug) return true;
+    if (seen.has(item.slug)) return false;
+    seen.add(item.slug);
+    return true;
+  });
+}
+
+function rewriteLinks(page) {
+  return {
+    ...page,
+    related: [...new Set((page.related || []).map(resolveSlug))].filter((slug) => slug !== page.slug),
+    heroActions: page.heroActions && uniqueBySlug(page.heroActions.map((action) => ({ ...action, slug: resolveSlug(action.slug) }))),
+    sections:
+      page.sections &&
+      page.sections.map((section) =>
+        section.cards
+          ? { ...section, cards: uniqueBySlug(section.cards.map((card) => (card.slug ? { ...card, slug: resolveSlug(card.slug) } : card))) }
+          : section
+      )
+  };
+}
+
+const livePages = basePages.filter((page) => !Object.hasOwn(redirects, page.slug)).map(rewriteLinks);
+const liveSlugs = new Set(livePages.map((page) => page.slug));
+for (const [from, to] of Object.entries(redirects)) {
+  if (!liveSlugs.has(to)) throw new Error(`Redirect target missing: /${from}/ -> /${to}/`);
+}
+
+export const pages = applyMultilingualAlternates(livePages);

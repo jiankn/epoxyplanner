@@ -1701,3 +1701,62 @@ body[data-cookie-modal="open"] {
     transition: none !important;
   }
 }
+
+/* 数据表（厚度表、用量表） */
+.data-table-wrap {
+  overflow-x: auto;
+  margin-top: 1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface-strong);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.data-table th,
+.data-table td {
+  padding: 0.7rem 0.9rem;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+
+.data-table thead th {
+  background: var(--accent-soft);
+  color: var(--text);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.data-table tbody th {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.data-table td {
+  color: var(--muted);
+}
+
+.data-table tbody tr:last-child th,
+.data-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.table-note {
+  margin-top: 0.6rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.mini-card h3 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.mini-card h3 a:hover {
+  text-decoration: underline;
+}

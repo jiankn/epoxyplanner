@@ -52,12 +52,16 @@ function urlForPath(site, slug = "") {
   return slug ? `${site.origin}/${slug}/` : `${site.origin}/`;
 }
 
-function buildFunctionRoutes({ pages }) {
+function buildFunctionRoutes({ pages, redirects }) {
   const routes = pages
     .map((page) => (page.slug ? `/${page.slug}/` : "/"))
     .sort((a, b) => a.localeCompare(b));
   const routeList = routes.map((route) => `  ${JSON.stringify(route)}`).join(",\n");
-  const contents = `export const HTML_ROUTES = new Set([\n${routeList}\n]);\n`;
+  const redirectList = Object.entries(redirects)
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([from, to]) => `  [${JSON.stringify(`/${from}/`)}, ${JSON.stringify(`/${to}/`)}]`)
+    .join(",\n");
+  const contents = `export const HTML_ROUTES = new Set([\n${routeList}\n]);\n\nexport const REDIRECTS = new Map([\n${redirectList}\n]);\n`;
   writeFile(path.join(projectRoot, "functions", "_generated-routes.js"), contents);
 }
 
@@ -101,14 +105,14 @@ function buildAssets() {
 async function main() {
   loadDotEnv(path.join(projectRoot, ".env"));
 
-  const [{ site, pages }, { renderPage, renderNotFound, renderRobots, renderSitemapIndex, renderSitemapSection }] = await Promise.all([
+  const [{ site, pages, redirects }, { renderPage, renderNotFound, renderRobots, renderSitemapIndex, renderSitemapSection }] = await Promise.all([
     import("../src/data/site.mjs"),
     import("../src/templates/render.mjs")
   ]);
 
   fs.rmSync(distRoot, { recursive: true, force: true });
   ensureDir(distRoot);
-  buildFunctionRoutes({ pages });
+  buildFunctionRoutes({ pages, redirects });
   buildAssets();
   buildPages({ site, pages, renderPage });
   buildSitemaps({ site, pages, renderSitemapIndex, renderSitemapSection });
@@ -117,9 +121,13 @@ async function main() {
   writeFile(path.join(distRoot, ".nojekyll"), "");
 
   // Path-level fallback for static hosts. Cloudflare host redirects are handled by functions/_middleware.js.
+  const pageRedirects = Object.entries(redirects)
+    .flatMap(([from, to]) => [`/${from}/ /${to}/ 301`, `/${from} /${to}/ 301`])
+    .join("\n");
   const redirectsContent = `http://epoxyplanner.com/* https://epoxyplanner.com/:splat 301
 http://www.epoxyplanner.com/* https://epoxyplanner.com/:splat 301
 https://www.epoxyplanner.com/* https://epoxyplanner.com/:splat 301
+${pageRedirects}
 `;
   writeFile(path.join(distRoot, "_redirects"), redirectsContent);
   console.log(`Built ${pages.length} pages into ${distRoot}`);

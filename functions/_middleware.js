@@ -1,4 +1,4 @@
-import { HTML_ROUTES } from "./_generated-routes.js";
+import { HTML_ROUTES, REDIRECTS } from "./_generated-routes.js";
 
 const CANONICAL_HOST = "epoxyplanner.com";
 
@@ -59,6 +59,13 @@ export async function onRequest(context) {
 
   if (url.protocol !== "https:" && url.hostname === CANONICAL_HOST) {
     url.protocol = "https:";
+    return Response.redirect(url.toString(), 301);
+  }
+
+  // 已合并页面的旧地址：301 到保留页
+  const redirectTarget = REDIRECTS.get(url.pathname.endsWith("/") ? url.pathname : `${url.pathname}/`);
+  if (redirectTarget) {
+    url.pathname = redirectTarget;
     return Response.redirect(url.toString(), 301);
   }
 

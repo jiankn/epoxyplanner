@@ -1,4 +1,4 @@
-const waveLastmod = "2026-05-05";
+const waveLastmod = "2026-10-03";
 
 export const wave1LocaleOrder = ["de", "fr", "pt-BR", "es", "it"];
 
@@ -14,17 +14,16 @@ const locales = {
     defaultUnit: "metric",
     brandTagline: "Harzmenge, Kosten und Beschichtung planen",
     nav: [
-      { label: "Rechner", slug: "de/epoxidharz-rechner" },
-      { label: "Menge", slug: "de/wie-viel-epoxidharz-brauche-ich" },
+      { label: "Rechner", slug: "de" },
       { label: "Verbrauch", slug: "de/epoxidharz-verbrauch-pro-m2" },
       { label: "Kosten", slug: "de/epoxidharz-kosten-pro-m2" },
-      { label: "Garagenboden", slug: "de/garagenboden-epoxidharz-kosten" }
+      { label: "Epoxidboden", slug: "de/epoxidboden-rechner" }
     ],
     footerNav: [
       { label: "Deutsch", slug: "de" },
-      { label: "Rechner", slug: "de/epoxidharz-rechner" },
+      { label: "Verbrauch pro m²", slug: "de/epoxidharz-verbrauch-pro-m2" },
       { label: "Kosten", slug: "de/epoxidharz-kosten-pro-m2" },
-      { label: "Garagenboden", slug: "de/garagenboden-epoxidharz-kosten" },
+      { label: "Epoxidboden", slug: "de/epoxidboden-rechner" },
       { label: "Methodik", slug: "methodology" }
     ],
     ui: {
@@ -38,7 +37,7 @@ const locales = {
       faqHeading: "Fragen vor dem Kauf von Epoxidharz",
       relatedEyebrow: "Verwandte Seiten",
       relatedHeading: "Weiter im gleichen Suchthema",
-      whyTitle: "Warum diese Seite existiert",
+      whyTitle: "Was der Rechner berücksichtigt",
       howToTitle: "So misst du die Eingaben",
       mistakesTitle: "Häufige Fehler, die Material kosten",
       checklistTitle: "Checkliste vor dem Kauf",
@@ -113,12 +112,12 @@ const locales = {
       "Mischverhältnis und maximale Schichtdicke im Datenblatt prüfen."
     ],
     hub: {
-      title: "Epoxidharz Rechner, Verbrauch und Kosten",
-      h1: "Epoxidharz Rechner für Menge, m² und Garagenboden",
+      title: "Epoxidharz Rechner: Menge in Litern berechnen",
+      h1: "Epoxidharz Rechner für Menge, Volumen und Kosten",
       description:
-        "Deutschsprachige Epoxidharz-Rechner für Menge, Verbrauch pro m², Kosten und Garagenboden-Beschichtung mit metrischen Einheiten.",
+        "Kostenloser Epoxidharz-Rechner: Maße eingeben und sehen, wie viele Liter Harz du inklusive Reserve kaufen musst. Faustregel: 1 Liter pro m² und mm Schichtdicke.",
       intro:
-        "Starte mit dem Rechner, der zu deiner Aufgabe passt: Volumen, Verbrauch pro m², Kosten oder Garagenboden. Die Seiten verwenden metrische Maße, Liter und Euro als Planungslogik."
+        "Gib Länge, Breite und Tiefe ein: Der Rechner zeigt Rohvolumen, Kaufmenge mit Reserve, die Aufteilung in Harz und Härter und die ungefähren Kosten. Für Verbrauch pro m², Kosten pro m² und Epoxidböden gibt es eigene Rechner weiter unten."
     }
   },
   fr: {
@@ -132,17 +131,16 @@ const locales = {
     defaultUnit: "metric",
     brandTagline: "Calculer la résine, le volume et le prix",
     nav: [
-      { label: "Calculateur", slug: "fr/calculateur-resine-epoxy" },
-      { label: "Quantité", slug: "fr/combien-de-resine-epoxy-faut-il" },
+      { label: "Calculateur", slug: "fr" },
       { label: "m²", slug: "fr/quantite-resine-epoxy-par-m2" },
       { label: "Prix", slug: "fr/prix-resine-epoxy-m2" },
-      { label: "Garage", slug: "fr/prix-sol-garage-epoxy" }
+      { label: "Sol époxy", slug: "fr/calculateur-sol-epoxy" }
     ],
     footerNav: [
       { label: "Français", slug: "fr" },
-      { label: "Calculateur", slug: "fr/calculateur-resine-epoxy" },
+      { label: "Quantité par m²", slug: "fr/quantite-resine-epoxy-par-m2" },
       { label: "Prix au m²", slug: "fr/prix-resine-epoxy-m2" },
-      { label: "Sol garage", slug: "fr/prix-sol-garage-epoxy" },
+      { label: "Sol époxy", slug: "fr/calculateur-sol-epoxy" },
       { label: "Méthode", slug: "methodology" }
     ],
     ui: {
@@ -156,7 +154,7 @@ const locales = {
       faqHeading: "Questions avant d’acheter la résine",
       relatedEyebrow: "Pages liées",
       relatedHeading: "Continuer dans la même intention",
-      whyTitle: "Pourquoi cette page existe",
+      whyTitle: "Ce que le calculateur prend en compte",
       howToTitle: "Comment mesurer les valeurs",
       mistakesTitle: "Erreurs fréquentes qui faussent la quantité",
       checklistTitle: "Vérifications avant achat",
@@ -231,12 +229,12 @@ const locales = {
       "Vérifier ratio, profondeur maximale et conditions de cure."
     ],
     hub: {
-      title: "Calculateur de résine époxy, quantité et prix au m²",
-      h1: "Calculateur de résine époxy pour volume, m² et garage",
+      title: "Calculateur de résine époxy : quelle quantité acheter en litres",
+      h1: "Calculateur de résine époxy : quantité, volume et prix",
       description:
-        "Calculateurs français pour estimer la quantité de résine époxy, le volume, le prix au m² et un sol de garage en unités métriques.",
+        "Calculateur gratuit : entrez les dimensions et obtenez les litres de résine époxy à acheter, marge comprise. Repère rapide : 1 litre par m² et par mm d’épaisseur.",
       intro:
-        "Choisissez le calculateur selon le projet réel : volume, quantité au m², prix ou sol de garage. Les pages utilisent les centimètres, mètres carrés, litres et euros."
+        "Saisissez longueur, largeur et profondeur : le calculateur affiche le volume brut, la quantité à acheter avec marge, la répartition résine/durcisseur et le coût estimé. Pour la quantité au m², le prix au m² ou un sol époxy, utilisez les calculateurs dédiés plus bas."
     }
   },
   "pt-BR": {
@@ -250,17 +248,17 @@ const locales = {
     defaultUnit: "metric",
     brandTagline: "Calcule resina, piso epóxi e custo",
     nav: [
-      { label: "Calculadora", slug: "pt-br/calculadora-resina-epoxi" },
+      { label: "Calculadora", slug: "pt-br" },
       { label: "Quantidade", slug: "pt-br/quanta-resina-epoxi-preciso" },
       { label: "Consumo", slug: "pt-br/consumo-resina-epoxi-por-m2" },
       { label: "Preço", slug: "pt-br/preco-piso-epoxi-m2" },
-      { label: "Garagem", slug: "pt-br/piso-epoxi-garagem-preco" }
+      { label: "Piso", slug: "pt-br/calculadora-piso-epoxi" }
     ],
     footerNav: [
       { label: "Português", slug: "pt-br" },
-      { label: "Calculadora", slug: "pt-br/calculadora-resina-epoxi" },
+      { label: "Consumo por m²", slug: "pt-br/consumo-resina-epoxi-por-m2" },
       { label: "Preço m²", slug: "pt-br/preco-piso-epoxi-m2" },
-      { label: "Garagem", slug: "pt-br/piso-epoxi-garagem-preco" },
+      { label: "Piso epóxi", slug: "pt-br/calculadora-piso-epoxi" },
       { label: "Metodologia", slug: "methodology" }
     ],
     ui: {
@@ -274,7 +272,7 @@ const locales = {
       faqHeading: "Perguntas antes de comprar resina",
       relatedEyebrow: "Páginas relacionadas",
       relatedHeading: "Continue no mesmo tipo de busca",
-      whyTitle: "Por que esta página existe",
+      whyTitle: "O que a calculadora considera",
       howToTitle: "Como medir os dados",
       mistakesTitle: "Erros comuns que fazem faltar material",
       checklistTitle: "Checklist antes de comprar",
@@ -349,12 +347,12 @@ const locales = {
       "Conferir proporção, cura e espessura máxima do produto."
     ],
     hub: {
-      title: "Calculadora de resina epóxi, piso e preço por m²",
-      h1: "Calculadora de resina epóxi para quantidade, m² e garagem",
+      title: "Calculadora de resina epóxi: quantos litros você precisa",
+      h1: "Calculadora de resina epóxi: quantidade, volume e custo",
       description:
-        "Calculadoras em português do Brasil para estimar resina epóxi, consumo por m², piso epóxi, garagem e preço com litros e reais.",
+        "Calculadora grátis: informe as medidas e veja quantos litros de resina epóxi comprar, já com sobra. Regra rápida: 1 litro cobre 1 m² com 1 mm de espessura.",
       intro:
-        "Escolha a calculadora conforme o projeto: peça de resina, consumo por metro quadrado, preço ou piso de garagem. As páginas usam medidas métricas, litros e reais."
+        "Digite comprimento, largura e profundidade: a calculadora mostra o volume bruto, a quantidade para comprar com sobra, a divisão parte A/parte B e o custo em reais. Para consumo por m², preço do piso ou piso epóxi, use as calculadoras específicas abaixo."
     }
   },
   es: {
@@ -368,17 +366,16 @@ const locales = {
     defaultUnit: "metric",
     brandTagline: "Calcula resina, suelo epoxi y coste",
     nav: [
-      { label: "Calculadora", slug: "es/calculadora-resina-epoxi" },
-      { label: "Cantidad", slug: "es/cuanta-resina-epoxi-necesito" },
+      { label: "Calculadora", slug: "es" },
       { label: "m²", slug: "es/consumo-resina-epoxi-por-m2" },
       { label: "Precio", slug: "es/precio-suelo-epoxi-m2" },
-      { label: "Garaje", slug: "es/precio-epoxi-garaje" }
+      { label: "Suelo", slug: "es/calculadora-suelo-epoxi" }
     ],
     footerNav: [
       { label: "Español", slug: "es" },
-      { label: "Calculadora", slug: "es/calculadora-resina-epoxi" },
+      { label: "Consumo por m²", slug: "es/consumo-resina-epoxi-por-m2" },
       { label: "Precio m²", slug: "es/precio-suelo-epoxi-m2" },
-      { label: "Garaje", slug: "es/precio-epoxi-garaje" },
+      { label: "Suelo epoxi", slug: "es/calculadora-suelo-epoxi" },
       { label: "Método", slug: "methodology" }
     ],
     ui: {
@@ -392,7 +389,7 @@ const locales = {
       faqHeading: "Preguntas antes de comprar resina",
       relatedEyebrow: "Páginas relacionadas",
       relatedHeading: "Seguir con la misma intención",
-      whyTitle: "Por qué existe esta página",
+      whyTitle: "Qué tiene en cuenta la calculadora",
       howToTitle: "Cómo medir los datos",
       mistakesTitle: "Errores comunes que hacen faltar material",
       checklistTitle: "Lista antes de comprar",
@@ -467,12 +464,12 @@ const locales = {
       "Comprobar mezcla, curado y grosor máximo del producto."
     ],
     hub: {
-      title: "Calculadora de resina epoxi, cantidad y precio por m²",
-      h1: "Calculadora de resina epoxi para cantidad, m² y garaje",
+      title: "Calculadora de resina epoxi: cuántos litros necesitas",
+      h1: "Calculadora de resina epoxi: cantidad, volumen y coste",
       description:
-        "Calculadoras en español para estimar cantidad de resina epoxi, consumo por m², precio de suelo epoxi y garaje con unidades métricas.",
+        "Calculadora gratis: introduce las medidas y obtén los litros de resina epoxi que debes comprar, con margen incluido. Regla rápida: 1 litro por m² y por mm de espesor.",
       intro:
-        "Elige la calculadora según la tarea real: volumen, consumo por m², precio o suelo de garaje. Las páginas usan medidas métricas, litros y euros."
+        "Introduce largo, ancho y profundidad: la calculadora muestra el volumen bruto, la cantidad a comprar con margen, la proporción resina/endurecedor y el coste estimado. Para consumo por m², precio del suelo o suelo epoxi, usa las calculadoras específicas de abajo."
     }
   },
   it: {
@@ -486,17 +483,16 @@ const locales = {
     defaultUnit: "metric",
     brandTagline: "Calcola resina, pavimento e costo",
     nav: [
-      { label: "Calcolatore", slug: "it/calcolatore-resina-epossidica" },
-      { label: "Quantità", slug: "it/quanta-resina-epossidica-serve" },
+      { label: "Calcolatore", slug: "it" },
       { label: "m²", slug: "it/consumo-resina-epossidica-m2" },
       { label: "Prezzo", slug: "it/prezzo-pavimento-resina-epossidica-m2" },
-      { label: "Garage", slug: "it/costo-pavimento-epossidico-garage" }
+      { label: "Pavimento", slug: "it/calcolatore-pavimento-epossidico" }
     ],
     footerNav: [
       { label: "Italiano", slug: "it" },
-      { label: "Calcolatore", slug: "it/calcolatore-resina-epossidica" },
+      { label: "Consumo al m²", slug: "it/consumo-resina-epossidica-m2" },
       { label: "Prezzo m²", slug: "it/prezzo-pavimento-resina-epossidica-m2" },
-      { label: "Garage", slug: "it/costo-pavimento-epossidico-garage" },
+      { label: "Pavimento", slug: "it/calcolatore-pavimento-epossidico" },
       { label: "Metodo", slug: "methodology" }
     ],
     ui: {
@@ -510,7 +506,7 @@ const locales = {
       faqHeading: "Domande prima di comprare resina",
       relatedEyebrow: "Pagine correlate",
       relatedHeading: "Continua nello stesso intento di ricerca",
-      whyTitle: "Perché esiste questa pagina",
+      whyTitle: "Cosa considera il calcolatore",
       howToTitle: "Come misurare i dati",
       mistakesTitle: "Errori comuni che fanno mancare materiale",
       checklistTitle: "Controlli prima dell’acquisto",
@@ -585,12 +581,12 @@ const locales = {
       "Verificare rapporto, cura e spessore massimo del prodotto."
     ],
     hub: {
-      title: "Calcolatore resina epossidica, quantità e prezzo al m²",
-      h1: "Calcolatore resina epossidica per quantità, m² e garage",
+      title: "Calcolatore resina epossidica: quanti litri servono",
+      h1: "Calcolatore resina epossidica: quantità, volume e costo",
       description:
-        "Calcolatori in italiano per stimare resina epossidica, consumo al m², prezzo pavimento in resina e garage con unità metriche.",
+        "Calcolatore gratuito: inserisci le misure e scopri quanti litri di resina epossidica comprare, margine incluso. Regola rapida: 1 litro per m² e per mm di spessore.",
       intro:
-        "Scegli il calcolatore in base al progetto reale: volume, consumo al metro quadrato, prezzo o pavimento del garage. Le pagine usano centimetri, metri quadrati, litri ed euro."
+        "Inserisci lunghezza, larghezza e profondità: il calcolatore mostra il volume grezzo, la quantità da comprare con margine, la divisione resina/indurente e il costo stimato. Per consumo al m², prezzo al m² o pavimento epossidico usa i calcolatori dedicati qui sotto."
     }
   }
 };
@@ -598,7 +594,7 @@ const locales = {
 const intentGroups = [
   {
     key: "hub",
-    enSlug: "",
+    enSlug: "epoxy-calculator",
     byLocale: {
       de: "de",
       fr: "fr",
@@ -609,7 +605,7 @@ const intentGroups = [
   },
   {
     key: "core",
-    enSlug: "resin-calculator",
+    enSlug: null,
     byLocale: {
       de: "de/epoxidharz-rechner",
       fr: "fr/calculateur-resine-epoxy",
@@ -631,7 +627,7 @@ const intentGroups = [
   },
   {
     key: "amount",
-    enSlug: "epoxy-amount-calculator",
+    enSlug: null,
     byLocale: {
       de: "de/wie-viel-epoxidharz-brauche-ich",
       fr: "fr/combien-de-resine-epoxy-faut-il",
@@ -642,7 +638,7 @@ const intentGroups = [
   },
   {
     key: "coverage",
-    enSlug: "epoxy-square-foot-calculator",
+    enSlug: "epoxy-coverage-calculator",
     byLocale: {
       de: "de/epoxidharz-verbrauch-pro-m2",
       fr: "fr/quantite-resine-epoxy-par-m2",
@@ -675,7 +671,7 @@ const intentGroups = [
   },
   {
     key: "garageCost",
-    enSlug: "epoxy-garage-floor-cost-calculator",
+    enSlug: null,
     byLocale: {
       de: "de/garagenboden-epoxidharz-kosten",
       fr: "fr/prix-sol-garage-epoxy",
@@ -686,7 +682,7 @@ const intentGroups = [
   },
   {
     key: "garageAmount",
-    enSlug: "garage-floor-epoxy-calculator",
+    enSlug: null,
     byLocale: {
       de: "de/wie-viel-epoxidharz-fuer-garage",
       fr: "fr/combien-de-resine-epoxy-pour-un-garage",
@@ -761,6 +757,112 @@ const calculatorTypes = {
   garageAmount: "garage-floor"
 };
 
+// GSC 数据显示同一语言里多个意图重叠的页面在抢同一批搜索词，这里把它们并到一个主页面。
+// 值是合并目标的意图 key，被合并的旧地址会生成 301 跳转。
+// pt-BR 的 volume / amount 页已排在第 8 名左右，暂时保留。
+const mergedIntents = {
+  core: { de: "hub", fr: "hub", "pt-BR": "hub", es: "hub", it: "hub" },
+  volume: { de: "hub", fr: "hub", es: "hub", it: "hub" },
+  amount: { de: "hub", fr: "hub", es: "hub", it: "hub" },
+  garageCost: { de: "costM2", fr: "costM2", "pt-BR": "costM2", es: "costM2", it: "costM2" },
+  garageAmount: { de: "floor", fr: "floor", "pt-BR": "floor", es: "floor", it: "floor" }
+};
+
+function isActiveIntent(localeCode, key) {
+  return !mergedIntents[key]?.[localeCode];
+}
+
+function slugFor(localeCode, key) {
+  return intentGroups.find((group) => group.key === key).byLocale[localeCode];
+}
+
+export function createMultilingualRedirects() {
+  const redirects = {};
+  for (const [key, targets] of Object.entries(mergedIntents)) {
+    for (const [localeCode, targetKey] of Object.entries(targets)) {
+      redirects[slugFor(localeCode, key)] = slugFor(localeCode, targetKey);
+    }
+  }
+  return redirects;
+}
+
+// 用量（每 m²）页的直接答案：1 m² × 1 mm = 1 L，按常见密度 1.1 kg/L 换算重量。
+const coverageThicknesses = [0.5, 1, 2, 3];
+const coverageAnswers = {
+  de: {
+    title: "Epoxidharz Verbrauch pro m²: ca. 1,1 kg je mm Schichtdicke",
+    description:
+      "Epoxidharz-Verbrauch: 1 Liter (ca. 1,1 kg) pro m² und mm Schichtdicke. Tabelle nach Schichtdicke plus Rechner für Liter, Reserve und Kosten deiner Fläche.",
+    answerHeading: "Wie viel Epoxidharz braucht man pro m²?",
+    answer:
+      "Pro Millimeter Schichtdicke braucht man 1 Liter Epoxidharz je Quadratmeter, also etwa 1,1 kg, weil die Dichte meist bei 1,1 bis 1,2 kg/L liegt. 1 Liter reicht damit für etwa 2 m² bei 0,5 mm, 1 m² bei 1 mm und 0,5 m² bei 2 mm. Plane 10–15 % Reserve für Verluste und Saugfähigkeit ein.",
+    headers: ["Schichtdicke", "Liter pro m²", "kg pro m² (≈1,1 kg/L)", "m² pro Liter"],
+    note: "Rohwerte ohne Reserve. Bei Bodenbeschichtungen und Epoxidfarben gilt der Verbrauch aus dem technischen Datenblatt des Herstellers."
+  },
+  fr: {
+    title: "Quantité de résine époxy par m² : 1 litre par mm d’épaisseur",
+    description:
+      "Consommation de résine époxy : 1 litre (≈1,1 kg) par m² et par mm d’épaisseur. Tableau par épaisseur et calculateur des litres, de la marge et du prix pour votre surface.",
+    answerHeading: "Quelle quantité de résine époxy par m² ?",
+    answer:
+      "Chaque millimètre d’épaisseur consomme 1 litre de résine époxy par mètre carré, soit environ 1,1 kg, car la densité se situe généralement entre 1,1 et 1,2 kg/L. 1 litre couvre donc environ 2 m² à 0,5 mm, 1 m² à 1 mm et 0,5 m² à 2 mm. Ajoutez 10 à 15 % de marge pour les pertes et l’absorption.",
+    headers: ["Épaisseur", "Litres par m²", "kg par m² (≈1,1 kg/L)", "m² par litre"],
+    note: "Valeurs brutes, sans marge. Pour les peintures et revêtements de sol époxy, suivez la consommation indiquée sur la fiche technique du fabricant."
+  },
+  "pt-BR": {
+    title: "Consumo de resina epóxi por m²: 1 litro rende 1 m² a 1 mm",
+    description:
+      "1 litro de resina epóxi cobre 1 m² com 1 mm de espessura (cerca de 1,1 kg). Veja a tabela por espessura e calcule litros, sobra e custo para a sua área.",
+    answerHeading: "Quantos litros de resina epóxi por m²?",
+    answer:
+      "Cada milímetro de espessura consome 1 litro de resina epóxi por metro quadrado, ou cerca de 1,1 kg, porque a densidade costuma ficar entre 1,1 e 1,2 kg/L. Assim, 1 litro rende cerca de 2 m² a 0,5 mm, 1 m² a 1 mm e 0,5 m² a 2 mm. Some 10–15% de sobra para perdas e absorção.",
+    headers: ["Espessura", "Litros por m²", "Kg por m² (≈1,1 kg/L)", "m² por litro"],
+    note: "Valores brutos, sem sobra. Tintas e revestimentos epóxi para piso seguem o rendimento da ficha técnica do fabricante."
+  },
+  es: {
+    title: "Consumo y rendimiento de resina epoxi por m² (1 litro por mm)",
+    description:
+      "Rendimiento de la resina epoxi: 1 litro cubre 1 m² con 1 mm de espesor (≈1,1 kg). Consulta la tabla por espesor y calcula litros, margen y coste para tu superficie.",
+    answerHeading: "¿Cuánta resina epoxi se necesita por m²?",
+    answer:
+      "Cada milímetro de espesor consume 1 litro de resina epoxi por metro cuadrado, unos 1,1 kg, porque su densidad suele estar entre 1,1 y 1,2 kg/L. Por tanto, 1 litro rinde unos 2 m² a 0,5 mm, 1 m² a 1 mm y 0,5 m² a 2 mm. Añade un 10–15 % de margen para pérdidas y absorción.",
+    headers: ["Espesor", "Litros por m²", "Kg por m² (≈1,1 kg/L)", "m² por litro"],
+    note: "Valores brutos, sin margen. Las pinturas y recubrimientos epoxi para suelos se calculan con el rendimiento de la ficha técnica del fabricante."
+  },
+  it: {
+    title: "Consumo resina epossidica al m²: 1,1 kg per mm di spessore",
+    description:
+      "Consumo della resina epossidica: 1 litro (≈1,1 kg) al m² per ogni mm di spessore. Tabella per spessore e calcolatore di litri, margine e costo per la tua superficie.",
+    answerHeading: "Quanta resina epossidica serve al m²?",
+    answer:
+      "Ogni millimetro di spessore richiede 1 litro di resina epossidica per metro quadrato, cioè circa 1,1 kg, perché la densità è in genere tra 1,1 e 1,2 kg/L. 1 litro copre quindi circa 2 m² a 0,5 mm, 1 m² a 1 mm e 0,5 m² a 2 mm. Aggiungi un margine del 10–15% per perdite e assorbimento.",
+    headers: ["Spessore", "Litri al m²", "kg al m² (≈1,1 kg/L)", "m² per litro"],
+    note: "Valori grezzi, senza margine. Per pitture e rivestimenti epossidici per pavimenti vale il consumo indicato nella scheda tecnica del produttore."
+  }
+};
+
+function coverageAnswerFields(locale) {
+  const copy = coverageAnswers[locale.code];
+  const format = (value, digits) =>
+    new Intl.NumberFormat(locale.numberLocale, { maximumFractionDigits: digits }).format(value);
+  return {
+    title: copy.title,
+    description: copy.description,
+    answerHeading: copy.answerHeading,
+    answer: copy.answer,
+    answerTable: {
+      headers: copy.headers,
+      rows: coverageThicknesses.map((mm) => [
+        `${format(mm, 1)} mm`,
+        `${format(mm, 1)} L`,
+        `${format(mm * 1.1, 2)} kg`,
+        `${format(1 / mm, 2)} m²`
+      ]),
+      note: copy.note
+    }
+  };
+}
+
 function localePageMeta(locale, intentKey) {
   return {
     locale: locale.code,
@@ -783,14 +885,11 @@ function localePageMeta(locale, intentKey) {
 }
 
 function makeRelated(localeCode, currentKey) {
-  const localGroup = intentGroups.find((group) => group.key === currentKey);
-  const core = intentGroups.find((group) => group.key === "core").byLocale[localeCode];
-  const hub = intentGroups.find((group) => group.key === "hub").byLocale[localeCode];
-  const related = intentGroups
-    .filter((group) => group.key !== "hub" && group.key !== currentKey)
-    .slice(0, 5)
-    .map((group) => group.byLocale[localeCode]);
-  return [hub, core, ...related].filter((slug, index, list) => slug && slug !== localGroup?.byLocale[localeCode] && list.indexOf(slug) === index);
+  const current = slugFor(localeCode, currentKey);
+  return intentGroups
+    .filter((group) => group.key === "hub" || isActiveIntent(localeCode, group.key))
+    .map((group) => group.byLocale[localeCode])
+    .filter((slug) => slug !== current);
 }
 
 function localizedCalculatorSpec(locale, key, values) {
@@ -806,11 +905,11 @@ function localizedCalculatorSpec(locale, key, values) {
     .map(([, sibling]) => sibling[2]);
 
   const introByLocale = {
-    de: `Diese Seite richtet sich an Nutzer, die nach ${primaryKeyword} suchen und eine konkrete Menge statt einer groben Faustregel brauchen. Sie plant ${angle} mit ${unitPhrase}, Reserve und Kostenlogik.`,
-    fr: `Cette page répond à la recherche ${primaryKeyword} avec une estimation utilisable, pas seulement une formule. Elle planifie ${angle} avec ${unitPhrase}, une marge et une logique de prix.`,
-    "pt-BR": `Esta página atende quem procura ${primaryKeyword} e precisa de uma estimativa prática, não só uma fórmula. Ela planeja ${angle} com ${unitPhrase}, sobra e custo.`,
-    es: `Esta página responde a la búsqueda ${primaryKeyword} con una estimación útil, no solo una fórmula. Planifica ${angle} con ${unitPhrase}, margen y coste.`,
-    it: `Questa pagina risponde alla ricerca ${primaryKeyword} con una stima utile, non solo una formula. Pianifica ${angle} con ${unitPhrase}, margine e costo.`
+    de: `Plane ${angle} mit ${unitPhrase}: Maße eingeben und sofort Rohmenge, Kaufmenge mit Reserve und Kosten sehen.`,
+    fr: `Calculez ${angle} avec ${unitPhrase} : saisissez vos mesures et voyez tout de suite le volume brut, la quantité à acheter avec marge et le coût.`,
+    "pt-BR": `Calcule ${angle} com ${unitPhrase}: informe as medidas e veja na hora o volume bruto, a quantidade para comprar com sobra e o custo.`,
+    es: `Calcula ${angle} con ${unitPhrase}: introduce las medidas y ve al momento el volumen bruto, la cantidad a comprar con margen y el coste.`,
+    it: `Calcola ${angle} con ${unitPhrase}: inserisci le misure e vedi subito il volume grezzo, la quantità da acquistare con margine e il costo.`
   };
 
   const bulletsByLocale = {
@@ -818,31 +917,31 @@ function localizedCalculatorSpec(locale, key, values) {
       `Für ${angle} mit metrischen Eingaben statt US-Standardwerten.`,
       isFloor ? "Plant Bodenflächen über Fläche, Schichten und Hersteller-Reichweite." : "Trennt Rohvolumen von einer realistischen Bestellmenge.",
       isCost ? "Hilft, Kosten nach Fläche und Literpreis vor dem Kauf zu prüfen." : "Zeigt Reserve, Teileplanung und Budget in einem Ablauf.",
-      "Verlinkt zu verwandten Rechnern, damit ähnliche Suchanfragen nicht in dünnen Varianten enden."
+      "Runde die Kaufmenge auf die nächste erhältliche Packungsgröße auf, statt genau die Rohmenge zu kaufen."
     ],
     fr: [
       `Conçu pour ${angle} avec des unités métriques.`,
       isFloor ? "Planifie un sol à partir de la surface, des couches et du rendement fabricant." : "Sépare le volume brut de la quantité réellement à acheter.",
       isCost ? "Aide à estimer le prix selon la surface et le prix au litre." : "Affiche marge, estimation et budget dans le même parcours.",
-      "Relie les intentions proches sans créer de pages faibles ou répétitives."
+      "Arrondissez la quantité au format de kit disponible supérieur plutôt que d’acheter le volume brut exact."
     ],
     "pt-BR": [
       `Feita para ${angle} com medidas métricas.`,
       isFloor ? "Planeja piso por área, demãos e rendimento informado pelo fabricante." : "Separa volume bruto da quantidade realista para comprar.",
       isCost ? "Ajuda a estimar preço por área e preço por litro." : "Mostra sobra, divisão do kit e custo em um único fluxo.",
-      "Conecta buscas próximas sem criar páginas repetidas e fracas."
+      "Arredonde a compra para o próximo tamanho de kit disponível, em vez de comprar o volume bruto exato."
     ],
     es: [
       `Pensada para ${angle} con unidades métricas.`,
       isFloor ? "Planifica suelo por superficie, capas y rendimiento del fabricante." : "Separa volumen bruto de cantidad realista de compra.",
       isCost ? "Ayuda a estimar precio por superficie y precio por litro." : "Muestra margen, división del kit y coste en el mismo flujo.",
-      "Conecta búsquedas cercanas sin convertirlas en páginas repetidas."
+      "Redondea la compra al siguiente tamaño de kit disponible en lugar de comprar el volumen bruto exacto."
     ],
     it: [
       `Pensata per ${angle} con unità metriche.`,
       isFloor ? "Pianifica il pavimento con superficie, strati e resa del produttore." : "Separa volume grezzo e quantità realistica da acquistare.",
       isCost ? "Aiuta a stimare prezzo per superficie e prezzo al litro." : "Mostra margine, divisione del kit e costo nello stesso flusso.",
-      "Collega intenti vicini senza creare pagine ripetitive."
+      "Arrotonda l’acquisto alla confezione disponibile successiva invece di comprare il volume grezzo esatto."
     ]
   };
 
@@ -956,13 +1055,14 @@ function localizedCalculatorSpec(locale, key, values) {
     note: locale.ui.fieldNote,
     compareLabel: title,
     resultEyebrow: locale.ui.resultEyebrow,
+    ...(key === "coverage" ? coverageAnswerFields(locale) : {}),
     ...localePageMeta(locale, key)
   };
 }
 
 function hubSections(locale) {
   const cards = intentGroups
-    .filter((group) => group.key !== "hub")
+    .filter((group) => group.key !== "hub" && isActiveIntent(locale.code, group.key))
     .map((group) => {
       const spec = localizedSpecs[locale.code][group.key];
       return {
@@ -977,7 +1077,7 @@ function hubSections(locale) {
     de: {
       choose: "Wähle zuerst die echte Aufgabe",
       body:
-        "Ein Garagenboden, eine dünne Beschichtung und ein Volumenguss brauchen unterschiedliche Eingaben. Diese deutschsprachige Übersicht hält die Suchpfade getrennt.",
+        "Ein Garagenboden, eine dünne Beschichtung und ein Volumenguss brauchen unterschiedliche Eingaben. Wähle den Rechner, der zu deinem Projekt passt.",
       trust: "Metrische Planung statt US-Standardwerte",
       trustBody:
         "Die lokalen Seiten starten mit cm, m², Litern und Euro. So passen die Rechner besser zu europäischen Produktlisten und Angeboten."
@@ -985,7 +1085,7 @@ function hubSections(locale) {
     fr: {
       choose: "Choisir d’abord la vraie tâche",
       body:
-        "Un sol de garage, une couche fine et un volume de coulée ne se calculent pas de la même manière. Cette section française sépare les intentions.",
+        "Un sol de garage, une couche fine et un volume de coulée ne se calculent pas de la même manière. Choisissez le calculateur adapté à votre projet.",
       trust: "Planification métrique, pas une traduction brute",
       trustBody:
         "Les pages partent des cm, m², litres et euros pour mieux correspondre aux fiches produits et aux devis locaux."
@@ -993,7 +1093,7 @@ function hubSections(locale) {
     "pt-BR": {
       choose: "Escolha primeiro o trabalho real",
       body:
-        "Piso de garagem, revestimento fino e volume de molde usam dados diferentes. Esta área em português separa essas intenções.",
+        "Piso de garagem, revestimento fino e volume de molde usam dados diferentes. Escolha a calculadora que combina com o seu projeto.",
       trust: "Planejamento métrico para compra local",
       trustBody:
         "As páginas usam cm, m², litros e reais para combinar melhor com anúncios, orçamentos e fichas de produto no Brasil."
@@ -1001,7 +1101,7 @@ function hubSections(locale) {
     es: {
       choose: "Elige primero la tarea real",
       body:
-        "Un suelo de garaje, una capa fina y un volumen de molde no se calculan igual. Esta sección en español separa esas intenciones.",
+        "Un suelo de garaje, una capa fina y un volumen de molde no se calculan igual. Elige la calculadora que encaja con tu proyecto.",
       trust: "Planificación métrica, no traducción literal",
       trustBody:
         "Las páginas usan cm, m², litros y euros para encajar mejor con fichas técnicas, compras y presupuestos locales."
@@ -1009,7 +1109,7 @@ function hubSections(locale) {
     it: {
       choose: "Scegli prima il lavoro reale",
       body:
-        "Un pavimento garage, un rivestimento sottile e un volume da stampo non si calcolano allo stesso modo. Questa sezione italiana separa gli intenti.",
+        "Un pavimento garage, un rivestimento sottile e un volume da stampo non si calcolano allo stesso modo. Scegli il calcolatore adatto al tuo progetto.",
       trust: "Pianificazione metrica, non traduzione letterale",
       trustBody:
         "Le pagine usano cm, m², litri ed euro per adattarsi meglio a schede tecniche, acquisti e preventivi locali."
@@ -1023,8 +1123,12 @@ function hubSections(locale) {
   ];
 }
 
-function createHubPage(locale, infoPage) {
-  return infoPage({
+// 语言首页同时就是该语言的通用计算器（原 core 页并入这里），下面再列出其余专用计算器。
+function createHubPage(locale, calculatorPage) {
+  const core = localizedCalculatorSpec(locale, "core", localizedSpecs[locale.code].core);
+  const [toolSection] = hubSections(locale);
+  return calculatorPage({
+    ...core,
     slug: locale.prefix,
     title: locale.hub.title,
     h1: locale.hub.h1,
@@ -1032,26 +1136,26 @@ function createHubPage(locale, infoPage) {
     eyebrow: locale.name,
     intro: locale.hub.intro,
     heroActions: intentGroups
-      .filter((group) => ["core", "coverage", "costM2", "garageCost"].includes(group.key))
-      .map((group) => {
-        const spec = localizedSpecs[locale.code][group.key];
-        return { label: spec[0], slug: group.byLocale[locale.code] };
-      }),
-    sections: hubSections(locale),
-    related: intentGroups.filter((group) => group.key !== "hub").map((group) => group.byLocale[locale.code]),
-    includeInSitemap: true,
+      .filter((group) => ["coverage", "costM2", "floor"].includes(group.key))
+      .map((group) => ({
+        label: localizedSpecs[locale.code][group.key][0],
+        slug: group.byLocale[locale.code],
+        icon: { coverage: "📏", costM2: "💰", floor: "🏠" }[group.key]
+      })),
+    sections: [toolSection],
+    related: [],
     ...localePageMeta(locale, "hub")
   });
 }
 
-export function createMultilingualWave1Pages({ calculatorPage, infoPage }) {
+export function createMultilingualWave1Pages({ calculatorPage }) {
   return wave1LocaleOrder.flatMap((localeCode) => {
     const locale = locales[localeCode];
-    const calculatorPages = Object.entries(localizedSpecs[localeCode]).map(([key, values]) =>
-      calculatorPage(localizedCalculatorSpec(locale, key, values))
-    );
+    const calculatorPages = Object.entries(localizedSpecs[localeCode])
+      .filter(([key]) => isActiveIntent(localeCode, key))
+      .map(([key, values]) => calculatorPage(localizedCalculatorSpec(locale, key, values)));
 
-    return [createHubPage(locale, infoPage), ...calculatorPages];
+    return [createHubPage(locale, calculatorPage), ...calculatorPages];
   });
 }
 
@@ -1067,12 +1171,17 @@ export function createLanguageMarketCards() {
   });
 }
 
+// 只给仍然存在的页面互相标注 hreflang；成员不足两个的组不输出。
 function alternatesForGroup(group) {
-  const alternates = { en: group.enSlug };
+  const alternates = {};
+  if (group.enSlug !== null) alternates.en = group.enSlug;
   for (const localeCode of wave1LocaleOrder) {
-    alternates[localeCode] = group.byLocale[localeCode];
+    if (group.key === "hub" || isActiveIntent(localeCode, group.key)) {
+      alternates[localeCode] = group.byLocale[localeCode];
+    }
   }
-  alternates["x-default"] = group.enSlug;
+  if (Object.keys(alternates).length < 2) return null;
+  if (group.enSlug !== null) alternates["x-default"] = group.enSlug;
   return alternates;
 }
 
@@ -1081,9 +1190,9 @@ export function applyMultilingualAlternates(pages) {
 
   for (const group of intentGroups) {
     const alternates = alternatesForGroup(group);
-    groupBySlug.set(group.enSlug, alternates);
-    for (const localeCode of wave1LocaleOrder) {
-      groupBySlug.set(group.byLocale[localeCode], alternates);
+    if (!alternates) continue;
+    for (const [hreflang, slug] of Object.entries(alternates)) {
+      if (hreflang !== "x-default") groupBySlug.set(slug, alternates);
     }
   }
 

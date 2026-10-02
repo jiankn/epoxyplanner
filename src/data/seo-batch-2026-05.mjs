@@ -2,61 +2,6 @@ const batchLastmod = "2026-05-05";
 
 const calculatorSpecs = [
   {
-    slug: "resin-calculator",
-    title: "Resin Calculator: Epoxy Amount, Waste & Cost",
-    h1: "Resin Calculator",
-    description:
-      "Estimate resin volume, waste buffer, part A/B split, and project cost for epoxy pours, molds, tabletops, and simple resin projects.",
-    eyebrow: "Resin Amount Hub",
-    intro:
-      "Use this resin calculator when you know the basic shape but have not decided whether the project belongs on a river table, mold, coating, or cost page. It gives a fast material estimate and points you to the more specific planner when the job needs different assumptions.",
-    primaryKeyword: "resin calculator",
-    supportingKeywords: ["epoxy resin calculator", "resin amount calculator", "how much resin do i need"],
-    calculatorType: "general",
-    bullets: [
-      "Best first stop for generic resin quantity searches that are not yet tied to one project type.",
-      "Supports rectangular and round inputs, with imperial or metric entry.",
-      "Shows raw volume, buffered order quantity, part A/B planning, and estimated cost.",
-      "Keeps the user from forcing every resin job through a river table or floor calculator."
-    ],
-    howTo: [
-      "Start with the simplest shape that matches the cavity or surface you want to fill.",
-      "Use finished inside dimensions, not the outside size of the mold or wood blank.",
-      "Keep the waste buffer modest for clean molds and raise it for porous wood, leaky seams, or many small cups.",
-      "After the first estimate, move to the matching page for molds, river tables, floors, or coatings if the project has special constraints."
-    ],
-    mistakes: [
-      "Searching for a resin calculator but using a floor coverage rate for a deep cast.",
-      "Entering outside mold dimensions instead of the actual inside resin cavity.",
-      "Ignoring kit size rounding and ending up short even when the raw calculation looks exact."
-    ],
-    faq: [
-      {
-        q: "Is this the same as an epoxy calculator?",
-        a: "It overlaps with the main epoxy calculator, but this page is written for people searching the broader resin term before choosing a specific epoxy project page."
-      },
-      {
-        q: "Should art resin and casting resin use the same estimate?",
-        a: "The volume math can start the same, but product choice changes. Thin art resin, tabletop resin, and deep casting resin have different pour-depth and cure limits."
-      },
-      {
-        q: "When should I leave this page?",
-        a: "Use a more specific page when you know the job is a garage floor, river table, dice mold, flood coat, or small jewelry pour."
-      }
-    ],
-    related: [
-      "epoxy-calculator",
-      "epoxy-amount-calculator",
-      "resin-mold-calculator",
-      "resin-art-pricing-calculator",
-      "epoxy-kit-size-guide",
-      "epoxy-unit-converter"
-    ],
-    note: "Use this as a broad resin estimate. If your project has a known scenario, switch to the matching page before buying.",
-    compareLabel: "Raw resin math vs buying quantity",
-    resultEyebrow: "Resin estimate"
-  },
-  {
     slug: "epoxy-pour-calculator",
     title: "Epoxy Pour Calculator: Depth, Volume, Layers & Waste",
     h1: "Epoxy Pour Calculator",
@@ -110,61 +55,6 @@ const calculatorSpecs = [
     note: "Use total project depth here. The max layer depth input controls the staged-pour recommendation.",
     compareLabel: "Planned pour vs conservative lift plan",
     resultEyebrow: "Pour quantity"
-  },
-  {
-    slug: "epoxy-amount-calculator",
-    title: "Epoxy Amount Calculator: How Much Epoxy to Buy",
-    h1: "Epoxy Amount Calculator",
-    description:
-      "Find the amount of epoxy to buy from project dimensions, waste buffer, price, and practical kit-size planning.",
-    eyebrow: "Buying Amount",
-    intro:
-      "This page answers the buying question behind many searches: not just what the raw volume is, but how much epoxy you should actually order after waste, rounding, and project uncertainty.",
-    primaryKeyword: "epoxy amount calculator",
-    supportingKeywords: ["how much epoxy to buy", "how much resin to buy", "epoxy resin amount calculator"],
-    calculatorType: "general",
-    bullets: [
-      "Translates dimensions into an order-ready mixed epoxy quantity.",
-      "Keeps raw volume and recommended amount visible side by side.",
-      "Useful for quick buying decisions before comparing real kit sizes.",
-      "Works as a bridge between how-much guides and scenario calculators."
-    ],
-    howTo: [
-      "Measure the fill area using finished dimensions.",
-      "Pick rectangle or round shape and enter the planned depth.",
-      "Set a waste buffer that reflects the risk of spills, runoff, porous edges, and measuring uncertainty.",
-      "Use the result with the kit size guide before placing the order."
-    ],
-    mistakes: [
-      "Buying exactly the raw calculated volume with no overage.",
-      "Using the amount page for garage floors, where coverage rate matters more than volume.",
-      "Forgetting that Part A and Part B are included in the mixed total."
-    ],
-    faq: [
-      {
-        q: "Does the amount include both parts of the epoxy kit?",
-        a: "Yes. The main result is mixed epoxy. The Part A/B split is shown separately as a planning example."
-      },
-      {
-        q: "How much extra epoxy should I buy?",
-        a: "For clean simple shapes, a small buffer may be enough. For porous wood, irregular edges, leaks, or many small batches, use a larger buffer and compare the conservative scenario."
-      },
-      {
-        q: "Is this a kit size calculator?",
-        a: "It gives the target quantity. Use the kit size guide to match that target against real product packaging."
-      }
-    ],
-    related: [
-      "how-much-epoxy-do-i-need",
-      "epoxy-kit-size-guide",
-      "epoxy-calculator",
-      "epoxy-cost-calculator",
-      "epoxy-unit-converter",
-      "epoxy-waste-factor-guide"
-    ],
-    note: "The useful buying number is usually the recommended amount, not the raw geometric minimum.",
-    compareLabel: "Raw amount vs order amount",
-    resultEyebrow: "Amount to buy"
   },
   {
     slug: "epoxy-calculator-metric",
@@ -332,61 +222,6 @@ const calculatorSpecs = [
     resultEyebrow: "Rectangle volume"
   },
   {
-    slug: "epoxy-square-foot-calculator",
-    title: "Epoxy Square Foot Calculator: Coverage by Area & Thickness",
-    h1: "Epoxy Square Foot Calculator",
-    description:
-      "Estimate epoxy needed per square foot from surface area, coat thickness, edge runoff, waste buffer, and cost.",
-    eyebrow: "Area Coverage",
-    intro:
-      "This epoxy square foot calculator is for coating jobs where area is the starting point. It turns surface size and intended thickness into resin quantity, then adds the planning margin that flat formulas miss.",
-    primaryKeyword: "epoxy square foot calculator",
-    supportingKeywords: ["epoxy per square foot calculator", "resin square foot calculator", "epoxy coverage per square foot"],
-    calculatorType: "coverage",
-    bullets: [
-      "Best for coatings, flood coats, countertops, tabletops, and area-driven estimates.",
-      "Uses area and thickness instead of cavity volume thinking.",
-      "Includes runoff, edge soak, and waste buffer.",
-      "Pairs with cost-per-square-foot and gallon coverage guides for buying decisions."
-    ],
-    howTo: [
-      "Measure the coated surface area and enter length and width.",
-      "Use the intended finished thickness, such as a thin seal coat or flood coat.",
-      "Add edges only if they will receive epoxy or lose material through runoff.",
-      "Check the cost-per-square-foot guide if the buying decision is budget-driven."
-    ],
-    mistakes: [
-      "Using square footage alone without a coat thickness.",
-      "Forgetting edges, drips, and porous surfaces.",
-      "Applying floor coating coverage rates to tabletop resin."
-    ],
-    faq: [
-      {
-        q: "Can square feet alone tell me how much epoxy I need?",
-        a: "No. Square footage needs a target thickness. A seal coat and a flood coat on the same area use different amounts."
-      },
-      {
-        q: "Is this the right page for floors?",
-        a: "Use it for general area math. For garage floors, use the floor coverage page because floors are usually planned by published coverage rate and coat count."
-      },
-      {
-        q: "Why does thickness matter so much?",
-        a: "Doubling coat thickness roughly doubles the volume, before waste and runoff are added."
-      }
-    ],
-    related: [
-      "how-much-epoxy-per-square-foot",
-      "how-much-does-a-gallon-of-epoxy-cover",
-      "epoxy-cost-per-square-foot",
-      "epoxy-coverage-calculator",
-      "epoxy-flood-coat-calculator",
-      "epoxy-floor-coverage-calculator"
-    ],
-    note: "Area is only half the estimate. Enter a realistic coat thickness before comparing kit sizes.",
-    compareLabel: "Area baseline vs buffered coverage",
-    resultEyebrow: "Square-foot estimate"
-  },
-  {
     slug: "epoxy-floor-coverage-calculator",
     title: "Epoxy Floor Coverage Calculator: Sq Ft, Coats & Kits",
     h1: "Epoxy Floor Coverage Calculator",
@@ -440,67 +275,6 @@ const calculatorSpecs = [
     note: "Use the product's floor coverage rate. Floor estimates are coverage-based, not cavity-volume based.",
     compareLabel: "Floor coverage vs conservative material",
     resultEyebrow: "Floor material estimate"
-  },
-  {
-    slug: "epoxy-garage-floor-cost-calculator",
-    title: "Epoxy Garage Floor Cost Calculator: Sq Ft, Coats & Budget",
-    h1: "Epoxy Garage Floor Cost Calculator",
-    description:
-      "Calculate garage floor epoxy material cost from floor size, coat count, coverage rate, waste buffer, and price per gallon.",
-    eyebrow: "Garage Cost Tool",
-    intro:
-      "This page is for the moment after a homeowner knows the garage size and wants a budget number. It keeps coverage and material cost together so kit comparisons are more grounded.",
-    primaryKeyword: "epoxy garage floor cost calculator",
-    supportingKeywords: ["garage floor epoxy cost calculator", "epoxy garage cost estimator", "garage epoxy calculator cost"],
-    calculatorType: "garage-floor",
-    bullets: [
-      "Turns floor size, coats, coverage rate, and price per gallon into a material budget.",
-      "Best for DIY kit comparison and early project planning.",
-      "Keeps substrate prep and labor out of the number unless you add them separately.",
-      "Complements the guide page that explains cost drivers."
-    ],
-    howTo: [
-      "Enter the garage's usable floor length and width.",
-      "Use the planned coat count for primer, base coat, and topcoat if they are all part of the epoxy budget.",
-      "Enter a realistic coverage rate from the product listing or technical sheet.",
-      "Use price per gallon to compare kit options on the same basis."
-    ],
-    mistakes: [
-      "Comparing kits by package price without normalizing coverage.",
-      "Ignoring concrete porosity, cracks, stem walls, and waste.",
-      "Treating material cost as the full installed cost when labor and prep may dominate."
-    ],
-    faq: [
-      {
-        q: "Does this include labor?",
-        a: "No. It estimates material quantity and material budget. Installed cost depends on prep, repairs, labor, and coating system."
-      },
-      {
-        q: "Is a two-car garage automatically 400 square feet?",
-        a: "No. Many are close, but measure your own garage because small size differences change kit count."
-      },
-      {
-        q: "Should flakes or topcoat be included?",
-        a: "Include them only if you can express their material need through coat count, coverage, and price. Otherwise treat them as separate line items."
-      }
-    ],
-    related: [
-      "epoxy-garage-floor-cost",
-      "two-car-garage-epoxy-calculator",
-      "epoxy-floor-coverage-calculator",
-      "garage-floor-epoxy-calculator",
-      "epoxy-cost-per-square-foot",
-      "epoxy-kit-size-guide"
-    ],
-    note: "This is a material cost estimate. Prep, repairs, labor, flakes, and tools may change the final project budget.",
-    compareLabel: "Base floor material vs conservative budget",
-    resultEyebrow: "Garage floor budget",
-    statLabels: {
-      raw: "Base material",
-      split: "System type",
-      cost: "Material cost",
-      layers: "Coat plan"
-    }
   },
   {
     slug: "two-car-garage-epoxy-calculator",
@@ -1171,68 +945,6 @@ const calculatorSpecs = [
 ];
 
 const guideSpecs = [
-  {
-    slug: "epoxy-garage-floor-cost",
-    title: "Epoxy Garage Floor Cost: Material Budget & Cost Drivers",
-    h1: "Epoxy Garage Floor Cost",
-    description:
-      "Understand epoxy garage floor material cost, square-foot drivers, coat count, kit coverage, waste, and when a calculator is more reliable than averages.",
-    eyebrow: "Garage Cost Guide",
-    intro:
-      "Garage floor cost searches are usually buying-decision searches. This guide explains what changes the material budget and points users to the calculator when they know their square footage.",
-    primaryKeyword: "epoxy garage floor cost",
-    supportingKeywords: ["garage floor epoxy cost", "cost to epoxy garage floor", "epoxy garage floor material cost"],
-    answer:
-      "Epoxy garage floor material cost depends mainly on square footage, coat count, published coverage rate, slab condition, and kit price. A measured calculation is more reliable than a generic per-garage average.",
-    takeaways: [
-      "Square footage and coverage rate drive material quantity.",
-      "Primer, base coat, flakes, and topcoat can change the coat count.",
-      "Rough or porous concrete usually needs a more conservative coverage assumption.",
-      "Material cost is not the same as installed cost."
-    ],
-    sections: [
-      {
-        title: "What changes the cost",
-        body:
-          "The biggest variables are floor size, number of coats, coating coverage per gallon, surface condition, and kit price. Labor, concrete repair, grinding, moisture mitigation, flakes, and topcoat can add cost outside the calculator."
-      },
-      {
-        title: "When to use the calculator",
-        points: [
-          "Use the garage floor cost calculator once you know floor length and width.",
-          "Use the floor coverage calculator when the question is quantity rather than budget.",
-          "Use cost per square foot when comparing different systems on the same floor."
-        ]
-      },
-      {
-        title: "Ad placement note",
-        body:
-          "This is a strong monetization page because users are comparing products and project budgets. Ads should sit after the direct answer or calculator links, not before the cost explanation."
-      }
-    ],
-    faq: [
-      {
-        q: "Why do garage floor cost estimates vary so much?",
-        a: "Because prep, coating system, slab condition, and coat count differ. Material-only estimates are narrower than installed-cost estimates."
-      },
-      {
-        q: "Is a DIY kit cheaper than a professional install?",
-        a: "Usually on material and labor cost, but a professional install may include prep, repairs, and coating systems a basic kit does not include."
-      },
-      {
-        q: "Should I buy by gallons or by coverage?",
-        a: "For floors, start from coverage. Gallons only make sense after you know how much area the system covers per gallon."
-      }
-    ],
-    related: [
-      "epoxy-garage-floor-cost-calculator",
-      "garage-floor-epoxy-calculator",
-      "epoxy-floor-coverage-calculator",
-      "two-car-garage-epoxy-calculator",
-      "epoxy-cost-per-square-foot",
-      "epoxy-kit-size-guide"
-    ]
-  },
   {
     slug: "river-table-epoxy-cost",
     title: "River Table Epoxy Cost: Resin Budget Before You Buy",

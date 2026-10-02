@@ -356,7 +356,7 @@ function renderCards(cards = [], page = {}) {
           return `
             <article class="mini-card${primaryClass}">
               <div class="mini-card__header">
-                <h3>${icon}${escapeHtml(card.title)}</h3>
+                <h3>${icon}${card.slug ? `<a href="${href}">${escapeHtml(card.title)}</a>` : escapeHtml(card.title)}</h3>
               </div>
               <div class="mini-card__body">
                 <p>${escapeHtml(card.text)}</p>
@@ -389,7 +389,7 @@ function renderRelated(page, pageMap) {
             (relatedPage) => `
             <article class="mini-card">
               <div class="mini-card__header">
-                <h3>${escapeHtml(relatedPage.h1)}</h3>
+                <h3><a href="${hrefFor(relatedPage.slug)}">${escapeHtml(relatedPage.h1)}</a></h3>
               </div>
               <div class="mini-card__body">
                 <p>${escapeHtml(relatedPage.description)}</p>
@@ -418,6 +418,35 @@ function renderBullets(title, bullets = [], className = "") {
   `;
 }
 
+function renderTable(table) {
+  if (!table?.rows?.length) return "";
+  return `
+    <div class="data-table-wrap">
+      <table class="data-table">
+        <thead><tr>${table.headers.map((header) => `<th scope="col">${escapeHtml(header)}</th>`).join("")}</tr></thead>
+        <tbody>
+          ${table.rows.map((row) => `<tr>${row.map((cell, index) => (index === 0 ? `<th scope="row">${escapeHtml(cell)}</th>` : `<td>${escapeHtml(cell)}</td>`)).join("")}</tr>`).join("")}
+        </tbody>
+      </table>
+    </div>
+    ${table.note ? `<p class="table-note">${escapeHtml(table.note)}</p>` : ""}
+  `;
+}
+
+// 计算器页顶部的直接答案：问句标题 + 一段答案 + 可选表格
+function renderAnswerBlock(page) {
+  if (!page.answer) return "";
+  return `
+    <section class="section answer-section">
+      <div class="section-heading">
+        <h2>${escapeHtml(page.answerHeading)}</h2>
+      </div>
+      <p class="lead">${escapeHtml(page.answer)}</p>
+      ${renderTable(page.answerTable)}
+    </section>
+  `;
+}
+
 function renderGuideSections(sections = [], page = {}) {
   return sections
     .map((section) => `
@@ -427,6 +456,7 @@ function renderGuideSections(sections = [], page = {}) {
         </div>
         ${section.body ? `<p class="lead">${escapeHtml(section.body)}</p>` : ""}
         ${section.points ? `<ul class="bullet-list">${section.points.map((point) => `<li>${escapeHtml(point)}</li>`).join("")}</ul>` : ""}
+        ${renderTable(section.table)}
         ${section.faqs ? renderFaqs(section.faqs, page) : ""}
         ${section.cards ? renderCards(section.cards, page) : ""}
         ${section.contactEmail ? `<p><a class="text-link" href="mailto:${escapeHtml(section.contactEmail)}">${escapeHtml(section.contactEmail)}</a></p>` : ""}
@@ -574,6 +604,7 @@ function renderInfoSections(page) {
           ${section.points.map((point) => `<li>${escapeHtml(point)}</li>`).join("")}
         </ul>
       ` : ""}
+      ${renderTable(section.table)}
       ${section.cards ? renderCards(section.cards, page) : ""}
       ${section.faqs ? renderFaqs(section.faqs, page) : ""}
       ${section.contactEmail ? `<p><a class="text-link" href="mailto:${escapeHtml(section.contactEmail)}">${escapeHtml(section.contactEmail)}</a></p>` : ""}
@@ -694,7 +725,9 @@ function renderPageBody(page, context) {
   if (page.pageType === "calculator") {
     return [
       renderHero(page),
+      renderAnswerBlock(page),
       renderCalculator(page),
+      page.sections ? renderInfoSections(page) : "",
       renderBullets(uiText(page, "whyTitle", "Why this page exists"), page.bullets),
       renderBullets(uiText(page, "howToTitle", "How to measure or set the inputs"), page.howTo),
       renderBullets(uiText(page, "mistakesTitle", "Common mistakes that cost money"), page.mistakes),
@@ -1043,7 +1076,7 @@ export function renderPage(page, context) {
     <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght=300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="/assets/site.css" />
     ${renderConsentBootstrap()}
     ${jsonLd(page, context)}

@@ -10,8 +10,8 @@ const NUMBER_FORMAT = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 2
 });
 
-function formatNumber(value, digits = 2) {
-  return new Intl.NumberFormat("en-US", {
+function formatNumber(value, digits = 2, numberLocale = "en-US") {
+  return new Intl.NumberFormat(numberLocale, {
     maximumFractionDigits: digits,
     minimumFractionDigits: value !== 0 && Math.abs(value) < 10 ? Math.min(digits, 1) : 0
   }).format(value);
@@ -107,14 +107,276 @@ function displayDepth(valueInches, unit) {
   return `${formatNumber(valueInches)} in`;
 }
 
-function displaySplit(recommendedCubicInches, unit, ratio) {
-  if (!ratio) return "Verify brand ratio";
+// 结果区动态文案。英文是默认值，其他语言缺少的键会回退到英文。
+// 函数型条目接收参数对象 p，里面的数值和单位已经按语言格式化好。
+// 目前覆盖多语言页用到的计算器类型：general、volume、coverage、garage-floor。
+const RESULT_TEXT = {
+  en: {
+    secondaryDefault: (p) => `Recommended order quantity based on raw volume plus planning buffer. Equivalent to ${p.equivalent}.`,
+    split: (p) => `${p.a} A / ${p.b} B (${p.ratio} example)`,
+    splitUnknown: "Verify brand ratio",
+    addPrice: "Add price / gallon",
+    errGeneric: "Please check the form inputs.",
+    errDiameterDepth: "Enter a positive diameter and depth.",
+    errLengthWidthDepth: "Enter positive length, width, and depth.",
+    errSurface: "Enter positive surface dimensions and coat thickness.",
+    errFloor: "Enter positive floor dimensions and coverage rate.",
+    shapeRectangle: "Rectangle geometry",
+    shapeRound: "Round geometry",
+    rawVolumeShape: (p) => `${p.shape}: ${p.dual} raw volume.`,
+    wasteBuffer: (p) => `Waste buffer: +${p.pct}%.`,
+    recommendedOrder: (p) => `Recommended order: ${p.volume}.`,
+    conservativeNote: "Conservative scenario adds another 8% planning margin.",
+    layerShallowPour: "Single coat / shallow pour",
+    layerSingleLift: "Single lift if product allows",
+    layerStagedLifts: (p) => `${p.n} staged lifts`,
+    secondaryCoverage: (p) => `Surface estimate for ${p.area} at ${p.depth} target thickness.`,
+    surfaceArea: (p) => `Surface area: ${p.area}.`,
+    rawAtThickness: (p) => `Raw resin volume at target thickness: ${p.dual}.`,
+    edgeSoak: (p) => `Edge soak and runoff allowance: +${p.pct}%.`,
+    layerFloodCoat: "1 flood coat",
+    layerThickCoat: "Thick coat, confirm product spec",
+    volumeRound: (p) => `Round volume model at ${p.depth} depth.`,
+    volumeRect: (p) => `Rectangular volume model at ${p.depth} depth.`,
+    rawVolume: (p) => `Raw volume: ${p.dual}.`,
+    coatsPlanned: (p) => `${p.n} ${pluralize(p.n, "coat")} planned`,
+    secondaryFloor: (p) => `Coverage-based floor estimate for ${p.area} across ${p.n} coats.`,
+    floorArea: (p) => `Floor area: ${p.area}.`,
+    coverageRate: (p) => `Coverage rate: ${p.rate} ${p.areaUnit} per ${p.priceUnit === "liter" ? "L" : "gallon"}.`,
+    coatsCount: (p) => `Coats planned: ${p.n}.`
+  },
+  de: {
+    secondaryDefault: (p) => `Empfohlene Bestellmenge aus Rohvolumen plus Planungsreserve.${p.equivalent ? ` Entspricht ${p.equivalent}.` : ""}`,
+    split: (p) => `${p.a} A / ${p.b} B (Beispiel ${p.ratio})`,
+    splitUnknown: "Mischverhältnis laut Hersteller prüfen",
+    addPrice: (p) => (p.priceUnit === "liter" ? "Preis pro Liter eingeben" : "Preis pro Gallone eingeben"),
+    errGeneric: "Bitte prüfe die Eingaben.",
+    errDiameterDepth: "Gib einen positiven Durchmesser und eine positive Tiefe ein.",
+    errLengthWidthDepth: "Gib positive Werte für Länge, Breite und Tiefe ein.",
+    errSurface: "Gib positive Flächenmaße und eine positive Schichtdicke ein.",
+    errFloor: "Gib positive Bodenmaße und eine positive Reichweite ein.",
+    shapeRectangle: "Rechteck",
+    shapeRound: "Kreisform",
+    rawVolumeShape: (p) => `${p.shape}: ${p.dual} Rohvolumen.`,
+    wasteBuffer: (p) => `Reserve: +${p.pct} %.`,
+    recommendedOrder: (p) => `Empfohlene Bestellmenge: ${p.volume}.`,
+    conservativeNote: "Das konservative Szenario rechnet weitere 8 % Reserve ein.",
+    layerShallowPour: "Eine Schicht / flacher Guss",
+    layerSingleLift: "Ein Guss, wenn das Produkt es erlaubt",
+    layerStagedLifts: (p) => `${p.n} Gussschichten nacheinander`,
+    secondaryCoverage: (p) => `Flächenschätzung für ${p.area} bei ${p.depth} Schichtdicke.`,
+    surfaceArea: (p) => `Fläche: ${p.area}.`,
+    rawAtThickness: (p) => `Rohvolumen bei Zielschichtdicke: ${p.dual}.`,
+    edgeSoak: (p) => `Zuschlag für Kanten und Ablaufen: +${p.pct} %.`,
+    layerFloodCoat: "1 gegossene Deckschicht",
+    layerThickCoat: "Dicke Schicht, Datenblatt prüfen",
+    volumeRound: (p) => `Rundes Volumenmodell bei ${p.depth} Tiefe.`,
+    volumeRect: (p) => `Rechteckiges Volumenmodell bei ${p.depth} Tiefe.`,
+    rawVolume: (p) => `Rohvolumen: ${p.dual}.`,
+    coatsPlanned: (p) => `${p.n} ${p.n === 1 ? "Schicht" : "Schichten"} geplant`,
+    secondaryFloor: (p) => `Bodenschätzung nach Reichweite für ${p.area} mit ${p.n} ${p.n === 1 ? "Schicht" : "Schichten"}.`,
+    floorArea: (p) => `Bodenfläche: ${p.area}.`,
+    coverageRate: (p) => `Reichweite: ${p.rate} ${p.areaUnit} pro ${p.priceUnit === "liter" ? "Liter" : "Gallone"}.`,
+    coatsCount: (p) => `Geplante Schichten: ${p.n}.`
+  },
+  fr: {
+    secondaryDefault: (p) => `Quantité à commander : volume brut plus marge de sécurité.${p.equivalent ? ` Soit ${p.equivalent}.` : ""}`,
+    split: (p) => `${p.a} A / ${p.b} B (exemple ${p.ratio})`,
+    splitUnknown: "Vérifiez le ratio du fabricant",
+    addPrice: (p) => (p.priceUnit === "liter" ? "Indiquez le prix par litre" : "Indiquez le prix par gallon"),
+    errGeneric: "Vérifiez les valeurs saisies.",
+    errDiameterDepth: "Saisissez un diamètre et une profondeur positifs.",
+    errLengthWidthDepth: "Saisissez une longueur, une largeur et une profondeur positives.",
+    errSurface: "Saisissez des dimensions de surface et une épaisseur positives.",
+    errFloor: "Saisissez des dimensions de sol et un rendement positifs.",
+    shapeRectangle: "Forme rectangulaire",
+    shapeRound: "Forme ronde",
+    rawVolumeShape: (p) => `${p.shape} : ${p.dual} de volume brut.`,
+    wasteBuffer: (p) => `Marge : +${p.pct} %.`,
+    recommendedOrder: (p) => `Quantité recommandée : ${p.volume}.`,
+    conservativeNote: "Le scénario prudent ajoute encore 8 % de marge.",
+    layerShallowPour: "Une couche / coulée peu épaisse",
+    layerSingleLift: "Une seule coulée si le produit le permet",
+    layerStagedLifts: (p) => `${p.n} coulées successives`,
+    secondaryCoverage: (p) => `Estimation pour ${p.area} à ${p.depth} d’épaisseur.`,
+    surfaceArea: (p) => `Surface : ${p.area}.`,
+    rawAtThickness: (p) => `Volume brut à l’épaisseur visée : ${p.dual}.`,
+    edgeSoak: (p) => `Marge pour bords et coulures : +${p.pct} %.`,
+    layerFloodCoat: "1 couche de finition coulée",
+    layerThickCoat: "Couche épaisse, vérifiez la fiche technique",
+    volumeRound: (p) => `Volume rond calculé à ${p.depth} de profondeur.`,
+    volumeRect: (p) => `Volume rectangulaire calculé à ${p.depth} de profondeur.`,
+    rawVolume: (p) => `Volume brut : ${p.dual}.`,
+    coatsPlanned: (p) => (p.n === 1 ? "1 couche prévue" : `${p.n} couches prévues`),
+    secondaryFloor: (p) => `Estimation du sol selon le rendement pour ${p.area} en ${p.n} ${p.n === 1 ? "couche" : "couches"}.`,
+    floorArea: (p) => `Surface du sol : ${p.area}.`,
+    coverageRate: (p) => `Rendement : ${p.rate} ${p.areaUnit} par ${p.priceUnit === "liter" ? "litre" : "gallon"}.`,
+    coatsCount: (p) => `Couches prévues : ${p.n}.`
+  },
+  "pt-BR": {
+    secondaryDefault: (p) => `Quantidade recomendada para compra: volume bruto mais sobra de planejamento.${p.equivalent ? ` Equivale a ${p.equivalent}.` : ""}`,
+    split: (p) => `${p.a} A / ${p.b} B (exemplo ${p.ratio})`,
+    splitUnknown: "Confira a proporção do fabricante",
+    addPrice: (p) => (p.priceUnit === "liter" ? "Informe o preço por litro" : "Informe o preço por galão"),
+    errGeneric: "Confira os valores informados.",
+    errDiameterDepth: "Informe diâmetro e profundidade maiores que zero.",
+    errLengthWidthDepth: "Informe comprimento, largura e profundidade maiores que zero.",
+    errSurface: "Informe medidas da superfície e espessura maiores que zero.",
+    errFloor: "Informe medidas do piso e rendimento maiores que zero.",
+    shapeRectangle: "Formato retangular",
+    shapeRound: "Formato redondo",
+    rawVolumeShape: (p) => `${p.shape}: ${p.dual} de volume bruto.`,
+    wasteBuffer: (p) => `Sobra: +${p.pct}%.`,
+    recommendedOrder: (p) => `Quantidade recomendada: ${p.volume}.`,
+    conservativeNote: "O cenário conservador soma mais 8% de sobra.",
+    layerShallowPour: "Uma camada / despejo raso",
+    layerSingleLift: "Um único despejo, se o produto permitir",
+    layerStagedLifts: (p) => `${p.n} despejos em etapas`,
+    secondaryCoverage: (p) => `Estimativa para ${p.area} com ${p.depth} de espessura.`,
+    surfaceArea: (p) => `Área: ${p.area}.`,
+    rawAtThickness: (p) => `Volume bruto na espessura desejada: ${p.dual}.`,
+    edgeSoak: (p) => `Sobra para bordas e escorrimento: +${p.pct}%.`,
+    layerFloodCoat: "1 camada de cobertura",
+    layerThickCoat: "Camada grossa, confira a ficha técnica",
+    volumeRound: (p) => `Volume redondo calculado com ${p.depth} de profundidade.`,
+    volumeRect: (p) => `Volume retangular calculado com ${p.depth} de profundidade.`,
+    rawVolume: (p) => `Volume bruto: ${p.dual}.`,
+    coatsPlanned: (p) => (p.n === 1 ? "1 demão prevista" : `${p.n} demãos previstas`),
+    secondaryFloor: (p) => `Estimativa do piso pelo rendimento para ${p.area} em ${p.n} ${p.n === 1 ? "demão" : "demãos"}.`,
+    floorArea: (p) => `Área do piso: ${p.area}.`,
+    coverageRate: (p) => `Rendimento: ${p.rate} ${p.areaUnit} por ${p.priceUnit === "liter" ? "litro" : "galão"}.`,
+    coatsCount: (p) => `Demãos previstas: ${p.n}.`
+  },
+  es: {
+    secondaryDefault: (p) => `Cantidad recomendada para comprar: volumen bruto más margen de planificación.${p.equivalent ? ` Equivale a ${p.equivalent}.` : ""}`,
+    split: (p) => `${p.a} A / ${p.b} B (ejemplo ${p.ratio})`,
+    splitUnknown: "Comprueba la proporción del fabricante",
+    addPrice: (p) => (p.priceUnit === "liter" ? "Indica el precio por litro" : "Indica el precio por galón"),
+    errGeneric: "Revisa los valores introducidos.",
+    errDiameterDepth: "Introduce un diámetro y una profundidad mayores que cero.",
+    errLengthWidthDepth: "Introduce largo, ancho y profundidad mayores que cero.",
+    errSurface: "Introduce medidas de superficie y espesor mayores que cero.",
+    errFloor: "Introduce medidas del suelo y un rendimiento mayores que cero.",
+    shapeRectangle: "Forma rectangular",
+    shapeRound: "Forma redonda",
+    rawVolumeShape: (p) => `${p.shape}: ${p.dual} de volumen bruto.`,
+    wasteBuffer: (p) => `Margen: +${p.pct} %.`,
+    recommendedOrder: (p) => `Cantidad recomendada: ${p.volume}.`,
+    conservativeNote: "El escenario conservador añade otro 8 % de margen.",
+    layerShallowPour: "Una capa / vertido poco profundo",
+    layerSingleLift: "Un solo vertido si el producto lo permite",
+    layerStagedLifts: (p) => `${p.n} vertidos por capas`,
+    secondaryCoverage: (p) => `Estimación para ${p.area} con ${p.depth} de espesor.`,
+    surfaceArea: (p) => `Superficie: ${p.area}.`,
+    rawAtThickness: (p) => `Volumen bruto con el espesor previsto: ${p.dual}.`,
+    edgeSoak: (p) => `Margen para bordes y escurrido: +${p.pct} %.`,
+    layerFloodCoat: "1 capa de recubrimiento",
+    layerThickCoat: "Capa gruesa, revisa la ficha técnica",
+    volumeRound: (p) => `Volumen redondo calculado con ${p.depth} de profundidad.`,
+    volumeRect: (p) => `Volumen rectangular calculado con ${p.depth} de profundidad.`,
+    rawVolume: (p) => `Volumen bruto: ${p.dual}.`,
+    coatsPlanned: (p) => (p.n === 1 ? "1 capa prevista" : `${p.n} capas previstas`),
+    secondaryFloor: (p) => `Estimación del suelo según rendimiento para ${p.area} en ${p.n} ${p.n === 1 ? "capa" : "capas"}.`,
+    floorArea: (p) => `Superficie del suelo: ${p.area}.`,
+    coverageRate: (p) => `Rendimiento: ${p.rate} ${p.areaUnit} por ${p.priceUnit === "liter" ? "litro" : "galón"}.`,
+    coatsCount: (p) => `Capas previstas: ${p.n}.`
+  },
+  it: {
+    secondaryDefault: (p) => `Quantità consigliata da ordinare: volume grezzo più margine di sicurezza.${p.equivalent ? ` Equivale a ${p.equivalent}.` : ""}`,
+    split: (p) => `${p.a} A / ${p.b} B (esempio ${p.ratio})`,
+    splitUnknown: "Verifica il rapporto del produttore",
+    addPrice: (p) => (p.priceUnit === "liter" ? "Inserisci il prezzo al litro" : "Inserisci il prezzo al gallone"),
+    errGeneric: "Controlla i valori inseriti.",
+    errDiameterDepth: "Inserisci diametro e profondità maggiori di zero.",
+    errLengthWidthDepth: "Inserisci lunghezza, larghezza e profondità maggiori di zero.",
+    errSurface: "Inserisci dimensioni della superficie e spessore maggiori di zero.",
+    errFloor: "Inserisci dimensioni del pavimento e resa maggiori di zero.",
+    shapeRectangle: "Forma rettangolare",
+    shapeRound: "Forma rotonda",
+    rawVolumeShape: (p) => `${p.shape}: ${p.dual} di volume grezzo.`,
+    wasteBuffer: (p) => `Margine: +${p.pct}%.`,
+    recommendedOrder: (p) => `Quantità consigliata: ${p.volume}.`,
+    conservativeNote: "Lo scenario prudente aggiunge un ulteriore 8% di margine.",
+    layerShallowPour: "Uno strato / colata sottile",
+    layerSingleLift: "Una sola colata se il prodotto lo consente",
+    layerStagedLifts: (p) => `${p.n} colate a strati`,
+    secondaryCoverage: (p) => `Stima per ${p.area} con ${p.depth} di spessore.`,
+    surfaceArea: (p) => `Superficie: ${p.area}.`,
+    rawAtThickness: (p) => `Volume grezzo allo spessore previsto: ${p.dual}.`,
+    edgeSoak: (p) => `Margine per bordi e colature: +${p.pct}%.`,
+    layerFloodCoat: "1 strato di finitura colato",
+    layerThickCoat: "Strato spesso, verifica la scheda tecnica",
+    volumeRound: (p) => `Volume rotondo calcolato con ${p.depth} di profondità.`,
+    volumeRect: (p) => `Volume rettangolare calcolato con ${p.depth} di profondità.`,
+    rawVolume: (p) => `Volume grezzo: ${p.dual}.`,
+    coatsPlanned: (p) => (p.n === 1 ? "1 strato previsto" : `${p.n} strati previsti`),
+    secondaryFloor: (p) => `Stima del pavimento in base alla resa per ${p.area} in ${p.n} ${p.n === 1 ? "strato" : "strati"}.`,
+    floorArea: (p) => `Superficie del pavimento: ${p.area}.`,
+    coverageRate: (p) => `Resa: ${p.rate} ${p.areaUnit} per ${p.priceUnit === "liter" ? "litro" : "gallone"}.`,
+    coatsCount: (p) => `Strati previsti: ${p.n}.`
+  }
+};
 
-  const totalParts = ratio.a + ratio.b;
-  const partA = recommendedCubicInches * (ratio.a / totalParts);
-  const partB = recommendedCubicInches * (ratio.b / totalParts);
+// 按表单语言生成结果文案和数值格式。英文分支完全沿用原有格式函数，保证英文页输出不变；
+// 其他语言用本地数字格式，并且以升为主：公制下只显示升，英制下显示“升 / 加仑”。
+function createResultText({ locale = "en", numberLocale = "en-US", priceUnit = "gallon" } = {}) {
+  const localized = locale !== "en" && Boolean(RESULT_TEXT[locale]);
+  const table = localized ? RESULT_TEXT[locale] : RESULT_TEXT.en;
+  const num = (value, digits = 2) => formatNumber(value, digits, localized ? numberLocale : "en-US");
+  const plain = (value, digits) => new Intl.NumberFormat(numberLocale, { maximumFractionDigits: digits }).format(value);
+  const liters = (cubicInches) => `${num(litersFromCubicInches(cubicInches))} L`;
 
-  return `${displayVolume(partA, unit)} A / ${displayVolume(partB, unit)} B (${ratio.a}:${ratio.b} example)`;
+  const t = (key, params = {}) => {
+    const entry = table[key] ?? RESULT_TEXT.en[key];
+    return typeof entry === "function" ? entry({ priceUnit, ...params }) : entry;
+  };
+
+  const volume = (cubicInches, unit) => {
+    if (!localized) return displayVolume(cubicInches, unit);
+    return unit === "metric" ? liters(cubicInches) : `${num(gallonsFromCubicInches(cubicInches))} gal`;
+  };
+
+  const dual = (cubicInches, unit) => {
+    if (!localized) return displayVolumeDual(cubicInches);
+    return unit === "metric" ? liters(cubicInches) : `${liters(cubicInches)} / ${num(gallonsFromCubicInches(cubicInches))} gal`;
+  };
+
+  return {
+    t,
+    volume,
+    dual,
+    // 主结果旁的换算值；公制的本地化页面主结果已经是升，不再重复
+    equivalent: (cubicInches, unit) => {
+      if (!localized) return displayVolumeDual(cubicInches);
+      return unit === "metric" ? "" : liters(cubicInches);
+    },
+    areaUnit: (unit, areaKind = "surface") => {
+      if (!localized) return areaKind === "garage-floor" ? (unit === "metric" ? "sq m" : "sq ft") : unit === "metric" ? "sq cm" : "sq in";
+      return areaKind === "garage-floor" ? (unit === "metric" ? "m²" : "ft²") : unit === "metric" ? "cm²" : "in²";
+    },
+    area(value, unit, areaKind = "surface") {
+      if (!localized) return displayArea(value, unit, areaKind);
+      return `${num(value)} ${this.areaUnit(unit, areaKind)}`;
+    },
+    // 公制下不足 1 cm 的厚度（多为涂层）按毫米显示，更符合欧洲用户的读法
+    depth: (valueInches, unit) => {
+      if (!localized) return displayDepth(valueInches, unit);
+      if (unit !== "metric") return `${num(valueInches)} in`;
+      const cm = valueInches * CM_PER_INCH;
+      return cm < 1 ? `${num(cm * 10)} mm` : `${num(cm)} cm`;
+    },
+    pct: (value) => (localized ? plain(value, 1) : formatNumber(value, 1)),
+    rate: (value) => (localized ? plain(value, 2) : NUMBER_FORMAT.format(value)),
+    money: (value, currency) => (Number.isFinite(value) ? formatMoney(value, numberLocale, currency) : t("addPrice")),
+    split(recommendedCubicInches, unit, ratio) {
+      if (!ratio) return t("splitUnknown");
+
+      const totalParts = ratio.a + ratio.b;
+      const partA = recommendedCubicInches * (ratio.a / totalParts);
+      const partB = recommendedCubicInches * (ratio.b / totalParts);
+      return t("split", { a: volume(partA, unit), b: volume(partB, unit), ratio: `${ratio.a}:${ratio.b}` });
+    }
+  };
 }
 
 function parseVolumeUnit(unit) {
@@ -567,6 +829,7 @@ function finalizeResult({
   currency = "USD",
   priceUnit = "gallon"
 }) {
+  const text = createResultText({ locale, numberLocale, priceUnit });
   const product = productRecommendation(type, depthInches, recommendedCubicInches, locale);
   const projectedCost =
     Number.isFinite(pricePerGallon) && pricePerGallon > 0
@@ -574,17 +837,15 @@ function finalizeResult({
       : Number.NaN;
 
   return {
-    primary: displayVolume(recommendedCubicInches, unit),
-    secondary:
-      secondary ||
-      `Recommended order quantity based on raw volume plus planning buffer. Equivalent to ${displayVolumeDual(recommendedCubicInches)}.`,
-    rawText: displayVolumeDual(rawCubicInches),
-    splitText: splitTextOverride || displaySplit(recommendedCubicInches, unit, product.ratio),
-    costText: costTextOverride || formatMoney(projectedCost, numberLocale, currency),
+    primary: text.volume(recommendedCubicInches, unit),
+    secondary: secondary || text.t("secondaryDefault", { equivalent: text.equivalent(recommendedCubicInches, unit) }),
+    rawText: text.dual(rawCubicInches, unit),
+    splitText: splitTextOverride || text.split(recommendedCubicInches, unit, product.ratio),
+    costText: costTextOverride || text.money(projectedCost, currency),
     layersText,
     breakdown,
-    standardText: compareStandard || displayVolume(recommendedCubicInches, unit),
-    conservativeText: compareConservative || displayVolume(conservativeCubicInches, unit),
+    standardText: compareStandard || text.volume(recommendedCubicInches, unit),
+    conservativeText: compareConservative || text.volume(conservativeCubicInches, unit),
     productText: compareProduct || product.label,
     product
   };
@@ -598,6 +859,7 @@ function requirePositive(fields, message) {
 
 function computeGeneral(data) {
   const runtime = runtimeOptions(data);
+  const text = createResultText(runtime);
   const unit = data.unit || "imperial";
   const wastePct = toNumber(data.wastePct);
   const pricePerGallon = toNumber(data.pricePerGallon);
@@ -610,22 +872,26 @@ function computeGeneral(data) {
   if (shape === "round") {
     const diameter = toInches(toNumber(data.diameter), unit);
     depthInches = toInches(toNumber(data.depthRound), unit);
-    requirePositive([diameter, depthInches], "Enter a positive diameter and depth.");
+    requirePositive([diameter, depthInches], text.t("errDiameterDepth"));
     rawCubicInches = volumeFromRound(diameter, depthInches);
-    shapeCopy = "Round geometry";
+    shapeCopy = text.t("shapeRound");
   } else {
     const length = toInches(toNumber(data.length), unit);
     const width = toInches(toNumber(data.width), unit);
     depthInches = toInches(toNumber(data.depth), unit);
-    requirePositive([length, width, depthInches], "Enter positive length, width, and depth.");
+    requirePositive([length, width, depthInches], text.t("errLengthWidthDepth"));
     rawCubicInches = volumeFromRectangle(length, width, depthInches);
-    shapeCopy = "Rectangle geometry";
+    shapeCopy = text.t("shapeRectangle");
   }
 
   const recommendedCubicInches = rawCubicInches * (1 + wastePct / 100);
   const conservativeCubicInches = rawCubicInches * (1 + wastePct / 100 + 0.08);
   const layersText =
-    depthInches <= 0.25 ? "Single coat / shallow pour" : depthInches <= 2 ? "Single lift if product allows" : `${Math.ceil(depthInches / 2)} staged lifts`;
+    depthInches <= 0.25
+      ? text.t("layerShallowPour")
+      : depthInches <= 2
+        ? text.t("layerSingleLift")
+        : text.t("layerStagedLifts", { n: Math.ceil(depthInches / 2) });
 
   return finalizeResult({
     ...runtime,
@@ -638,23 +904,24 @@ function computeGeneral(data) {
     depthInches,
     layersText,
     breakdown: buildBreakdown([
-      `${shapeCopy}: ${displayVolumeDual(rawCubicInches)} raw volume.`,
-      `Waste buffer: +${formatNumber(wastePct, 1)}%.`,
-      `Recommended order: ${displayVolume(recommendedCubicInches, unit)}.`,
-      "Conservative scenario adds another 8% planning margin."
+      text.t("rawVolumeShape", { shape: shapeCopy, dual: text.dual(rawCubicInches, unit) }),
+      text.t("wasteBuffer", { pct: text.pct(wastePct) }),
+      text.t("recommendedOrder", { volume: text.volume(recommendedCubicInches, unit) }),
+      text.t("conservativeNote")
     ])
   });
 }
 
 function computeCoverage(data) {
   const runtime = runtimeOptions(data);
+  const text = createResultText(runtime);
   const unit = data.unit || "imperial";
   const wastePct = toNumber(data.wastePct);
   const pricePerGallon = toNumber(data.pricePerGallon);
   const lengthInput = toNumber(data.length);
   const widthInput = toNumber(data.width);
   const depthInput = toNumber(data.depth);
-  requirePositive([lengthInput, widthInput, depthInput], "Enter positive surface dimensions and coat thickness.");
+  requirePositive([lengthInput, widthInput, depthInput], text.t("errSurface"));
 
   const lengthInches = toInches(lengthInput, unit);
   const widthInches = toInches(widthInput, unit);
@@ -664,7 +931,7 @@ function computeCoverage(data) {
   const rawCubicInches = volumeFromRectangle(lengthInches, widthInches, depthInches);
   const recommendedCubicInches = rawCubicInches * (1 + wastePct / 100 + edgeSoakPct / 100);
   const conservativeCubicInches = rawCubicInches * (1 + wastePct / 100 + edgeSoakPct / 100 + 0.05);
-  const layersText = depthInches <= 0.125 ? "1 flood coat" : "Thick coat, confirm product spec";
+  const layersText = depthInches <= 0.125 ? text.t("layerFloodCoat") : text.t("layerThickCoat");
 
   return finalizeResult({
     ...runtime,
@@ -676,18 +943,19 @@ function computeCoverage(data) {
     pricePerGallon,
     depthInches,
     layersText,
-    secondary: `Surface estimate for ${displayArea(area, unit)} at ${displayDepth(depthInches, unit)} target thickness.`,
+    secondary: text.t("secondaryCoverage", { area: text.area(area, unit), depth: text.depth(depthInches, unit) }),
     breakdown: buildBreakdown([
-      `Surface area: ${displayArea(area, unit)}.`,
-      `Raw resin volume at target thickness: ${displayVolumeDual(rawCubicInches)}.`,
-      `Waste buffer: +${formatNumber(wastePct, 1)}%.`,
-      `Edge soak and runoff allowance: +${edgeSoakPct}%.`
+      text.t("surfaceArea", { area: text.area(area, unit) }),
+      text.t("rawAtThickness", { dual: text.dual(rawCubicInches, unit) }),
+      text.t("wasteBuffer", { pct: text.pct(wastePct) }),
+      text.t("edgeSoak", { pct: edgeSoakPct })
     ])
   });
 }
 
 function computeVolume(data) {
   const runtime = runtimeOptions(data);
+  const text = createResultText(runtime);
   const unit = data.unit || "imperial";
   const wastePct = toNumber(data.wastePct);
   const pricePerGallon = toNumber(data.pricePerGallon);
@@ -700,16 +968,16 @@ function computeVolume(data) {
   if (shape === "round") {
     const diameter = toInches(toNumber(data.diameter), unit);
     depthInches = toInches(toNumber(data.depthRound), unit);
-    requirePositive([diameter, depthInches], "Enter a positive diameter and depth.");
+    requirePositive([diameter, depthInches], text.t("errDiameterDepth"));
     rawCubicInches = volumeFromRound(diameter, depthInches);
-    detailLine = `Round volume model at ${displayDepth(depthInches, unit)} depth.`;
+    detailLine = text.t("volumeRound", { depth: text.depth(depthInches, unit) });
   } else {
     const length = toInches(toNumber(data.length), unit);
     const width = toInches(toNumber(data.width), unit);
     depthInches = toInches(toNumber(data.depth), unit);
-    requirePositive([length, width, depthInches], "Enter positive length, width, and depth.");
+    requirePositive([length, width, depthInches], text.t("errLengthWidthDepth"));
     rawCubicInches = volumeFromRectangle(length, width, depthInches);
-    detailLine = `Rectangular volume model at ${displayDepth(depthInches, unit)} depth.`;
+    detailLine = text.t("volumeRect", { depth: text.depth(depthInches, unit) });
   }
 
   const recommendedCubicInches = rawCubicInches * (1 + wastePct / 100);
@@ -724,12 +992,12 @@ function computeVolume(data) {
     conservativeCubicInches,
     pricePerGallon,
     depthInches,
-    layersText: depthInches <= 2 ? "Single lift if product allows" : `${Math.ceil(depthInches / 2)} staged lifts`,
+    layersText: depthInches <= 2 ? text.t("layerSingleLift") : text.t("layerStagedLifts", { n: Math.ceil(depthInches / 2) }),
     breakdown: buildBreakdown([
       detailLine,
-      `Raw volume: ${displayVolumeDual(rawCubicInches)}.`,
-      `Waste buffer: +${formatNumber(wastePct, 1)}%.`,
-      `Recommended order: ${displayVolume(recommendedCubicInches, unit)}.`
+      text.t("rawVolume", { dual: text.dual(rawCubicInches, unit) }),
+      text.t("wasteBuffer", { pct: text.pct(wastePct) }),
+      text.t("recommendedOrder", { volume: text.volume(recommendedCubicInches, unit) })
     ])
   });
 }
@@ -874,6 +1142,7 @@ function computeSurface(data) {
 
 function computeGarageFloor(data) {
   const runtime = runtimeOptions(data);
+  const text = createResultText(runtime);
   const unit = data.unit || "imperial";
   const coats = Math.max(1, Math.round(toNumber(data.coats)));
   const coverageRate = toNumber(data.coverageRate);
@@ -881,7 +1150,7 @@ function computeGarageFloor(data) {
   const pricePerGallon = toNumber(data.pricePerGallon);
   const length = toNumber(data.length);
   const width = toNumber(data.width);
-  requirePositive([length, width, coverageRate], "Enter positive floor dimensions and coverage rate.");
+  requirePositive([length, width, coverageRate], text.t("errFloor"));
 
   const area = length * width;
   const rawCoverageVolume = (area * coats) / coverageRate;
@@ -898,13 +1167,13 @@ function computeGarageFloor(data) {
     conservativeCubicInches,
     pricePerGallon,
     depthInches: 0,
-    layersText: `${coats} ${pluralize(coats, "coat")} planned`,
-    secondary: `Coverage-based floor estimate for ${displayArea(area, unit, "garage-floor")} across ${coats} coats.`,
+    layersText: text.t("coatsPlanned", { n: coats }),
+    secondary: text.t("secondaryFloor", { area: text.area(area, unit, "garage-floor"), n: coats }),
     breakdown: buildBreakdown([
-      `Floor area: ${displayArea(area, unit, "garage-floor")}.`,
-      `Coverage rate: ${NUMBER_FORMAT.format(coverageRate)} ${unit === "metric" ? "sq m" : "sq ft"} per ${runtime.priceUnit === "liter" ? "L" : "gallon"}.`,
-      `Coats planned: ${coats}.`,
-      `Waste buffer: +${formatNumber(wastePct, 1)}%.`
+      text.t("floorArea", { area: text.area(area, unit, "garage-floor") }),
+      text.t("coverageRate", { rate: text.rate(coverageRate), areaUnit: text.areaUnit(unit, "garage-floor") }),
+      text.t("coatsCount", { n: coats }),
+      text.t("wasteBuffer", { pct: text.pct(wastePct) })
     ])
   });
 }
@@ -1201,30 +1470,40 @@ function showError(form, message) {
   if (error) error.textContent = message;
 }
 
-function resetPanel(shell) {
-  const fallbacks = {
-    "[data-result-primary]": "--",
-    "[data-result-secondary]": "Start with the inputs to generate an order-ready estimate.",
-    "[data-stat-raw]": "--",
-    "[data-stat-split]": "--",
-    "[data-stat-cost]": "--",
-    "[data-stat-layers]": "--",
-    "[data-compare-standard]": "--",
-    "[data-compare-conservative]": "--",
-    "[data-compare-product]": "--",
-    "[data-product-heading]": "Match the result to the right resin class",
-    "[data-product-copy]": "Use the estimate to narrow the resin class first. Then confirm product limits, cure behavior, and measurement assumptions before you make a buying decision."
-  };
+const PANEL_FALLBACK_SELECTORS = [
+  "[data-result-primary]",
+  "[data-result-secondary]",
+  "[data-stat-raw]",
+  "[data-stat-split]",
+  "[data-stat-cost]",
+  "[data-stat-layers]",
+  "[data-compare-standard]",
+  "[data-compare-conservative]",
+  "[data-compare-product]",
+  "[data-product-heading]",
+  "[data-product-copy]",
+  "[data-breakdown-list]"
+];
 
-  Object.entries(fallbacks).forEach(([selector, value]) => {
+// 页面渲染时的占位文案已经按语言输出，首次计算前记下来，出错重置时原样恢复
+const panelFallbacks = new WeakMap();
+
+function capturePanelFallbacks(shell) {
+  if (!shell || panelFallbacks.has(shell)) return;
+  const snapshot = {};
+  PANEL_FALLBACK_SELECTORS.forEach((selector) => {
     const node = shell.querySelector(selector);
-    if (node) node.textContent = value;
+    if (node) snapshot[selector] = node.innerHTML;
   });
+  panelFallbacks.set(shell, snapshot);
+}
 
-  const list = shell.querySelector("[data-breakdown-list]");
-  if (list) {
-    list.innerHTML = "<li>Enter the form values to see raw volume, buffer, and recommendation.</li>";
-  }
+function resetPanel(shell) {
+  const snapshot = panelFallbacks.get(shell) || {};
+  Object.entries(snapshot).forEach(([selector, html]) => {
+    const node = shell.querySelector(selector);
+    if (node) node.innerHTML = html;
+  });
 
   // Sticky bar is outside calculator-shell, search from parent section
   const section = shell.closest(".section") || shell.parentElement;
@@ -1289,7 +1568,7 @@ function compute(form) {
     const result = computer(serializeForm(form));
     updatePanel(form, result);
   } catch (error) {
-    showError(form, error instanceof Error ? error.message : "Please check the form inputs.");
+    showError(form, error instanceof Error ? error.message : createResultText({ locale: form.dataset.locale }).t("errGeneric"));
     resetPanel(shell);
   }
 }
@@ -1319,6 +1598,7 @@ function handleUnitChange(form, nextUnit) {
 }
 
 function initCalculator(form) {
+  capturePanelFallbacks(form.closest(".calculator-shell"));
   updateConditionalGroups(form);
   handleUnitChange(form, form.querySelector('[name="unit"]')?.value || "");
   compute(form);

@@ -400,6 +400,13 @@ const epoxyCalculatorContent = {
   ]
 };
 
+// ---- 第 3 步：覆盖率、配比、每加仑价格（数字按公式现算或注明出处）----
+const sqFtPerGallon = (inches) => CU_IN_PER_GAL / (144 * inches);
+const flOzPerSqFt = (inches) => (144 * inches) / CU_IN_PER_FL_OZ;
+const ratioSplit = (total, a, b, unit, digits = 1) =>
+  `${fmtNum((total * a) / (a + b), digits)} + ${fmtNum((total * b) / (a + b), digits)} ${unit}`;
+const mixRatios = [[1, 1], [2, 1], [3, 1]];
+
 const firstBatchPages = createFirstBatchPages({ calculatorPage, guidePage });
 const multilingualWave1Pages = createMultilingualWave1Pages({ calculatorPage, infoPage });
 const languageMarketCards = createLanguageMarketCards();
@@ -617,12 +624,23 @@ const basePages = [
     h1: "Epoxy Coverage Calculator",
     description:
       "Enter square feet (or m²) and coat thickness to see how many gallons of epoxy you need, with edge runoff, waste, and cost for tabletops, bar tops, and countertops.",
-    eyebrow: "Coverage Intent",
+    eyebrow: "Coverage Calculator",
     intro:
-      "Use this page when the real question is coverage, not cavity volume. It is built for top coats, flood coats, tabletops, countertops, and other thin resin layers where surface area, coat thickness, runoff, and edge behavior matter more than block volume math.",
+      "Enter the surface area and coat thickness to see how much epoxy a tabletop, bar top, countertop, or other thin coat needs, with edges, runoff, and waste included.",
     primaryKeyword: "epoxy coverage calculator",
     supportingKeywords: ["epoxy resin coverage calculator", "epoxy square foot calculator", "epoxy coverage estimator", "epoxy resin coverage"],
     calculatorType: "coverage",
+    answerHeading: "How do you calculate epoxy coverage?",
+    answer: `Gallons needed = square feet × thickness in inches × 144 ÷ 231. At the common 1/8 in flood coat, one gallon covers about ${fmtNum(sqFtPerGallon(0.125))} sq ft, or about ${fmtNum(flOzPerSqFt(0.125), 0)} fl oz per square foot; at 1/16 in it covers twice as much. Enter your area and thickness below to add edges, runoff, and cost.`,
+    answerTable: {
+      headers: ["Coat thickness", "Coverage per gallon", "Resin per sq ft"],
+      rows: [[1 / 16, "1/16 in (1.6 mm)"], [1 / 8, "1/8 in (3.2 mm)"], [1 / 4, "1/4 in (6.4 mm)"]].map(([inches, label]) => [
+        label,
+        `${fmtNum(sqFtPerGallon(inches))} sq ft`,
+        `${fmtNum(flOzPerSqFt(inches))} fl oz`
+      ]),
+      note: "Mixed resin, top surface only, before waste. The epoxy thickness and coverage chart lists seal coats and floor coatings in mils."
+    },
     bullets: [
       "Best for tabletops, countertops, bar tops, and other surface-finish jobs.",
       "Turns area and thickness into an order-ready resin estimate with realistic buffer.",
@@ -672,7 +690,7 @@ const basePages = [
     note: "Use this page for finish coats and surface pours. If the resin is filling a cavity or thick section, move to the volume, river-table, or deep-pour page instead.",
     compareLabel: "Coverage baseline vs buffered order",
     resultEyebrow: "Coverage recommendation",
-    lastmod: "2026-05-05"
+    lastmod: "2026-10-03"
   }),
   calculatorPage({
     slug: "river-table-epoxy-calculator",
@@ -680,7 +698,7 @@ const basePages = [
     h1: "River Table Epoxy Calculator",
     description:
       "Estimate epoxy for river tables with quick mode, segment mode, seepage, seal-coat buffer, cost planning, and deep-pour recommendations.",
-    eyebrow: "High-Value Scenario",
+    eyebrow: "River Table Planner",
     intro:
       "Estimate resin for a live-edge river table in one of two modes: a fast average-width estimate, or segment mode for irregular channels. Seepage, the seal coat, and cost are built in.",
     primaryKeyword: "river table epoxy calculator",
@@ -728,7 +746,8 @@ const basePages = [
       "deep-pour-vs-table-top-epoxy"
     ],
     note: "River tables punish under-buying. Start with quick mode, then switch to segment mode if the river shape changes enough to make a single average width misleading.",
-    compareLabel: "Quick mode vs segment mode"
+    compareLabel: "Quick mode vs segment mode",
+    lastmod: "2026-10-03"
   }),
   calculatorPage({
     slug: "deep-pour-epoxy-calculator",
@@ -1011,7 +1030,7 @@ const basePages = [
       "Calculate epoxy for cracks, knots, and void fills with small-volume estimates, waste buffer, and unit conversion.",
     eyebrow: "Small Fill Planning",
     intro:
-      "This page is tuned for small irregular fills where ounces and milliliters matter. It is a better choice than a broad volume page when you are filling cracks, knots, and localized voids.",
+      "For small, irregular fills where ounces and milliliters matter: cracks, knots, bark inclusions, and other localized voids.",
     primaryKeyword: "void fill epoxy calculator",
     supportingKeywords: ["epoxy void filling calculator", "crack fill epoxy calculator", "epoxy knot fill calculator", "small epoxy fill calculator"],
     calculatorType: "void-fill",
@@ -1046,7 +1065,7 @@ const basePages = [
       "how-to-measure-a-river-table-for-epoxy"
     ],
     compareLabel: "Tight fill vs sand-back buffer",
-    lastmod: "2026-05-05"
+    lastmod: "2026-10-03"
   }),
   calculatorPage({
     slug: "round-epoxy-table-calculator",
@@ -1162,7 +1181,7 @@ const basePages = [
       "Estimate how much epoxy a river table needs with measurement tips, waste guidance, segment-based planning, and a dedicated calculator.",
     eyebrow: "Guide",
     intro:
-      "River table estimates usually fail when the user relies on one average width and ignores seepage, seal coat, and the real buying decision. This guide fixes that thinking first, then pushes you to the dedicated planner.",
+      "River table estimates usually come up short when they rely on one average width and ignore seepage and the seal coat. This guide covers how to measure the channel and how much extra to plan, then hands off to the river table calculator.",
     primaryKeyword: "how much epoxy do i need for a river table",
     supportingKeywords: ["how much resin for river table", "river table epoxy amount"],
     answer:
@@ -1197,7 +1216,7 @@ const basePages = [
       "deep-pour-epoxy-calculator",
       "epoxy-cost-calculator"
     ],
-    lastmod: "2026-05-05"
+    lastmod: "2026-10-03"
   }),
   guidePage({
     slug: "how-to-measure-a-river-table-for-epoxy",
@@ -1252,7 +1271,7 @@ const basePages = [
       "Compare deep pour and table top epoxy by thickness, cure behavior, use case, and project fit for river tables, slabs, and coatings.",
     eyebrow: "Comparison Guide",
     intro:
-      "This is one of the highest-value decision pages on the site. Users often know how much epoxy they need before they know which category of resin will actually survive the pour.",
+      "Many projects know how much epoxy they need before deciding which kind of resin can handle the pour. This guide compares deep pour and table top epoxy by depth per pour, cure, and use.",
     primaryKeyword: "deep pour vs table top epoxy",
     supportingKeywords: ["deep pour or tabletop epoxy", "what epoxy for river table"],
     answer:
@@ -1286,7 +1305,7 @@ const basePages = [
       "table-top-epoxy-calculator",
       "river-table-epoxy-calculator"
     ],
-    lastmod: "2026-05-05"
+    lastmod: "2026-10-03"
   }),
   guidePage({
     slug: "epoxy-waste-factor-guide",
@@ -1419,50 +1438,82 @@ const basePages = [
   }),
   guidePage({
     slug: "epoxy-mixing-ratio-guide",
-    title: "Epoxy Mixing Ratio Guide: Part A / Part B Calculator",
-    h1: "Epoxy Mixing Ratio Guide",
+    title: "Epoxy Mix Ratio Guide: Resin to Hardener Chart (1:1, 2:1, 3:1)",
+    h1: "Epoxy Mix Ratio: Resin to Hardener Chart",
     description:
-      "Understand epoxy mix ratios, part A/B calculations, and practical batch planning for river tables, void fills, and coating jobs.",
+      "How to split epoxy resin and hardener at 1:1, 2:1, and 3:1 in ounces and milliliters, when to measure by weight, and what happens if the ratio is off.",
     eyebrow: "Mixing Guide",
     intro:
-      "Users often know the total amount of resin they need but still get stuck on how to split it into batches or how to think about part A and part B. This guide resolves that gap.",
-    primaryKeyword: "epoxy mixing ratio guide",
-    supportingKeywords: ["part a part b epoxy calculator", "epoxy mix ratio chart"],
-    answer:
-      "Once you know the recommended mixed volume, split it according to the product mix ratio and batch size constraints. The safest workflow is to plan both the total project quantity and the per-batch mixing routine.",
+      "The mix ratio on your resin's label tells you how to split the total into Part A (resin) and Part B (hardener). The charts below do the split for common batch sizes, and the steps cover how to measure and mix so the epoxy cures fully.",
+    primaryKeyword: "epoxy mix ratio",
+    supportingKeywords: ["resin to hardener ratio", "resin mix ratio", "epoxy mixing ratio chart", "how to mix epoxy resin"],
+    answer: `Use the ratio printed on your product. At 1:1, mix equal parts resin and hardener; at 2:1, two parts resin to one part hardener; at 3:1, three parts to one. A 16 fl oz batch is ${ratioSplit(16, 1, 1, "oz")} at 1:1, ${ratioSplit(16, 2, 1, "oz")} at 2:1, and ${ratioSplit(16, 3, 1, "oz")} at 3:1. If the label gives the ratio by weight, weigh both parts instead of using cups.`,
     takeaways: [
-      "Part A and part B planning matters most when batch size and pour timing matter.",
-      "The same total quantity can be mixed in very different ways.",
-      "Always follow the ratio on the product documentation.",
-      "Batch size mistakes usually show up after the quantity estimate is already correct."
+      "The first number is the resin (Part A), the second the hardener (Part B).",
+      "Tabletop and coating resins are often 1:1; many casting and deep-pour resins are 2:1 or more. The label decides.",
+      "A ratio by weight is not the same as a ratio by volume, because the two parts differ in density.",
+      "An off-ratio mix may never fully cure, so measure each part, do not guess."
     ],
     sections: [
       {
-        title: "What this guide does and does not assume",
-        points: [
-          "It helps you think about mixed total volume and batch planning.",
-          "It does not replace the product-specific ratio on the resin data sheet.",
-          "The calculator pages already show a simple part A / part B split for planning."
+        title: "Resin to hardener chart in fluid ounces",
+        table: {
+          headers: ["Total mixed", ...mixRatios.map(([a, b]) => `${a}:${b}`)],
+          rows: [4, 8, 16, 32, 64, 128].map((total) => [
+            total === 128 ? "128 fl oz (1 gal)" : `${total} fl oz`,
+            ...mixRatios.map(([a, b]) => ratioSplit(total, a, b, "oz"))
+          ]),
+          note: "Each cell is resin (Part A) + hardener (Part B), by volume. Rounded to 0.1 fl oz."
+        }
+      },
+      {
+        title: "Resin to hardener chart in milliliters",
+        table: {
+          headers: ["Total mixed", ...mixRatios.map(([a, b]) => `${a}:${b}`)],
+          rows: [100, 250, 500, 1000].map((total) => [`${fmtNum(total, 0)} ml`, ...mixRatios.map(([a, b]) => ratioSplit(total, a, b, "ml"))]),
+          note: "Each cell is resin (Part A) + hardener (Part B), by volume. Rounded to 0.1 ml."
+        }
+      },
+      {
+        title: "By volume or by weight?",
+        body:
+          "Resin and hardener usually have different densities, so a ratio by weight (for example 100:45) does not match the same numbers by volume. Use measuring cups only when the label gives a volume ratio; for a weight ratio, use a digital scale.",
+        cards: [
+          {
+            title: "Epoxy Mix Ratio by Volume vs Weight",
+            text: "When to measure with cups and when you need a scale.",
+            slug: "epoxy-mix-ratio-by-volume-vs-weight"
+          }
         ]
       },
       {
-        title: "Where this guide matters most",
+        title: "How to mix epoxy resin",
         points: [
-          "Deep pours where exotherm risk makes batch planning part of the workflow.",
-          "Void fills and small pours where ounces and milliliters need to be split accurately.",
-          "Budget planning where you want the quantity, batch size, and unit price to agree."
+          "Measure each part in its own graduated cup at the ratio on the label.",
+          "Combine them and stir slowly, scraping the sides and bottom of the cup, for the full mixing time on the label.",
+          "For larger batches, pour into a second clean cup and stir again, so no unmixed resin from the cup walls reaches the pour.",
+          "Pour soon after mixing: mixed epoxy heats up in the cup, and bigger batches lose working time faster.",
+          "Mix in batches you can pour within the working time, rather than the whole project at once."
+        ]
+      },
+      {
+        title: "What happens if the ratio is off",
+        body:
+          "An off-ratio mix may not cure, or may cure with weaker properties. Typical signs are soft or sticky spots, areas that never cure, cracking, and excess shrinkage. Changing the amount of hardener does not fix a pour; follow the label ratio.",
+        links: [
+          { label: "Crosslink Technology: mix ratio related problems", url: "https://crosslinktech.com/support/trouble-shooting-guide/mix-ratio-related-problems.html" }
         ]
       }
     ],
     faq: [],
     related: [
+      "epoxy-mix-ratio-by-volume-vs-weight",
       "epoxy-calculator",
       "deep-pour-epoxy-calculator",
-      "epoxy-cost-calculator",
       "epoxy-unit-converter",
       "void-fill-epoxy-calculator"
     ],
-    lastmod: "2026-05-05"
+    lastmod: "2026-10-03"
   }),
   calculatorPage({
     slug: "epoxy-cost-calculator",
@@ -1472,10 +1523,41 @@ const basePages = [
       "Estimate epoxy project cost from planned resin quantity, waste, and price input for river tables, deep pours, coatings, and other resin projects.",
     eyebrow: "Budget Planning",
     intro:
-      "This page exists because the real question is often not only how much resin you need, but what that plan will cost once waste, buffer, and real order quantity are included. Use it to pressure-test the budget before you choose kits or quote a project.",
+      "Enter the resin quantity and the price per gallon or liter to see the project budget with a waste buffer. Use it once you know how much resin the project needs.",
     primaryKeyword: "epoxy cost calculator",
-    supportingKeywords: ["how much does epoxy cost for a river table", "epoxy project cost calculator", "epoxy price calculator", "resin project budget calculator"],
+    supportingKeywords: ["epoxy cost per gallon", "epoxy project cost calculator", "epoxy price calculator", "resin project budget calculator"],
     calculatorType: "cost",
+    answerHeading: "How much does epoxy cost per gallon?",
+    answer:
+      "Floor-coating epoxy runs about $30 to $150 per gallon depending on type: water-based is the cheapest, 100% solids costs the most, and polyurea or polyaspartic topcoats run about $150 per gallon. Enter your quantity and price below to see the budget with waste.",
+    answerTable: {
+      headers: ["Epoxy type", "Angi (2026)", "HomeGuide (2026)"],
+      rows: [
+        ["Water-based", "$30 – $50", "$40 – $100"],
+        ["Solvent-based", "$40 – $55", "$50 – $100"],
+        ["100% solids", "$45 – $150", "$70 – $150"],
+        ["Polyurea / polyaspartic", "About $150 (This Old House 2026)", "—"]
+      ],
+      note: "Per gallon of floor coating material. Tabletop, casting, and art resin kits are priced per mixed gallon on the product listing."
+    },
+    sections: [
+      {
+        title: "Pricing a garage or basement floor?",
+        body: "Installed floor prices include prep and labor, which usually cost more than the material.",
+        cards: [
+          {
+            title: "Epoxy Garage Floor Cost Calculator",
+            text: "Installed price per square foot for professional epoxy, metallic, and polyaspartic floors, plus DIY kits.",
+            slug: "garage-floor-epoxy-calculator"
+          }
+        ],
+        links: [
+          { label: "Angi: Epoxy Flooring Cost", url: "https://www.angi.com/articles/epoxy-flooring-costs-advantages-and-installation.htm", note: "updated Aug 3, 2026" },
+          { label: "HomeGuide: Epoxy Flooring Cost", url: "https://homeguide.com/costs/epoxy-flooring-cost", note: "2026" },
+          { label: "This Old House: Epoxy Floor Cost", url: "https://www.thisoldhouse.com/flooring/epoxy-floor-cost", note: "updated Mar 13, 2026" }
+        ]
+      }
+    ],
     bullets: [
       "Translates planned quantity into a budget range you can actually compare against suppliers.",
       "Useful for quoting, procurement planning, and sanity-checking expensive pours before you order.",
@@ -1522,7 +1604,7 @@ const basePages = [
       "void-fill-epoxy-calculator",
       "epoxy-mixing-ratio-guide"
     ],
-    note: "This page is for budget pressure-testing, not geometry discovery. Use a project calculator first if you are still unsure about the resin quantity itself.",
+    note: "Enter the quantity you plan to order. If you are still working out how much resin you need, start with a project calculator.",
     compareLabel: "Planned quantity vs conservative budget",
     resultEyebrow: "Budget range",
     statLabels: {
@@ -1531,7 +1613,7 @@ const basePages = [
       cost: "Projected cost",
       layers: "Planning note"
     },
-    lastmod: "2026-05-05"
+    lastmod: "2026-10-03"
   }),
   {
     slug: "epoxy-unit-converter",
@@ -1883,7 +1965,7 @@ const basePages = [
       "Answers to the most common site-wide questions about epoxy calculations, waste, conversions, and product planning.",
     eyebrow: "FAQ",
     intro:
-      "This page collects the broadest questions that appear across the site, especially the ones users ask before they choose a scenario-specific tool.",
+      "Answers to the questions people ask most before choosing a calculator: accuracy, waste, units, and product limits.",
     sections: [
       {
         title: "Most common questions",

@@ -938,10 +938,6 @@ const calculatorSpecs = [
         a: "No. It estimates resin material cost. Final price should include pigments, molds, packaging, labor, fees, failed batches, and profit."
       },
       {
-        q: "Why is this useful for AdSense and affiliate traffic?",
-        a: "Pricing searches are commercial and decision-heavy. The page helps users make a real buying and selling decision without turning into a pure sales page."
-      },
-      {
         q: "Can I use liters instead of gallons?",
         a: "Yes. Choose liters as the quantity unit when your project estimate or supplier listing is metric."
       }
@@ -1234,11 +1230,11 @@ const guideSpecs = [
       "Learn how much epoxy is needed per square foot at common coat thicknesses and when to use a coverage calculator.",
     eyebrow: "Coverage Answer",
     intro:
-      "This page answers a common coverage question with the missing variable included: thickness. A square foot by itself does not determine the amount of epoxy.",
+      "How much epoxy a square foot takes depends on the coat thickness. The table below gives fluid ounces per square foot for common floor coats, seal coats, and flood coats.",
     primaryKeyword: "how much epoxy per square foot",
     supportingKeywords: ["how much resin per square foot", "epoxy per square foot", "epoxy coverage per sq ft"],
     answer:
-      "The amount of epoxy per square foot depends on thickness. A thin seal coat uses much less resin than a flood coat or floor system covering the same area.",
+      "About 10 fl oz per square foot for a 1/8 in tabletop flood coat, 5 fl oz at 1/16 in, and 2.5 fl oz for a thin 1/32 in seal coat. Floor coatings use far less: about 0.8 fl oz per square foot at 10 mils per coat. Add the edges and 10–15% for waste.",
     takeaways: [
       "Area alone is not enough; thickness or coverage rate is required.",
       "Use coating thickness for tabletops and countertops.",
@@ -1247,14 +1243,29 @@ const guideSpecs = [
     ],
     sections: [
       {
+        title: "Epoxy per square foot by thickness",
+        table: {
+          headers: ["Thickness", "Fl oz per sq ft", "Liters per m²"],
+          rows: [
+            ["10 mils (0.25 mm), floor coat", "0.8", "0.25"],
+            ["20 mils (0.5 mm), floor coat", "1.6", "0.51"],
+            ["1/32 in (0.8 mm), seal coat", "2.5", "0.79"],
+            ["1/16 in (1.6 mm)", "5.0", "1.59"],
+            ["1/8 in (3.2 mm), flood coat", "10.0", "3.18"],
+            ["1/4 in (6.4 mm)", "19.9", "6.35"]
+          ],
+          note: "Mixed resin, raw volume before waste. 1 US gallon = 231 cubic inches = 128 fl oz."
+        }
+      },
+      {
         title: "The simple formula",
         body:
-          "For surface coats, resin volume equals area multiplied by thickness. The calculator handles unit conversion and adds practical buffer so the result can be used for buying."
+          "Fluid ounces per square foot = 144 × thickness in inches ÷ 1.805. The coverage calculator applies it to your area and adds edges, runoff, and waste."
       },
       {
         title: "Which calculator to use",
         points: [
-          "Use the square-foot calculator for tabletop, countertop, and flood coat planning.",
+          "Use the coverage calculator for tabletop, countertop, and flood coat planning.",
           "Use the floor coverage calculator for garage floors.",
           "Use the gallon coverage guide when a product listing only says one gallon covers a range."
         ]
@@ -1296,11 +1307,11 @@ const guideSpecs = [
       "Understand how far a gallon of epoxy goes by coat thickness, coverage rate, surface type, and waste assumptions.",
     eyebrow: "Gallon Coverage",
     intro:
-      "A gallon coverage question needs context. One gallon can cover very different areas depending on whether the user is sealing wood, flooding a tabletop, or coating concrete.",
+      "One gallon covers very different areas depending on whether you are sealing wood, flooding a tabletop, or coating concrete. Thickness is what decides it.",
     primaryKeyword: "how much does a gallon of epoxy cover",
     supportingKeywords: ["epoxy gallon coverage", "1 gallon epoxy coverage", "how far does a gallon of epoxy go"],
     answer:
-      "A gallon of epoxy covers more area at a thinner coat and less area at a thicker coat. For floors, use the product's stated coverage rate; for tabletops and flood coats, calculate from thickness.",
+      "At the common 1/8 in tabletop flood coat, one mixed gallon covers about 12.8 sq ft; at 1/16 in about 25.7 sq ft; and as a thin 1/32 in seal coat about 51 sq ft. Floor coatings go on much thinner: about 160 sq ft per gallon at 10 mils and 80 sq ft at 20 mils, per coat.",
     takeaways: [
       "There is no universal coverage number without thickness or product coverage rate.",
       "Seal coats cover more area than flood coats.",
@@ -1309,6 +1320,21 @@ const guideSpecs = [
     ],
     sections: [
       {
+        title: "Coverage of one gallon by thickness",
+        table: {
+          headers: ["Application", "Thickness", "Coverage per gallon"],
+          rows: [
+            ["Floor coating, thin coat", "10 mils (0.25 mm)", "About 160 sq ft"],
+            ["Floor coating, thick coat", "20 mils (0.5 mm)", "About 80 sq ft"],
+            ["Seal coat on wood", "1/32 in (0.8 mm)", "About 51 sq ft"],
+            ["Thin flood coat", "1/16 in (1.6 mm)", "About 25.7 sq ft"],
+            ["Tabletop flood coat", "1/8 in (3.2 mm)", "About 12.8 sq ft"],
+            ["Thick pour", "1/4 in (6.4 mm)", "About 6.4 sq ft"]
+          ],
+          note: "Raw coverage of one mixed gallon (Part A + Part B). Plan on 10–15% less for runoff, edges, and cup loss. HomeGuide (2026) puts typical floor epoxy at 80–200 sq ft per gallon."
+        }
+      },
+      {
         title: "Why product labels differ",
         body:
           "Labels may describe floor coating coverage, flood coat coverage, or mixed kit volume. Compare products only after you know the intended application and thickness."
@@ -1316,9 +1342,17 @@ const guideSpecs = [
       {
         title: "Practical planning path",
         points: [
-          "Use the coverage calculator for surface coats.",
-          "Use the floor coverage calculator for concrete floors.",
+          "A \"1 gallon kit\" usually means one gallon mixed, sold as two half-gallon bottles. Check whether the listing gives the mixed total or each part.",
+          "Use the coverage calculator for tabletops and other surface coats.",
+          "Use the floor coverage calculator for concrete floors, with the coverage rate on the kit.",
           "Use the cost calculator after deciding how many gallons the project needs."
+        ],
+        cards: [
+          {
+            title: "Epoxy Thickness & Coverage Chart",
+            text: "Typical thickness for each job, in mils and inches, with square feet per gallon.",
+            slug: "epoxy-coverage-chart"
+          }
         ]
       },
       {
@@ -1924,7 +1958,8 @@ const referenceAnswers = {
 
 // 2026-10-03 删改过正文（去掉写给运营看的说明）的页面，lastmod 如实更新
 const editedSlugs = new Set(["epoxy-calculator-metric", "epoxy-countertop-cost", "how-to-calculate-epoxy-pour", "epoxy-kit-size-guide",
-  "epoxy-floor-coverage-calculator", "two-car-garage-epoxy-calculator", "epoxy-cost-per-square-foot"]);
+  "epoxy-floor-coverage-calculator", "two-car-garage-epoxy-calculator", "epoxy-cost-per-square-foot",
+  "how-much-does-a-gallon-of-epoxy-cover", "how-much-epoxy-per-square-foot", "resin-art-pricing-calculator"]);
 const lastmodFor = (slug) => (referenceAnswers[slug] || editedSlugs.has(slug) ? referenceLastmod : batchLastmod);
 
 export function createFirstBatchPages({ calculatorPage, guidePage }) {

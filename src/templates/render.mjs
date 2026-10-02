@@ -502,6 +502,7 @@ function renderGuideSections(sections = [], page = {}) {
         ${section.body ? `<p class="lead">${escapeHtml(section.body)}</p>` : ""}
         ${section.points ? `<ul class="bullet-list">${section.points.map((point) => `<li>${escapeHtml(point)}</li>`).join("")}</ul>` : ""}
         ${renderTable(section.table)}
+        ${renderSourceLinks(section.links)}
         ${section.faqs ? renderFaqs(section.faqs, page) : ""}
         ${section.cards ? renderCards(section.cards, page) : ""}
         ${section.contactEmail ? `<p><a class="text-link" href="mailto:${escapeHtml(section.contactEmail)}">${escapeHtml(section.contactEmail)}</a></p>` : ""}
@@ -802,7 +803,7 @@ function renderPageBody(page, context) {
         <div class="answer-grid">
           <article class="answer-card answer-card--lead">
             <p class="eyebrow">${escapeHtml(uiText(page, "directAnswerEyebrow", "Direct Answer"))}</p>
-            <h2>${escapeHtml(uiText(page, "directAnswerHeading", "Start with the shortest correct answer"))}</h2>
+            <h2>${escapeHtml(uiText(page, "directAnswerHeading", "The short answer"))}</h2>
             <p class="lead">${escapeHtml(page.answer)}</p>
           </article>
           <article class="answer-card">

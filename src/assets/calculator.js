@@ -1,3 +1,5 @@
+import { FLOOR_COST_RATES, FLOOR_PRO_MINIMUM, floorCostRange } from "./floor-cost-rates.js";
+
 const CUBIC_INCHES_PER_GALLON = 231;
 const CUBIC_INCHES_PER_LITER = 61.0237440947;
 const CUBIC_INCHES_PER_QUART = CUBIC_INCHES_PER_GALLON / 4;
@@ -1819,7 +1821,84 @@ function computeConverter(data) {
   };
 }
 
+function usd(value) {
+  return formatMoney(Math.round(value), "en-US", "USD");
+}
+
+function usdRange(low, high) {
+  return Math.round(low) === Math.round(high) ? usd(low) : `${usd(low)} – ${usd(high)}`;
+}
+
+function perSqFt(value) {
+  return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
+}
+
+function computeFloorCost(data) {
+  const length = toNumber(data.length);
+  const width = toNumber(data.width);
+  requirePositive([length, width], "Enter a positive length and width in feet.");
+
+  const area = length * width;
+  const systemKey = FLOOR_COST_RATES[data.system] ? data.system : "pro-epoxy";
+  const result = floorCostRange(area, systemKey, data.condition, data.needsGrinding);
+  const { rate, condition, coating, prep, grinding, low, high, minimumApplied } = result;
+  const areaText = `${NUMBER_FORMAT.format(area)} sq ft`;
+  const prepTotal = [prep[0] + grinding[0], prep[1] + grinding[1]];
+
+  // 对照：请人做的换成 DIY 彩砂套装，DIY 的换成请人做环氧
+  const altKey = rate.pro ? "diy-solids" : "pro-epoxy";
+  const alt = floorCostRange(area, altKey, data.condition, data.needsGrinding);
+  const otherProKey = systemKey === "pro-poly" ? "pro-epoxy" : "pro-poly";
+  const otherPro = floorCostRange(area, otherProKey, data.condition, false);
+
+  const breakdown = [
+    `Floor area: ${areaText} (${NUMBER_FORMAT.format(length)} × ${NUMBER_FORMAT.format(width)} ft).`,
+    `${rate.label}: ${perSqFt(rate.low)} – ${perSqFt(rate.high)} per sq ft = ${usdRange(coating[0], coating[1])}${rate.pro ? " installed" : " in materials"}.`,
+    condition.flat[1] || condition.perSqFt[1]
+      ? `${condition.label}: ${usdRange(prep[0], prep[1])}.`
+      : "Floor prep: basic cleaning and etching is usually included in professional quotes and DIY kits.",
+    grinding[1] ? `Grinder rental for old coating or sealer: ${usdRange(grinding[0], grinding[1])} per day.` : "",
+    minimumApplied ? `Contractor minimum applied: many installers charge at least ${usdRange(FLOOR_PRO_MINIMUM[0], FLOOR_PRO_MINIMUM[1])} per job.` : "",
+    rate.pro
+      ? "Not included: moving items out, foundation repair, and premium topcoats beyond the standard system."
+      : "Not included: tools you do not own, extra topcoat, and your time (plan 2–3 days including cure)."
+  ];
+
+  return {
+    primary: usdRange(low, high),
+    secondary: `${areaText}, ${rate.label}: about ${perSqFt(low / area)} – ${perSqFt(high / area)} per sq ft including prep.`,
+    rawText: `${perSqFt(low / area)} – ${perSqFt(high / area)}`,
+    stickyCost: `${perSqFt(low / area)} – ${perSqFt(high / area)} / sq ft`,
+    splitText: usdRange(coating[0], coating[1]),
+    costText: prepTotal[1] ? usdRange(prepTotal[0], prepTotal[1]) : "Included",
+    layersText: `${rate.pro ? "DIY kit" : "Pro epoxy"}: ${usdRange(alt.low, alt.high)}`,
+    breakdown: buildBreakdown(breakdown),
+    standardText: usd(low),
+    conservativeText: usd(high),
+    productText: `${otherProKey === "pro-poly" ? "Polyaspartic" : "Pro epoxy"}: ${usdRange(otherPro.low, otherPro.high)}`,
+    product: rate.pro
+      ? {
+          heading: "Compare two or three itemized quotes",
+          copy: `A fair quote for this floor should land near ${usdRange(low, high)}. Ask each installer how they prep the concrete (diamond grinding or acid etch), how many coats and what topcoat they use, whether crack repair and a moisture test are included, and what the warranty covers.`
+        }
+      : {
+          heading: "Check the slab before you buy a kit",
+          copy: "DIY kits fail most often on damp slabs and on floors with an old sealer. Tape a plastic sheet to the floor for 24 hours to check for moisture, and plan a grinder rental if water beads on the surface instead of soaking in."
+        }
+  };
+}
+
+function applySizePreset(form, value) {
+  const match = /^(\d+)x(\d+)$/.exec(value || "");
+  if (!match) return;
+  const length = form.querySelector('[name="length"]');
+  const width = form.querySelector('[name="width"]');
+  if (length) length.value = match[1];
+  if (width) width.value = match[2];
+}
+
 const COMPUTERS = {
+  "floor-cost": computeFloorCost,
   general: computeGeneral,
   coverage: computeCoverage,
   volume: computeVolume,
@@ -1961,8 +2040,10 @@ function updatePanel(form, result) {
     if (stickyPrimary) stickyPrimary.textContent = result.primary;
     const stickyCostEl2 = section.querySelector("[data-sticky-cost]");
     const stickyCostVal2 = section.querySelector("[data-sticky-cost-value]");
-    if (stickyCostVal2) stickyCostVal2.textContent = result.costText;
-    if (stickyCostEl2) stickyCostEl2.style.display = result.costText ? "flex" : "none";
+    // 浮动栏默认显示费用；个别计算器（如地坪成本）用 stickyCost 指定别的值
+    const stickyCost = result.stickyCost ?? result.costText;
+    if (stickyCostVal2) stickyCostVal2.textContent = stickyCost;
+    if (stickyCostEl2) stickyCostEl2.style.display = stickyCost ? "flex" : "none";
   }
 
   const breakdown = shell.querySelector("[data-breakdown-list]");
@@ -2036,6 +2117,14 @@ function initCalculator(form) {
 
     if (target.matches('[name="unit"]')) {
       handleUnitChange(form, target.value);
+    }
+
+    // 选了车库尺寸预设就填入长宽；手动改长宽时预设切回“自定义”
+    if (target.matches('[name="sizePreset"]')) {
+      applySizePreset(form, target.value);
+    } else if (target.matches('[name="length"], [name="width"]')) {
+      const preset = form.querySelector('[name="sizePreset"]');
+      if (preset) preset.value = "custom";
     }
 
     updateConditionalGroups(form);

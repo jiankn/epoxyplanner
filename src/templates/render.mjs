@@ -120,6 +120,51 @@ const FORM_TEMPLATES = {
       ${numberField("Price / gallon", "pricePerGallon", "62", "0.01")}
     </div>
   `,
+  // 地坪包工包料成本：费率和出处在 src/assets/floor-cost-rates.js
+  "floor-cost": () => `
+    <div class="field-grid field-grid--three">
+      <label class="field">
+        <span>Garage size</span>
+        <select class="custom-select" name="sizePreset">
+          <option value="custom">Custom size</option>
+          <option value="12x24">1-car (12 × 24 ft)</option>
+          <option value="20x20" selected>2-car (20 × 20 ft)</option>
+          <option value="24x24">2-car (24 × 24 ft)</option>
+          <option value="24x36">3-car (24 × 36 ft)</option>
+        </select>
+      </label>
+      ${numberField("Length (ft)", "length", "20", "0.1")}
+      ${numberField("Width (ft)", "width", "20", "0.1")}
+    </div>
+    <div class="field-grid field-grid--two">
+      <label class="field">
+        <span>Coating system</span>
+        <select class="custom-select" name="system">
+          <optgroup label="Professional install (materials + labor)">
+            <option value="pro-epoxy" selected>Epoxy, solid color or flake</option>
+            <option value="pro-metallic">Metallic epoxy</option>
+            <option value="pro-poly">Polyaspartic / polyurea with flake</option>
+          </optgroup>
+          <optgroup label="DIY kit (materials only)">
+            <option value="diy-basic">Basic water-based kit</option>
+            <option value="diy-solids">100% solids kit with flake</option>
+          </optgroup>
+        </select>
+      </label>
+      <label class="field">
+        <span>Floor condition</span>
+        <select class="custom-select" name="condition">
+          <option value="good" selected>Good: clean, few or no cracks</option>
+          <option value="cracks">Cracks or chips to patch</option>
+          <option value="moisture">Moisture: needs a vapor barrier</option>
+          <option value="resurface">Badly damaged: needs resurfacing</option>
+        </select>
+      </label>
+    </div>
+    <div class="field-grid field-grid--one checkbox-row">
+      ${checkboxField("DIY only: old coating or sealer, needs a grinder rental", "needsGrinding")}
+    </div>
+  `,
   "void-fill": ({ page }) => `
     <div class="field-grid field-grid--four">
       ${unitToggle(page)}
@@ -574,8 +619,10 @@ function renderCalculator(page) {
             </div>
             <p data-product-copy>${escapeHtml(uiText(page, "nextStepCopy", "Use the estimate to narrow the resin class first. Then confirm product limits, cure behavior, and measurement assumptions before you make a buying decision."))}</p>
             <div class="button-row">
-              <a class="button" href="/deep-pour-vs-table-top-epoxy/">${escapeHtml(uiText(page, "compareResinTypes", "Compare Resin Types"))}</a>
-              <a class="button button--ghost" href="/methodology/">${escapeHtml(uiText(page, "seeMethodology", "See Methodology"))}</a>
+              ${(page.nextStepLinks || [
+                { label: uiText(page, "compareResinTypes", "Compare Resin Types"), slug: "deep-pour-vs-table-top-epoxy" },
+                { label: uiText(page, "seeMethodology", "See Methodology"), slug: "methodology" }
+              ]).map((link, index) => `<a class="button${index ? " button--ghost" : ""}" href="${hrefFor(link.slug)}">${escapeHtml(link.label)}</a>`).join("")}
             </div>
           </div>
         </div>
@@ -605,11 +652,22 @@ function renderInfoSections(page) {
         </ul>
       ` : ""}
       ${renderTable(section.table)}
+      ${renderSourceLinks(section.links)}
       ${section.cards ? renderCards(section.cards, page) : ""}
       ${section.faqs ? renderFaqs(section.faqs, page) : ""}
       ${section.contactEmail ? `<p><a class="text-link" href="mailto:${escapeHtml(section.contactEmail)}">${escapeHtml(section.contactEmail)}</a></p>` : ""}
     </section>
   `).join("");
+}
+
+// 引用的外部来源：标题链接到原文，后面跟更新日期等说明
+function renderSourceLinks(links) {
+  if (!links?.length) return "";
+  return `
+    <ul class="bullet-list">
+      ${links.map((link) => `<li><a class="text-link" href="${escapeHtml(link.url)}" target="_blank" rel="noopener">${escapeHtml(link.label)}</a>${link.note ? ` (${escapeHtml(link.note)})` : ""}</li>`).join("")}
+    </ul>
+  `;
 }
 
 function breadcrumb(page) {

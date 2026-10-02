@@ -96,6 +96,7 @@ function buildAssets() {
   copyFile(path.join(projectRoot, "src", "assets", "site.css"), path.join(distRoot, "assets", "site.css"));
   copyFile(path.join(projectRoot, "src", "assets", "site.js"), path.join(distRoot, "assets", "site.js"));
   copyFile(path.join(projectRoot, "src", "assets", "calculator.js"), path.join(distRoot, "assets", "calculator.js"));
+  copyFile(path.join(projectRoot, "src", "assets", "floor-cost-rates.js"), path.join(distRoot, "assets", "floor-cost-rates.js"));
   copyFile(path.join(projectRoot, "src", "assets", "favicon.svg"), path.join(distRoot, "assets", "favicon.svg"));
   copyFile(path.join(projectRoot, "src", "assets", "favicon-32.png"), path.join(distRoot, "assets", "favicon-32.png"));
   copyFile(path.join(projectRoot, "src", "assets", "apple-touch-icon.png"), path.join(distRoot, "assets", "apple-touch-icon.png"));

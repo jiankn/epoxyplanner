@@ -1,4 +1,5 @@
 import { createFirstBatchPages } from "./seo-batch-2026-05.mjs";
+import { FLOOR_COST_RATES, floorCostRange } from "../assets/floor-cost-rates.js";
 import {
   applyMultilingualAlternates,
   createLanguageMarketCards,
@@ -18,12 +19,12 @@ export const site = {
   nav: [
     { label: "Epoxy Calculator", slug: "epoxy-calculator" },
     { label: "River Table", slug: "river-table-epoxy-calculator" },
-    { label: "Deep Pour", slug: "deep-pour-epoxy-calculator" },
+    { label: "Floor Cost", slug: "garage-floor-epoxy-calculator" },
     { label: "Coverage", slug: "epoxy-coverage-calculator" },
     {
       label: "More",
       children: [
-        { label: "Garage Floor", slug: "garage-floor-epoxy-calculator" },
+        { label: "Deep Pour", slug: "deep-pour-epoxy-calculator" },
         { label: "Cost", slug: "epoxy-cost-calculator" },
         { label: "Converter", slug: "epoxy-unit-converter" },
         { label: "Guides", slug: "how-much-epoxy-do-i-need" }
@@ -204,6 +205,132 @@ function infoPage({
   };
 }
 
+// ---- 环氧地坪成本页：答案、价格表、FAQ 里的数字都按共享费率现算 ----
+const floorCostUpdated = "October 3, 2026";
+const usd0 = (value) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(Math.round(value));
+// 整数价格不带小数（$4），非整数保留两位（$0.50）
+const usd2 = (value) =>
+  new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: Number.isInteger(value) ? 0 : 2, maximumFractionDigits: 2 }).format(value);
+const floorRange = (area, system, condition = "good") => {
+  const { low, high } = floorCostRange(area, system, condition, false);
+  return `${usd0(low)} – ${usd0(high)}`;
+};
+const rateRange = (system) => `${usd2(FLOOR_COST_RATES[system].low)} – ${usd2(FLOOR_COST_RATES[system].high)}`;
+const diyRange = (area) => `${usd0(area * FLOOR_COST_RATES["diy-basic"].low)} – ${usd0(area * FLOOR_COST_RATES["diy-solids"].high)}`;
+const garageSizes = [
+  ["1-car (12 × 24 ft)", 288],
+  ["2-car (20 × 20 ft)", 400],
+  ["2-car (24 × 24 ft)", 576],
+  ["3-car (24 × 36 ft)", 864]
+];
+
+const floorCostContent = {
+  answerHeading: "How much does it cost to epoxy a garage floor?",
+  answer: `Professional epoxy costs about ${rateRange("pro-epoxy")} per square foot installed, so a 400 sq ft two-car garage runs roughly ${floorRange(400, "pro-epoxy")}. Metallic and polyaspartic systems cost ${rateRange("pro-poly")} per square foot. DIY kits cost ${usd2(FLOOR_COST_RATES["diy-basic"].low)} to ${usd2(FLOOR_COST_RATES["diy-solids"].high)} per square foot in materials, plus tools and prep.`,
+  answerTable: {
+    headers: ["Garage", "Area", "DIY kit (materials)", "Pro epoxy", "Pro metallic", "Pro polyaspartic"],
+    rows: garageSizes.map(([label, area]) => [
+      label,
+      `${area} sq ft`,
+      diyRange(area),
+      floorRange(area, "pro-epoxy"),
+      floorRange(area, "pro-metallic"),
+      floorRange(area, "pro-poly")
+    ]),
+    note: `U.S. national averages for a floor in good condition, compiled ${floorCostUpdated} from HomeGuide, Angi, This Old House, and Bob Vila. High-cost metros land near the top of each range.`
+  },
+  sections: [
+    {
+      title: "Epoxy floor cost per square foot by coating system",
+      body: "Professional prices include materials and labor. DIY prices are kit materials only.",
+      table: {
+        headers: ["Coating system", "DIY materials", "Professional installed", "Typical lifespan"],
+        rows: [
+          ["Epoxy, solid color or flake", `${usd2(FLOOR_COST_RATES["diy-basic"].low)} – ${usd2(FLOOR_COST_RATES["diy-solids"].high)}`, rateRange("pro-epoxy"), "3 – 20 years"],
+          ["Metallic epoxy", "About $2.70 (kit list price)", rateRange("pro-metallic"), "Similar to epoxy"],
+          ["Polyaspartic / polyurea with flake", "Rarely sold as a DIY kit", rateRange("pro-poly"), "10 – 20+ years"]
+        ],
+        note: "Lifespans from HomeGuide (2026). Water-based DIY coatings sit at the short end and may need recoating within a few years."
+      }
+    },
+    {
+      title: "What adds to the price",
+      table: {
+        headers: ["Item", "Typical cost", "Source"],
+        rows: [
+          ["Patching cracks and chips", "$25 – $250 per job", "Angi 2026, This Old House 2026"],
+          ["Vapor barrier for a damp slab", "About +$1 per sq ft", "Installer quoted by Bob Vila (2024)"],
+          ["Resurfacing a badly damaged slab", "$3 – $7 per sq ft", "HomeGuide 2026"],
+          ["Power washing", "$0.35 – $0.77 per sq ft", "HomeGuide 2026"],
+          ["Floor grinder rental (DIY, old coating or sealer)", "$100 – $200 per day", "ArmorGarage 2026"],
+          ["Contractor minimum charge", "$500 – $1,000 per job", "Bob Vila 2024"]
+        ],
+        note: "Small floors cost more per square foot because setup and minimum labor do not shrink: Homewyse's 120 sq ft example works out to about $8 – $13 per sq ft (September 2026)."
+      }
+    },
+    {
+      title: "DIY kit or professional install?",
+      body: `For a 400 sq ft two-car garage, DIY kits run about ${diyRange(400)} in materials, while a professional epoxy floor runs ${floorRange(400, "pro-epoxy")}. Labor is roughly 33% to 60% of a professional job (Angi, 2026), and most of that time goes into grinding and repairing the slab.`,
+      points: [
+        "DIY makes sense on a dry, sound slab with no old coating, when you can keep the garage empty for two to three days.",
+        "Hire a pro when the slab is damp, has an old coating or sealer, needs real crack repair, or when you want metallic or polyaspartic finishes.",
+        "Diamond grinding bonds better than acid etching. Pros grind as standard; DIYers rent a grinder for old or sealed floors.",
+        "Before buying a kit, tape a plastic sheet to the slab for 24 hours. Condensation under it means you need a vapor barrier."
+      ]
+    },
+    {
+      title: "How to check an epoxy floor quote",
+      points: [
+        "Price per square foot: does it fall inside the range for the system quoted? Very low bids often skip grinding or use a thin water-based coat.",
+        "Surface prep: diamond grinding or shot blasting, not just a wash and acid etch.",
+        "Coats and topcoat: how many coats, how thick, and whether the topcoat is polyaspartic or polyurethane.",
+        "Repairs and moisture: are crack repair and a moisture test included, or priced as extras?",
+        "Cure time: how long before you can walk on it and before you can park on it.",
+        "Warranty: what it covers (peeling, hot-tire pickup) and for how long."
+      ]
+    },
+    {
+      title: "Sources and method",
+      body: `Ranges are U.S. national averages for materials and labor, compiled ${floorCostUpdated}. Where cost guides disagree, the calculator uses the overlap of the most recent neutral guides rather than the extremes. Seller data is used only for kit list prices and equipment rental.`,
+      links: [
+        { label: "HomeGuide: Epoxy Flooring Cost", url: "https://homeguide.com/costs/epoxy-flooring-cost", note: "2026" },
+        { label: "HomeGuide: Garage Floor Coating Cost", url: "https://homeguide.com/costs/garage-floor-coating-cost", note: "2026" },
+        { label: "Angi: Epoxy Flooring Cost", url: "https://www.angi.com/articles/epoxy-flooring-costs-advantages-and-installation.htm", note: "updated Aug 3, 2026" },
+        { label: "This Old House: Epoxy Floor Cost", url: "https://www.thisoldhouse.com/flooring/epoxy-floor-cost", note: "updated Mar 13, 2026" },
+        { label: "Homewyse: Cost to Epoxy Coat Garage Floor", url: "https://www.homewyse.com/services/cost_to_epoxy_coat_garage_floor.html", note: "September 2026" },
+        { label: "Bob Vila: Epoxy Garage Floor Cost", url: "https://www.bobvila.com/articles/epoxy-garage-floor-cost/", note: "updated Apr 26, 2024" },
+        { label: "Bob Vila: Polyaspartic Floor Coating Cost", url: "https://www.bobvila.com/articles/polyaspartic-floor-coating-cost/", note: "updated Jan 31, 2024" },
+        { label: "ArmorGarage: Epoxy Flooring Cost per Sq Ft", url: "https://armorgarage.com/blog/epoxy-flooring-cost-per-square-foot/", note: "kit seller, Sep 22, 2026" }
+      ],
+      cards: [
+        {
+          title: "Need gallons instead of dollars?",
+          text: "The floor coverage calculator turns square feet, coats, and your kit's coverage rate into gallons and kits to buy.",
+          slug: "epoxy-floor-coverage-calculator"
+        }
+      ]
+    }
+  ],
+  faq: [
+    {
+      q: "How much does it cost to epoxy a 2-car garage?",
+      a: `About ${floorRange(400, "pro-epoxy")} for a 400 sq ft (20 × 20 ft) garage with professional epoxy, and ${floorRange(576, "pro-epoxy")} for a 576 sq ft (24 × 24 ft) garage. DIY kits cost about ${diyRange(400)} and ${diyRange(576)} in materials for the same sizes.`
+    },
+    {
+      q: "Why are epoxy floor quotes so different?",
+      a: "Quotes differ mainly in surface prep, the number and thickness of coats, the topcoat, repairs, and local labor rates. A low bid that skips diamond grinding or uses a thin water-based coat is not comparable to a full-build flake system with a polyaspartic topcoat."
+    },
+    {
+      q: "How long does an epoxy garage floor last?",
+      a: "HomeGuide rates epoxy floors at 3 to 20 years and polyurea or polyaspartic coatings at 10 to 20+ years. Thin water-based DIY coatings sit at the short end; ground, multi-coat systems sit at the long end."
+    },
+    {
+      q: "Does a basement floor cost the same as a garage floor?",
+      a: "Per square foot, yes, for the same system. Basements are more likely to need a vapor barrier for moisture, which adds about $1 per square foot, and they often have more corners and edges to cut in."
+    }
+  ]
+};
+
 const firstBatchPages = createFirstBatchPages({ calculatorPage, guidePage });
 const multilingualWave1Pages = createMultilingualWave1Pages({ calculatorPage, infoPage });
 const languageMarketCards = createLanguageMarketCards();
@@ -219,6 +346,7 @@ const basePages = [
     intro:
       "Calculate exactly how much epoxy resin you need — with waste, seepage, layer count, Part A / Part B split, cost, and product-fit guidance built in.",
     heroActions: [
+      { label: "Epoxy Floor Cost", slug: "garage-floor-epoxy-calculator", icon: "🏠" },
       { label: "River Table", slug: "river-table-epoxy-calculator", icon: "🪵" },
       { label: "Deep Pour", slug: "deep-pour-epoxy-calculator", icon: "🧊" },
       { label: "Coverage & Coatings", slug: "epoxy-coverage-calculator", icon: "🖌️" },
@@ -233,6 +361,12 @@ const basePages = [
         body:
           "The fastest way to get a trustworthy estimate is to start from the actual project type. River tables, deep pours, coatings, floor jobs, and void fills do not share the same measurement logic or product constraints.",
         cards: [
+          {
+            title: "Epoxy Floor Cost Calculator",
+            text: "Installed price for garage and basement floors: $4–$10 per sq ft for professional epoxy, with DIY kits, flake, metallic, and polyaspartic compared.",
+            slug: "garage-floor-epoxy-calculator",
+            primary: true
+          },
           {
             title: "Epoxy Resin Calculator",
             text: "Best first stop for regular shapes, quick planning, and broad resin estimates in gallons or liters.",
@@ -270,9 +404,9 @@ const basePages = [
             primary: true
           },
           {
-            title: "Garage Floor Epoxy Calculator",
-            text: "Plan floor coatings from square footage, coats, kit coverage, waste, and material cost.",
-            slug: "garage-floor-epoxy-calculator",
+            title: "Floor Coverage Calculator",
+            text: "Gallons and kits for a garage or basement floor from square footage, coats, and kit coverage.",
+            slug: "epoxy-floor-coverage-calculator",
             primary: true
           },
           {
@@ -785,58 +919,69 @@ const basePages = [
   }),
   calculatorPage({
     slug: "garage-floor-epoxy-calculator",
-    title: "Garage Floor Epoxy Calculator: Gallons, Kits & Cost Estimate",
-    h1: "Garage Floor Epoxy Calculator and Cost Estimator",
+    title: "Epoxy Garage Floor Cost Calculator: Price per Sq Ft (2026)",
+    h1: "Epoxy Garage Floor Cost Calculator",
     description:
-      "Estimate garage floor epoxy: enter floor size, coats, and kit coverage to get gallons, kit count, and material cost for a one-, two-, or three-car garage.",
-    eyebrow: "Floor Coating Calculator",
+      "Epoxy garage floor cost: $4–$10 per sq ft installed, about $1,600–$4,000 for a 400 sq ft 2-car garage. Compare DIY kits, flake, metallic, and polyaspartic.",
+    eyebrow: "Floor Cost Estimator",
     intro:
-      "Garage floors behave differently from woodworking pours. This page turns floor area, number of coats, and the kit's coverage rate into gallons to buy and a material budget, so you can compare kits before you order.",
-    primaryKeyword: "garage floor epoxy calculator",
-    supportingKeywords: ["epoxy garage floor cost calculator", "epoxy flooring cost calculator", "epoxy floor calculator", "garage epoxy coverage calculator"],
-    calculatorType: "garage-floor",
-    bullets: [
-      "Floor-area-first coverage planning.",
-      "Useful for kit sizing and material budgeting.",
-      "Separate from wood and river-table workflows by design.",
-      "Built for people comparing one-car, two-car, and workshop floor kit coverage."
-    ],
+      "Enter the floor size, coating system, and slab condition to get an installed price range, the cost per square foot, and what prep and repairs add. Ranges are U.S. national averages from current cost guides, with sources listed below.",
+    primaryKeyword: "epoxy garage floor cost calculator",
+    supportingKeywords: ["epoxy garage floor cost", "epoxy floor cost", "epoxy flooring cost calculator", "epoxy floor cost per square foot", "garage floor coating cost calculator"],
+    calculatorType: "floor-cost",
+    ...floorCostContent,
+    bullets: [],
     howTo: [
-      "Measure the usable coated area after excluding cabinets, steps, or uncoated zones.",
-      "Set the planned number of coats rather than guessing with total gallons.",
-      "Use the product coverage rate from the floor coating kit, then compare the result against the kit size you can actually buy.",
-      "Confirm your coverage rate against the specific floor product you will use."
+      "Measure the coated floor only: skip the area under cabinets, steps, or built-in storage.",
+      "Pick the system you are actually comparing. Flake and solid-color epoxy share one price band.",
+      "Set the floor condition honestly. Cracks, moisture, and old coatings change the price more than the coating choice does.",
+      "Use the result to sanity-check quotes, not to replace them."
     ],
     mistakes: [
-      "Using a woodworking calculator for a garage floor coating.",
-      "Ignoring the number of coats in the final estimate.",
-      "Treating published coverage rates as exact instead of as planning ranges."
+      "Comparing a DIY kit price (materials only) with a professional quote (materials and labor).",
+      "Skipping a moisture check on a basement or slab-on-grade garage.",
+      "Choosing the lowest bid without asking how the concrete will be prepared."
     ],
-    faq: [
-      {
-        q: "How much does the epoxy for a garage floor cost?",
-        a: "Material cost is gallons needed times price per gallon. Gallons are floor area times coats divided by the kit's coverage per gallon. A 20 x 22 ft two-car garage (440 sq ft) with 2 coats at 160 sq ft per gallon needs 5.5 gallons before waste, so roughly $340 at $62 per gallon. Professional installation, crack repair, and flake or topcoat systems cost extra."
-      },
-      {
-        q: "How many coats of epoxy does a garage floor need?",
-        a: "Most DIY garage floor kits are built around two coats: a base coat and a second coat or clear topcoat. Enter the number your kit specifies, because each coat uses the full coverage rate again."
-      },
-      {
-        q: "Why is the garage floor page separate from the coverage page?",
-        a: "The coverage page handles general coatings, but garage floors introduce a different product context, area assumptions, and commercial buying logic."
-      }
-    ],
+    checklist: [],
+    generalFaq: [],
     related: [
       "epoxy-floor-coverage-calculator",
       "two-car-garage-epoxy-calculator",
-      "epoxy-cost-per-square-foot",
-      "epoxy-coverage-calculator",
-      "epoxy-cost-calculator",
       "epoxy-coverage-chart",
-      "how-much-epoxy-do-i-need",
+      "how-much-does-a-gallon-of-epoxy-cover",
       "epoxy-waste-factor-guide"
     ],
-    compareLabel: "Baseline coat vs kit buffer",
+    note: "Ranges are U.S. national averages for materials and labor. Get itemized quotes before you commit.",
+    compareLabel: "Low vs high estimate",
+    resultEyebrow: "Estimated cost",
+    statLabels: {
+      raw: "Price per sq ft",
+      split: "Coating",
+      cost: "Prep & repairs",
+      layers: "DIY vs pro"
+    },
+    nextStepLinks: [
+      { label: "Gallons & Kits Calculator", slug: "epoxy-floor-coverage-calculator" },
+      { label: "See Methodology", slug: "methodology" }
+    ],
+    ui: {
+      calculatorHeading: "Estimate your floor cost",
+      currentRecommendation: "Estimated cost",
+      estimatedCost: "Per sq ft",
+      standard: "Low estimate",
+      conservative: "High estimate",
+      productFit: "Other system",
+      whyChangedEyebrow: "Cost Breakdown",
+      whyChangedHeading: "What makes up the estimate",
+      compareEyebrow: "Range",
+      howToTitle: "How to get an accurate estimate",
+      mistakesTitle: "Mistakes that make quotes look wrong",
+      faqHeading: "Epoxy floor cost questions",
+      resultFallback: "Enter the floor size to see an installed price range.",
+      breakdownFallback: "Enter the floor size to see the coating, prep, and repair costs.",
+      nextStepHeading: "Compare two or three itemized quotes",
+      nextStepCopy: "Use the range to check quotes. Ask how the concrete will be prepared, how many coats go down, and what the warranty covers."
+    },
     lastmod: "2026-10-03"
   }),
   calculatorPage({
@@ -1339,8 +1484,7 @@ const basePages = [
     related: [
       "epoxy-calculator",
       "resin-art-pricing-calculator",
-      "epoxy-garage-floor-cost-calculator",
-      "epoxy-garage-floor-cost",
+      "garage-floor-epoxy-calculator",
       "river-table-epoxy-cost",
       "epoxy-countertop-cost",
       "epoxy-bar-top-cost",
@@ -1350,7 +1494,6 @@ const basePages = [
       "epoxy-unit-converter",
       "epoxy-waste-factor-guide",
       "void-fill-epoxy-calculator",
-      "garage-floor-epoxy-calculator",
       "epoxy-mixing-ratio-guide"
     ],
     note: "This page is for budget pressure-testing, not geometry discovery. Use a project calculator first if you are still unsure about the resin quantity itself.",

@@ -223,13 +223,26 @@ const calculatorSpecs = [
   },
   {
     slug: "epoxy-floor-coverage-calculator",
-    title: "Epoxy Floor Coverage Calculator: Sq Ft, Coats & Kits",
+    title: "Epoxy Floor Coverage Calculator: Gallons, Coats & Kits",
     h1: "Epoxy Floor Coverage Calculator",
     description:
-      "Estimate epoxy floor coating quantity from square footage, coat count, coverage rate, waste buffer, and projected material cost.",
+      "How much epoxy a garage or basement floor needs: turn square feet, coats, and your kit's coverage rate into gallons and kits to buy, with waste and material cost.",
     eyebrow: "Floor Coverage",
     intro:
-      "Floor epoxy is usually planned from square footage, coats, and the coverage rate published for the coating system. This page uses that workflow instead of a woodworking-style volume formula.",
+      "Floor epoxy is planned from square footage, coats, and the coverage rate printed on the coating system. This page counts the gallons and kits to buy. For the installed price of a professional floor, use the epoxy garage floor cost calculator.",
+    sections: [
+      {
+        title: "Looking for the installed price?",
+        body: "This calculator counts material. Professional quotes add surface prep, repairs, and labor, which usually make up most of the bill.",
+        cards: [
+          {
+            title: "Epoxy Garage Floor Cost Calculator",
+            text: "Installed price for garage and basement floors: $4–$10 per sq ft for professional epoxy, with DIY, flake, metallic, and polyaspartic compared.",
+            slug: "garage-floor-epoxy-calculator"
+          }
+        ]
+      }
+    ],
     primaryKeyword: "epoxy floor coverage calculator",
     supportingKeywords: ["epoxy floor calculator", "floor epoxy coverage calculator", "epoxy floor coating calculator"],
     calculatorType: "garage-floor",
@@ -266,9 +279,7 @@ const calculatorSpecs = [
     ],
     related: [
       "garage-floor-epoxy-calculator",
-      "epoxy-garage-floor-cost-calculator",
       "two-car-garage-epoxy-calculator",
-      "epoxy-garage-floor-cost",
       "epoxy-cost-per-square-foot",
       "epoxy-square-foot-calculator"
     ],
@@ -288,6 +299,19 @@ const calculatorSpecs = [
     primaryKeyword: "two car garage epoxy calculator",
     supportingKeywords: ["2 car garage epoxy calculator", "epoxy for two car garage", "two car garage epoxy cost"],
     calculatorType: "garage-floor",
+    sections: [
+      {
+        title: "What a two-car garage costs installed",
+        body: "Professional epoxy runs about $1,600 to $4,000 for a 400 sq ft (20 × 20 ft) garage and $2,304 to $5,760 for a 576 sq ft (24 × 24 ft) garage, before repairs.",
+        cards: [
+          {
+            title: "Epoxy Garage Floor Cost Calculator",
+            text: "Installed price for garage and basement floors: $4–$10 per sq ft for professional epoxy, with DIY, flake, metallic, and polyaspartic compared.",
+            slug: "garage-floor-epoxy-calculator"
+          }
+        ]
+      }
+    ],
     bullets: [
       "Focused on the common two-car garage planning task.",
       "Uses floor dimensions, coat count, coverage rate, and price per gallon.",
@@ -322,8 +346,6 @@ const calculatorSpecs = [
     related: [
       "garage-floor-epoxy-calculator",
       "epoxy-floor-coverage-calculator",
-      "epoxy-garage-floor-cost-calculator",
-      "epoxy-garage-floor-cost",
       "epoxy-cost-per-square-foot",
       "epoxy-kit-size-guide"
     ],
@@ -1131,62 +1153,75 @@ const guideSpecs = [
   },
   {
     slug: "epoxy-cost-per-square-foot",
-    title: "Epoxy Cost Per Square Foot: Coverage & Budget Guide",
-    h1: "Epoxy Cost Per Square Foot",
+    title: "Resin Cost Per Square Foot: Tabletops, Countertops & Bar Tops",
+    h1: "Epoxy Resin Cost Per Square Foot for Tabletops and Countertops",
     description:
-      "Calculate and understand epoxy cost per square foot for floors, countertops, tabletops, flood coats, and coverage-based resin projects.",
+      "Resin material cost per square foot for tabletops, countertops, and bar tops: about $4.68 to $9.35 per sq ft at 1/8 in, depending on the price per gallon.",
     eyebrow: "Cost Per Area",
     intro:
-      "Cost per square foot is useful only when the project is truly area-driven. This guide explains how thickness, coverage rate, coat count, and material price change the number.",
-    primaryKeyword: "epoxy cost per square foot",
-    supportingKeywords: ["epoxy price per square foot", "resin cost per square foot", "epoxy coating cost per square foot"],
+      "On a tabletop, countertop, or bar top, resin cost per square foot comes from coat thickness and the price per gallon. Epoxy garage and basement floors are priced differently, by coverage rate and labor, and have their own cost calculator.",
+    primaryKeyword: "resin cost per square foot",
+    supportingKeywords: ["epoxy resin cost per square foot", "countertop epoxy cost per square foot", "tabletop epoxy cost per square foot"],
     answer:
-      "Epoxy cost per square foot equals material cost divided by the covered area, but the correct material cost depends on thickness for surface coats and coverage rate for floor systems.",
+      "At the common 1/8 in flood-coat thickness, one gallon of mixed resin covers about 12.8 sq ft, so material costs roughly $4.68 per sq ft at $60 per gallon and $9.35 per sq ft at $120 per gallon. A 1/16 in coat costs half as much. Edges, a seal coat, and waste come on top.",
     takeaways: [
-      "Per-square-foot cost needs context: floors and tabletops are not planned the same way.",
-      "Thickness changes resin quantity for flood coats.",
-      "Coverage rate and coat count drive floor coating budgets.",
-      "Use cost per square foot to compare options only after the quantity model is consistent."
+      "Thickness sets the resin quantity: 1/8 in uses twice the resin of 1/16 in.",
+      "Price per gallon of mixed resin sets the rest.",
+      "Add the edges, a thin seal coat on raw wood, and 10–15% waste before comparing kits.",
+      "Garage and basement floors use coverage rates and labor, not thickness: use the floor cost calculator."
     ],
     sections: [
       {
-        title: "Two ways to calculate cost per square foot",
+        title: "Resin material cost per square foot",
+        table: {
+          headers: ["Price per gallon (mixed)", "1/16 in coat", "1/8 in coat"],
+          rows: [
+            ["$60", "$2.34 / sq ft", "$4.68 / sq ft"],
+            ["$90", "$3.51 / sq ft", "$7.01 / sq ft"],
+            ["$120", "$4.68 / sq ft", "$9.35 / sq ft"]
+          ],
+          note: "Top surface only, before waste. One gallon covers about 25.7 sq ft at 1/16 in and 12.8 sq ft at 1/8 in."
+        }
+      },
+      {
+        title: "How to work it out for your piece",
         points: [
-          "Surface coats: area times target thickness equals resin quantity.",
-          "Floors: area times coat count divided by coverage rate equals gallons.",
-          "Then multiply quantity by material price and divide by area."
+          "Resin quantity (gallons) = area (sq ft) × 144 × thickness (in) ÷ 231.",
+          "Material cost = gallons × price per mixed gallon.",
+          "Cost per square foot = material cost ÷ area. Use the square-foot calculator to run your own numbers."
         ]
       },
       {
-        title: "Where users should go next",
-        body:
-          "Use the square-foot calculator for tabletop or coating thickness, the floor coverage calculator for concrete floors, and the cost calculator after the quantity is known."
-      },
-      {
-        title: "AdSense value",
-        body:
-          "This page can monetize well because it is a budget comparison page, but it must avoid pretending one universal per-square-foot price applies to every project."
+        title: "Pricing an epoxy floor instead?",
+        body: "Garage and basement floors are bought by coverage rate and coat count, and most of a professional bill is prep and labor.",
+        cards: [
+          {
+            title: "Epoxy Garage Floor Cost Calculator",
+            text: "Installed price for garage and basement floors: $4–$10 per sq ft for professional epoxy, with DIY, flake, metallic, and polyaspartic compared.",
+            slug: "garage-floor-epoxy-calculator"
+          }
+        ]
       }
     ],
     faq: [
       {
         q: "Is epoxy cost per square foot the same for floors and tables?",
-        a: "No. Floors use coating coverage rates and coat counts. Tables and countertops use surface area and thickness."
+        a: "No. Tables and countertops are priced from thickness and the resin's price per gallon. Floors use coating coverage rates, coat counts, and labor, which is why professional floors run about $4–$10 per sq ft installed."
       },
       {
         q: "Why do calculators show gallons first?",
-        a: "Because resin is usually purchased by volume. Cost per square foot is a comparison metric after quantity and price are known."
+        a: "Because resin is sold by volume. Cost per square foot is a comparison metric once quantity and price are known."
       },
       {
-        q: "Can this guide estimate labor?",
-        a: "No. It focuses on material cost. Labor, prep, repairs, and tools should be separate."
+        q: "Does this include labor?",
+        a: "No. This page covers resin material only. For floors, the epoxy garage floor cost calculator includes labor and prep."
       }
     ],
     related: [
       "epoxy-square-foot-calculator",
       "how-much-epoxy-per-square-foot",
-      "epoxy-floor-coverage-calculator",
-      "epoxy-garage-floor-cost",
+      "epoxy-flood-coat-calculator",
+      "garage-floor-epoxy-calculator",
       "epoxy-cost-calculator",
       "how-much-does-a-gallon-of-epoxy-cover"
     ]
@@ -1888,7 +1923,8 @@ const referenceAnswers = {
 };
 
 // 2026-10-03 删改过正文（去掉写给运营看的说明）的页面，lastmod 如实更新
-const editedSlugs = new Set(["epoxy-calculator-metric", "epoxy-countertop-cost", "how-to-calculate-epoxy-pour", "epoxy-kit-size-guide"]);
+const editedSlugs = new Set(["epoxy-calculator-metric", "epoxy-countertop-cost", "how-to-calculate-epoxy-pour", "epoxy-kit-size-guide",
+  "epoxy-floor-coverage-calculator", "two-car-garage-epoxy-calculator", "epoxy-cost-per-square-foot"]);
 const lastmodFor = (slug) => (referenceAnswers[slug] || editedSlugs.has(slug) ? referenceLastmod : batchLastmod);
 
 export function createFirstBatchPages({ calculatorPage, guidePage }) {

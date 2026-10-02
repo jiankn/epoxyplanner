@@ -841,6 +841,174 @@ const coverageAnswers = {
   }
 };
 
+// ---- 第 1 阶段：按 GSC 实际搜索词补充的内容（目前只有 pt-BR 和 fr）----
+const numberIn = (locale) => (value, digits = 2) =>
+  new Intl.NumberFormat(locale.numberLocale, { maximumFractionDigits: digits }).format(value);
+
+// 常见透明环氧密度约 1.1 kg/L，用于“1 kg 能刷多少 m²”换算
+const typicalDensity = 1.1;
+
+function kgCoverageTable(locale, copy) {
+  const format = numberIn(locale);
+  return {
+    headers: copy.headers,
+    rows: coverageThicknesses.map((mm) => [
+      `${format(mm, 1)} mm`,
+      `${format(1 / (typicalDensity * mm), 2)} m²`,
+      `${format(typicalDensity * mm, 2)} kg`
+    ]),
+    note: copy.note
+  };
+}
+
+const localeExtras = {
+  "pt-BR": {
+    coverage: (locale) => [
+      {
+        title: "1 kg de resina epóxi rende quantos m²?",
+        body:
+          "Depende da espessura e da densidade do produto. Com a densidade típica de 1,1 kg/L, 1 kg equivale a cerca de 0,9 litro: rende perto de 1,8 m² com 0,5 mm, 0,9 m² com 1 mm e 0,45 m² com 2 mm. Se a ficha técnica indicar outra densidade, divida o peso por ela para obter os litros.",
+        table: kgCoverageTable(locale, {
+          headers: ["Espessura", "m² por kg (≈1,1 kg/L)", "kg por m²"],
+          note: "Valores brutos, sem sobra. Resinas com carga mineral costumam ser mais densas: use a densidade da ficha técnica."
+        })
+      },
+      {
+        title: "Como a calculadora chega ao valor recomendado",
+        points: [
+          "Volume bruto (L) = área (m²) × espessura (mm). Exemplo: 10 m² com 1 mm = 10 L.",
+          "Depois ela soma a sobra que você informar (10% por padrão) e mais 4% para bordas e escorrimento em camadas de até cerca de 3 mm, ou 6% em camadas mais grossas.",
+          "No exemplo, 10 L + 10% + 4% = 11,4 L. Arredonde para o tamanho de kit imediatamente acima.",
+          "Piso epóxi segue outra conta: use o rendimento por demão da ficha técnica na calculadora de piso."
+        ],
+        cards: [
+          {
+            title: "Calculadora de piso epóxi",
+            text: "Para piso: quantidade por área, número de demãos e rendimento do fabricante.",
+            slug: "pt-br/calculadora-piso-epoxi"
+          },
+          {
+            title: "Calculadora de volume de resina epóxi",
+            text: "Para moldes, peças e cavidades: volume em litros pelo comprimento, largura e profundidade.",
+            slug: "pt-br/calculadora-volume-resina-epoxi"
+          }
+        ]
+      }
+    ],
+    floor: (locale) => {
+      const format = numberIn(locale);
+      const rate = 8;
+      const coats = 2;
+      const waste = 1.07;
+      return [
+        {
+          title: "Quanto de resina epóxi para piso por m²?",
+          body:
+            "No piso, o consumo vem do rendimento por demão informado pelo fabricante, e não só da espessura. Tintas e revestimentos epóxi costumam indicar entre 0,15 e 0,6 kg/m² por demão, e o primer fica em geral entre 0,15 e 0,3 kg/m². Sistemas autonivelantes de 2 a 3 mm consomem bem mais: multiplique a espessura em mm pela densidade da ficha técnica.",
+          table: {
+            headers: ["Área", `${coats} demãos a ${rate} m²/L`, "Com 7% de sobra"],
+            rows: [18, 30, 50].map((area) => [
+              `${area} m²`,
+              `${format((area * coats) / rate, 1)} L`,
+              `${format(((area * coats) / rate) * waste, 1)} L`
+            ]),
+            note: `${rate} m²/L é só um exemplo de rendimento. Troque pelo valor da ficha técnica do seu produto na calculadora acima.`
+          }
+        },
+        {
+          title: "Como calcular o investimento em piso epóxi",
+          points: [
+            "Quantidade = área × número de demãos ÷ rendimento por demão (m² por litro ou por kg).",
+            "Custo do material = quantidade × preço do litro ou do kg. A calculadora acima faz essa conta com o preço que você informar.",
+            "Some à parte o primer, o preparo do concreto (lixamento ou fresagem) e, se for contratar, a mão de obra: esses itens não entram no cálculo do material.",
+            "Exemplo: 18 m², 2 demãos e rendimento de 8 m²/L dão 4,5 L; com 7% de sobra, cerca de 4,8 L."
+          ],
+          cards: [
+            {
+              title: "Preço do piso epóxi por m²",
+              text: "Compare o custo por m² a partir do preço do litro e da espessura aplicada.",
+              slug: "pt-br/preco-piso-epoxi-m2"
+            }
+          ]
+        }
+      ];
+    }
+  },
+  fr: {
+    coverage: (locale) => [
+      {
+        title: "Combien de couches de résine époxy faut-il ?",
+        body:
+          "Divisez l’épaisseur totale visée par l’épaisseur maximale par couche indiquée sur la fiche technique, puis arrondissez au nombre entier supérieur. Exemple : 6 mm au total avec 3 mm maximum par couche, soit 2 couches.",
+        points: [
+          "Plateau en bois : une fine couche de bouche-pores pour fermer le bois, puis une ou plusieurs couches de finition.",
+          "Résine de revêtement : couches minces, souvent de l’ordre de 1,5 à 3 mm. Ne dépassez jamais le maximum de la fiche.",
+          "Résine de coulée : couches bien plus épaisses, souvent plusieurs centimètres, limitées par l’échauffement.",
+          "Le calculateur ci-dessus donne la quantité totale : répartissez-la ensuite entre les couches."
+        ]
+      },
+      {
+        title: "Quelle est la densité de la résine époxy ?",
+        body:
+          "La plupart des résines époxy transparentes ont une densité d’environ 1,1 à 1,2 kg/L. Pour passer des litres aux kilos, multipliez par la densité de la fiche technique : 1 kg correspond donc à environ 0,9 L, soit près de 0,9 m² à 1 mm d’épaisseur.",
+        table: kgCoverageTable(locale, {
+          headers: ["Épaisseur", "m² par kg (≈1,1 kg/L)", "kg par m²"],
+          note: "Valeurs brutes, sans marge. Les résines chargées sont plus denses : utilisez la densité de la fiche technique."
+        }),
+        cards: [
+          {
+            title: "Tableau de dosage résine / durcisseur",
+            text: "Quantités de A et de B en ml pour les rapports 1:1, 2:1 et 3:1.",
+            slug: "fr"
+          }
+        ]
+      }
+    ]
+  }
+};
+
+function extraSectionsFor(locale, key) {
+  const build = localeExtras[locale.code]?.[key];
+  return build ? { sections: build(locale) } : {};
+}
+
+const hubCardText = {
+  "pt-BR": {
+    volume: "Volume em litros para moldes, peças e cavidades.",
+    amount: "Quanta resina comprar, já com a sobra incluída.",
+    coverage: "Quantos litros por m² conforme a espessura: 1 L por m² a cada 1 mm.",
+    costM2: "Quanto custa o piso epóxi por m² a partir do preço do litro.",
+    floor: "Quantidade de resina para piso por área, demãos e rendimento."
+  },
+  fr: {
+    coverage: "Litres par m² selon l’épaisseur : 1 L par m² et par mm.",
+    costM2: "Prix au m² à partir du prix du litre et de l’épaisseur.",
+    floor: "Sol époxy : quantité selon la surface, le nombre de couches et le rendement."
+  }
+};
+
+const hubExtraSections = {
+  fr: (locale) => {
+    const format = numberIn(locale);
+    const ratios = [[1, 1], [2, 1], [3, 1]];
+    return [
+      {
+        title: "Tableau de dosage résine / durcisseur en ml",
+        body:
+          "Le rapport de mélange figure sur la fiche technique. S’il est donné en volume (1:1, 2:1, 3:1), utilisez le tableau ci-dessous. S’il est donné en poids, par exemple 100:45, pesez les deux composants : ne le convertissez pas en ml sans connaître leurs densités.",
+        table: {
+          headers: ["Mélange total", ...ratios.map(([a, b]) => `${a}:${b} (A + B)`)],
+          rows: [100, 250, 500, 1000].map((total) => [
+            `${format(total, 0)} ml`,
+            ...ratios.map(([a, b]) => `${format((total * a) / (a + b), 1)} + ${format((total * b) / (a + b), 1)} ml`)
+          ]),
+          note: "Valeurs arrondies au dixième de ml. Mesurez A et B dans des gobelets gradués séparés, puis mélangez soigneusement."
+        }
+      }
+    ];
+  }
+};
+
 function coverageAnswerFields(locale) {
   const copy = coverageAnswers[locale.code];
   const format = (value, digits) =>
@@ -914,31 +1082,26 @@ function localizedCalculatorSpec(locale, key, values) {
 
   const bulletsByLocale = {
     de: [
-      `Für ${angle} mit metrischen Eingaben statt US-Standardwerten.`,
       isFloor ? "Plant Bodenflächen über Fläche, Schichten und Hersteller-Reichweite." : "Trennt Rohvolumen von einer realistischen Bestellmenge.",
       isCost ? "Hilft, Kosten nach Fläche und Literpreis vor dem Kauf zu prüfen." : "Zeigt Reserve, Teileplanung und Budget in einem Ablauf.",
       "Runde die Kaufmenge auf die nächste erhältliche Packungsgröße auf, statt genau die Rohmenge zu kaufen."
     ],
     fr: [
-      `Conçu pour ${angle} avec des unités métriques.`,
       isFloor ? "Planifie un sol à partir de la surface, des couches et du rendement fabricant." : "Sépare le volume brut de la quantité réellement à acheter.",
       isCost ? "Aide à estimer le prix selon la surface et le prix au litre." : "Affiche marge, estimation et budget dans le même parcours.",
       "Arrondissez la quantité au format de kit disponible supérieur plutôt que d’acheter le volume brut exact."
     ],
     "pt-BR": [
-      `Feita para ${angle} com medidas métricas.`,
       isFloor ? "Planeja piso por área, demãos e rendimento informado pelo fabricante." : "Separa volume bruto da quantidade realista para comprar.",
       isCost ? "Ajuda a estimar preço por área e preço por litro." : "Mostra sobra, divisão do kit e custo em um único fluxo.",
       "Arredonde a compra para o próximo tamanho de kit disponível, em vez de comprar o volume bruto exato."
     ],
     es: [
-      `Pensada para ${angle} con unidades métricas.`,
       isFloor ? "Planifica suelo por superficie, capas y rendimiento del fabricante." : "Separa volumen bruto de cantidad realista de compra.",
       isCost ? "Ayuda a estimar precio por superficie y precio por litro." : "Muestra margen, división del kit y coste en el mismo flujo.",
       "Redondea la compra al siguiente tamaño de kit disponible en lugar de comprar el volumen bruto exacto."
     ],
     it: [
-      `Pensata per ${angle} con unità metriche.`,
       isFloor ? "Pianifica il pavimento con superficie, strati e resa del produttore." : "Separa volume grezzo e quantità realistica da acquistare.",
       isCost ? "Aiuta a stimare prezzo per superficie e prezzo al litro." : "Mostra margine, divisione del kit e costo nello stesso flusso.",
       "Arrotonda l’acquisto alla confezione disponibile successiva invece di comprare il volume grezzo esatto."
@@ -1006,28 +1169,6 @@ function localizedCalculatorSpec(locale, key, values) {
     ]
   };
 
-  const faqByLocale = {
-    de: [
-      { q: `Wann ist ${title} die richtige Seite?`, a: `Nutze sie, wenn die Suchabsicht ${angle} ist und du metrische Eingaben mit Kaufreserve brauchst.` },
-      { q: "Warum Liter statt Gallonen?", a: "Für deutschsprachige Nutzer sind Liter und m² die natürlichere Einkaufs- und Planungsbasis." }
-    ],
-    fr: [
-      { q: `Quand utiliser ${title} ?`, a: `Utilisez cette page lorsque l’intention est ${angle} et que vous voulez une estimation métrique avec marge.` },
-      { q: "Pourquoi travailler en litres ?", a: "Pour le marché francophone, litres et mètres carrés correspondent mieux aux fiches produits et aux devis." }
-    ],
-    "pt-BR": [
-      { q: `Quando usar ${title}?`, a: `Use quando a intenção for ${angle} e você precisar de cálculo em medidas métricas com sobra.` },
-      { q: "Por que usar litros?", a: "No Brasil, litros e metros quadrados combinam melhor com compra, orçamento e descrição dos produtos." }
-    ],
-    es: [
-      { q: `Cuándo usar ${title}?`, a: `Úsala cuando la intención sea ${angle} y necesites una estimación métrica con margen.` },
-      { q: "Por qué usar litros?", a: "En español, litros y metros cuadrados encajan mejor con fichas técnicas, compras y presupuestos." }
-    ],
-    it: [
-      { q: `Quando usare ${title}?`, a: `Usala quando l’intento è ${angle} e ti serve una stima metrica con margine.` },
-      { q: "Perché usare i litri?", a: "Nel mercato italiano litri e metri quadrati sono più naturali per schede prodotto, preventivi e acquisti." }
-    ]
-  };
 
   const descriptionByLocale = {
     de: `${h1}: Menge, Verbrauch, Reserve und Kosten mit metrischen Einheiten planen, bevor du Epoxidharz kaufst.`,
@@ -1050,12 +1191,13 @@ function localizedCalculatorSpec(locale, key, values) {
     bullets: bulletsByLocale[locale.code],
     howTo: howToByLocale[locale.code],
     mistakes: mistakesByLocale[locale.code],
-    faq: faqByLocale[locale.code],
+    faq: [],
     related: makeRelated(locale.code, key),
     note: locale.ui.fieldNote,
     compareLabel: title,
     resultEyebrow: locale.ui.resultEyebrow,
     ...(key === "coverage" ? coverageAnswerFields(locale) : {}),
+    ...extraSectionsFor(locale, key),
     ...localePageMeta(locale, key)
   };
 }
@@ -1067,7 +1209,7 @@ function hubSections(locale) {
       const spec = localizedSpecs[locale.code][group.key];
       return {
         title: spec[0],
-        text: spec[3],
+        text: hubCardText[locale.code]?.[group.key] || spec[3],
         slug: group.byLocale[locale.code],
         primary: ["core", "coverage", "costM2", "garageCost"].includes(group.key)
       };
@@ -1142,7 +1284,7 @@ function createHubPage(locale, calculatorPage) {
         slug: group.byLocale[locale.code],
         icon: { coverage: "📏", costM2: "💰", floor: "🏠" }[group.key]
       })),
-    sections: [toolSection],
+    sections: [toolSection, ...(hubExtraSections[locale.code]?.(locale) || [])],
     related: [],
     ...localePageMeta(locale, "hub")
   });

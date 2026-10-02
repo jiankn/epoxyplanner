@@ -96,7 +96,7 @@ const calculatorSpecs = [
       },
       {
         q: "Is this different from the main calculator?",
-        a: "The core math is the same, but this page is structured for metric search intent and metric buying questions."
+        a: "The core math is the same, but this page starts in centimeters and liters and answers metric buying questions."
       }
     ],
     related: [
@@ -1041,11 +1041,6 @@ const guideSpecs = [
           "Use the seal coat calculator if the substrate can absorb resin.",
           "Use the cost calculator after the material quantity is believable."
         ]
-      },
-      {
-        title: "Where ads fit",
-        body:
-          "Countertop cost pages can carry ads after the direct answer and before the FAQ, but ads should not interrupt the calculator or make the page look like a product ranking."
       }
     ],
     faq: [
@@ -1604,12 +1599,7 @@ const guideSpecs = [
       {
         title: "When formulas change",
         body:
-          "A rectangle, circle, sphere, cylinder, floor coating, and live-edge river channel do not share the same calculation model. That is why this site uses separate intent pages."
-      },
-      {
-        title: "Why this matters for indexing",
-        body:
-          "This page has a different job from a calculator page: it explains the decision path and sends users to the correct tool instead of repeating one generic form."
+          "A rectangle, circle, sphere, cylinder, floor coating, and live-edge river channel do not share the same calculation model. That is why this site uses a separate calculator for each project type."
       }
     ],
     faq: [
@@ -1619,7 +1609,7 @@ const guideSpecs = [
       },
       {
         q: "Why not use one formula for everything?",
-        a: "Because project intent changes the variables. Floors, flood coats, river tables, and molds need different assumptions."
+        a: "Because the project type changes the variables. Floors, flood coats, river tables, and molds need different assumptions."
       },
       {
         q: "When do I add waste?",
@@ -1732,11 +1722,6 @@ const guideSpecs = [
         title: "Why this page matters",
         body:
           "A user can calculate correctly and still buy incorrectly if the product listing uses a different unit, ratio, or package convention. This guide closes that gap."
-      },
-      {
-        title: "Commercial intent without thin content",
-        body:
-          "This is a high-value monetization page because it sits close to purchase, but it should remain a buying method guide rather than a doorway to brand pages."
       }
     ],
     faq: [
@@ -1764,9 +1749,151 @@ const guideSpecs = [
   }
 ];
 
+// ---- 工具页参考表 ----
+// 表里的数字在构建时按几何公式算出，余量取各计算器表单的默认值，保证和计算器结果一致。
+const referenceLastmod = "2026-10-03";
+const CU_IN_PER_FL_OZ = 1.8046875;
+const ML_PER_CU_IN = 16.387064;
+const CU_IN_PER_GALLON = 231;
+const CU_IN_PER_LITER = 61.0237440947;
+
+function fmt(value, digits = 1) {
+  return new Intl.NumberFormat("en-US", { maximumFractionDigits: digits }).format(value);
+}
+
+// 小于 20 ml 或 1 fl oz 的量多保留一位小数，否则小件之间看不出差别
+function mlOz(cubicInches) {
+  const ml = cubicInches * ML_PER_CU_IN;
+  const oz = cubicInches / CU_IN_PER_FL_OZ;
+  return `${fmt(ml, ml < 20 ? 1 : 0)} ml (${fmt(oz, oz < 1 ? 2 : 1)} fl oz)`;
+}
+
+function gallonsOz(cubicInches) {
+  return `${fmt(cubicInches / CU_IN_PER_GALLON, 2)} gal (${fmt(cubicInches / CU_IN_PER_FL_OZ, 0)} fl oz)`;
+}
+
+const sphereVolume = (diameter) => (4 / 3) * Math.PI * (diameter / 2) ** 3;
+const cylinderVolume = (diameter, height) => Math.PI * (diameter / 2) ** 2 * height;
+const cubeVolume = (side) => side ** 3;
+const mmToIn = (mm) => mm / 25.4;
+
+function sphereReference() {
+  const waste = 1.1;
+  return {
+    answerHeading: "How much resin does a sphere mold need?",
+    answer: `Sphere volume is 4/3 × π × radius³, so resin needs grow fast with size: a 2 in (5 cm) sphere holds about ${mlOz(sphereVolume(2))} and a 4 in (10 cm) sphere about ${mlOz(sphereVolume(4))} before waste. The table adds the calculator's default 10% for the pour spout, trimming, and cup loss.`,
+    answerTable: {
+      headers: ["Inside diameter", "Raw resin", "With 10% waste"],
+      rows: [1, 1.5, 2, 3, 4, 6].map((d) => [`${fmt(d)} in (${fmt(d * 2.54)} cm)`, mlOz(sphereVolume(d)), mlOz(sphereVolume(d) * waste)]),
+      note: "Full spheres only. For a half-sphere (dome) mold, use half of each value."
+    }
+  };
+}
+
+function diceReference() {
+  const waste = 1.12;
+  const sizes = [16, 20, 25];
+  const die = (mm) => cubeVolume(mmToIn(mm));
+  return {
+    answerHeading: "How much resin do resin dice need?",
+    answer: `A 20 mm cube die holds about ${mlOz(die(20))} of resin; a 16 mm die about ${mlOz(die(16))} and a 25 mm die about ${mlOz(die(25))}. Polyhedral dice use less resin than a cube of the same size, so cube math is a safe upper limit for a set. The table adds the calculator's default 12% for sprues and overflow.`,
+    answerTable: {
+      headers: ["Die size", "One die", "Set of 7 (upper limit)", "Set of 7 + 12%"],
+      rows: sizes.map((mm) => [`${mm} mm`, mlOz(die(mm)), mlOz(die(mm) * 7), mlOz(die(mm) * 7 * waste)]),
+      note: "Cube volumes. A real polyhedral set needs less; weigh a water fill of your mold for production batches."
+    }
+  };
+}
+
+function coasterReference() {
+  const waste = 1.08;
+  const items = [
+    ["4 in round", "1/8 in", cylinderVolume(4, 0.125)],
+    ["4 in round", "1/4 in", cylinderVolume(4, 0.25)],
+    ["4 in square", "1/4 in", 4 * 4 * 0.25],
+    ["10 cm round", "5 mm", cylinderVolume(mmToIn(100), mmToIn(5))],
+    ["10 cm square", "5 mm", mmToIn(100) ** 2 * mmToIn(5)]
+  ];
+  return {
+    answerHeading: "How much resin does a coaster need?",
+    answer: `A 4 in round coaster poured 1/4 in thick needs about ${mlOz(cylinderVolume(4, 0.25))} of resin, and a set of four about ${mlOz(cylinderVolume(4, 0.25) * 4)} before waste. Resin scales directly with thickness, so a 1/8 in pour needs half as much. The table adds the calculator's default 8% for cup loss and drips.`,
+    answerTable: {
+      headers: ["Coaster", "Thickness", "One coaster", "Set of 4 + 8%"],
+      rows: items.map(([label, depth, volume]) => [label, depth, mlOz(volume), mlOz(volume * 4 * waste)])
+    }
+  };
+}
+
+function cylinderReference() {
+  const waste = 1.1;
+  const sizes = [[2, 4], [3, 4], [3, 6], [4, 6], [4, 8]];
+  return {
+    answerHeading: "How much resin does a cylinder mold need?",
+    answer: `Cylinder volume is π × radius² × height. A mold 3 in wide and 6 in tall holds about ${mlOz(cylinderVolume(3, 6))}, and a 4 × 8 in mold about ${mlOz(cylinderVolume(4, 8))} before waste. Measure the inside diameter and the height you will actually fill; the table adds the calculator's default 10%.`,
+    answerTable: {
+      headers: ["Inside diameter × fill height", "Raw resin", "With 10% waste"],
+      rows: sizes.map(([d, h]) => [`${d} × ${h} in (${fmt(d * 2.54)} × ${fmt(h * 2.54)} cm)`, mlOz(cylinderVolume(d, h)), mlOz(cylinderVolume(d, h) * waste)])
+    }
+  };
+}
+
+function cubeReference() {
+  const waste = 1.12;
+  return {
+    answerHeading: "How much resin does a cube mold need?",
+    answer: `A cube holds side³, so doubling the side multiplies the resin by eight: a 2 in cube needs about ${mlOz(cubeVolume(2))} and a 4 in cube about ${mlOz(cubeVolume(4))} before waste. The table adds the calculator's default 12% for overflow and trimming.`,
+    answerTable: {
+      headers: ["Inside side length", "Raw resin", "With 12% waste"],
+      rows: [1, 2, 3, 4, 6].map((side) => [`${side} in (${fmt(side * 2.54)} cm)`, mlOz(cubeVolume(side)), mlOz(cubeVolume(side) * waste)])
+    }
+  };
+}
+
+function floodCoatReference() {
+  const surfaces = [["2 × 4 ft table", 2, 4], ["2 × 6 ft bar top", 2, 6], ["3 × 6 ft table", 3, 6], ["4 × 8 ft table", 4, 8]];
+  const coat = (sqFt, inches) => sqFt * 144 * inches;
+  return {
+    answerHeading: "How much epoxy does a flood coat need?",
+    answer: `At the common 1/8 in (3 mm) self-leveling thickness, one gallon of mixed epoxy covers about ${fmt(CU_IN_PER_GALLON / (144 * 0.125))} sq ft, roughly ${fmt(144 * 0.125 / CU_IN_PER_FL_OZ, 0)} fl oz per sq ft. A 3 × 6 ft tabletop needs about ${gallonsOz(coat(18, 0.125))} before waste and edge runoff, which the calculator adds on top.`,
+    answerTable: {
+      headers: ["Surface", "Area", "1/16 in coat", "1/8 in coat"],
+      rows: surfaces.map(([label, w, l]) => [label, `${w * l} sq ft`, gallonsOz(coat(w * l, 0.0625)), gallonsOz(coat(w * l, 0.125))]),
+      note: "Top surface only, before waste. Add the edges if they get coated, and plan a thin seal coat first on raw wood."
+    }
+  };
+}
+
+function twoCarGarageReference() {
+  const sizes = [[20, 20], [22, 22], [24, 24]];
+  const gallons = (area, rate) => fmt((area * 2) / rate, 1);
+  return {
+    answerHeading: "How much epoxy does a two-car garage need?",
+    answer: `Two-car garages commonly run from 20 × 20 to 24 × 24 ft, or 400 to 576 sq ft. Two coats over a 20 × 20 ft floor take about ${gallons(400, 250)} gallons at 250 sq ft per gallon, or ${gallons(400, 160)} gallons at 160 sq ft per gallon. Coverage varies by product and concrete, so use the rate printed on your kit.`,
+    answerTable: {
+      headers: ["Garage", "Area", "At 250 sq ft/gal", "At 160 sq ft/gal"],
+      rows: sizes.map(([w, l]) => [`${w} × ${l} ft`, `${w * l} sq ft`, `${gallons(w * l, 250)} gal`, `${gallons(w * l, 160)} gal`]),
+      note: "Two coats, before waste. Rough or porous concrete lands at the low end of a product's coverage range."
+    }
+  };
+}
+
+const referenceAnswers = {
+  "sphere-resin-calculator": sphereReference(),
+  "resin-dice-calculator": diceReference(),
+  "resin-coaster-calculator": coasterReference(),
+  "cylinder-resin-calculator": cylinderReference(),
+  "cube-resin-calculator": cubeReference(),
+  "epoxy-flood-coat-calculator": floodCoatReference(),
+  "two-car-garage-epoxy-calculator": twoCarGarageReference()
+};
+
+// 2026-10-03 删改过正文（去掉写给运营看的说明）的页面，lastmod 如实更新
+const editedSlugs = new Set(["epoxy-calculator-metric", "epoxy-countertop-cost", "how-to-calculate-epoxy-pour", "epoxy-kit-size-guide"]);
+const lastmodFor = (slug) => (referenceAnswers[slug] || editedSlugs.has(slug) ? referenceLastmod : batchLastmod);
+
 export function createFirstBatchPages({ calculatorPage, guidePage }) {
   return [
-    ...calculatorSpecs.map((spec) => calculatorPage({ ...spec, lastmod: batchLastmod })),
-    ...guideSpecs.map((spec) => guidePage({ ...spec, lastmod: batchLastmod }))
+    ...calculatorSpecs.map((spec) => calculatorPage({ ...spec, ...referenceAnswers[spec.slug], lastmod: lastmodFor(spec.slug) })),
+    ...guideSpecs.map((spec) => guidePage({ ...spec, lastmod: lastmodFor(spec.slug) }))
   ];
 }

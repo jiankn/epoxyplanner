@@ -284,9 +284,24 @@ const basePages = [
         ]
       },
       {
-        title: "Localized metric calculators for non-English searches",
+        title: "Calculators for specific projects",
         body:
-          "The first multilingual rollout adds native-language calculator paths for German, French, Brazilian Portuguese, Spanish, and Italian. These pages are not direct translations: they start from local search wording, metric units, and local price expectations.",
+          "Small molds and single surfaces have their own math. These calculators start from the shape you are actually filling and show the resin in ml, fl oz, or gallons with a reference table for common sizes.",
+        cards: [
+          { title: "Epoxy Flood Coat Calculator", text: "Tabletops and bar tops at 1/16 or 1/8 in: about 1.4 gal for a 3 × 6 ft table at 1/8 in.", slug: "epoxy-flood-coat-calculator" },
+          { title: "Two-Car Garage Epoxy Calculator", text: "Gallons for two coats on 20 × 20 to 24 × 24 ft floors at your kit's coverage rate.", slug: "two-car-garage-epoxy-calculator" },
+          { title: "Resin Coaster Calculator", text: "Round or square coasters: about 51 ml for a 4 in coaster at 1/4 in, with set totals.", slug: "resin-coaster-calculator" },
+          { title: "Resin Dice Calculator", text: "Resin per die and per set of seven for 16, 20, and 25 mm molds.", slug: "resin-dice-calculator" },
+          { title: "Sphere Resin Calculator", text: "Ball and dome molds by inside diameter, from 1 to 6 in.", slug: "sphere-resin-calculator" },
+          { title: "Cylinder Resin Calculator", text: "Columns, tumblers, and round molds by diameter and fill height.", slug: "cylinder-resin-calculator" },
+          { title: "Cube Resin Calculator", text: "Block and cube molds: doubling the side needs eight times the resin.", slug: "cube-resin-calculator" },
+          { title: "Resin Art Pricing Calculator", text: "Turn material, time, and overhead into a minimum selling price.", slug: "resin-art-pricing-calculator" }
+        ]
+      },
+      {
+        title: "Calculators in other languages",
+        body:
+          "Metric calculators in German, French, Brazilian Portuguese, Spanish, and Italian, working in centimeters, square meters, liters, and local currency.",
         cards: languageMarketCards
       },
       {
@@ -303,7 +318,7 @@ const basePages = [
       {
         title: "Popular decisions people make before buying epoxy",
         body:
-          "Search traffic around epoxy is not only looking for a formula. People also want to know how much extra to buy, how to measure irregular rivers, and when they need deep-pour resin instead of a top coat.",
+          "Most buyers need more than a formula: how much extra to buy, how to measure an irregular river, and when a deep-pour resin is required instead of a top coat.",
         cards: [
           { title: "How Much Epoxy Do I Need?", text: "Short answer first, then the right calculator path.", slug: "how-much-epoxy-do-i-need" },
           { title: "How Much Epoxy for a River Table?", text: "Estimate quantity, waste, and kit count for a live-edge river build.", slug: "how-much-epoxy-do-i-need-for-a-river-table" },
@@ -330,7 +345,7 @@ const basePages = [
       }
     ],
     includeInSitemap: true,
-    lastmod: "2026-05-05"
+    lastmod: "2026-10-03"
   }),
   calculatorPage({
     slug: "epoxy-calculator",
@@ -885,7 +900,7 @@ const basePages = [
       "Diameter-first planning for circular projects.",
       "Better than converting round shapes into rough rectangles.",
       "Outputs purchase-ready units with waste guidance.",
-      "Covers the circle-calculator intent that does not fit a rectangular epoxy form."
+      "Works for round tables, trays, and circular molds with one diameter and one depth."
     ],
     howTo: [
       "Measure the widest true diameter of the project or mold.",
@@ -911,7 +926,7 @@ const basePages = [
       "epoxy-cost-calculator"
     ],
     compareLabel: "Round volume vs buffered order",
-    lastmod: "2026-05-05"
+    lastmod: "2026-10-03"
   }),
   guidePage({
     slug: "how-much-epoxy-do-i-need",
@@ -1363,6 +1378,22 @@ const basePages = [
     primaryKeyword: "epoxy unit converter",
     supportingKeywords: ["cubic inches to gallons epoxy", "liters to gallons resin calculator", "ounces to gallons epoxy", "epoxy calculator metric"],
     calculatorType: "converter",
+    answerHeading: "How many liters, ounces, and cubic inches are in a gallon of epoxy?",
+    answer:
+      "One US gallon of mixed epoxy is 3.785 liters, 4 quarts, 128 fl oz, or 231 cubic inches, and one liter is about 33.8 fl oz. Volume conversions are exact. Converting volume to weight is not: kits sold by weight need the resin density from the data sheet.",
+    answerTable: {
+      headers: ["Volume", "Liters / ml", "US fl oz", "Cubic inches", "US gallons"],
+      rows: [
+        ["1 gallon", "3.785 L", "128", "231", "1"],
+        ["1/2 gallon", "1.893 L", "64", "115.5", "0.5"],
+        ["1 quart", "946 ml", "32", "57.75", "0.25"],
+        ["16 fl oz", "473 ml", "16", "28.88", "0.125"],
+        ["1 liter", "1,000 ml", "33.81", "61.02", "0.264"],
+        ["500 ml", "500 ml", "16.91", "30.51", "0.132"],
+        ["100 cu in", "1.639 L", "55.41", "100", "0.433"]
+      ],
+      note: "US liquid measures. UK (imperial) gallons and fluid ounces are larger."
+    },
     bullets: [
       "Converts the units epoxy buyers and manufacturers actually use.",
       "Useful when your measurement notes and supplier listings are not in the same unit system.",
@@ -1384,10 +1415,6 @@ const basePages = [
         a: "Use the converter when the geometry is already solved and you only need to move between units. If you still need waste, layer, or project-fit guidance, move back to the matching calculator page."
       },
       {
-        q: "Why keep one converter page instead of separate pages for every unit pair?",
-        a: "Because the user intent is the same: convert a known epoxy volume from one unit to another. One stronger page is better than dozens of thin near-duplicates."
-      },
-      {
         q: "Can I use this for comparing product kit sizes across brands?",
         a: "Yes. That is one of the best uses for the page, especially when one brand lists liters and another lists gallons or ounces."
       },
@@ -1406,7 +1433,7 @@ const basePages = [
       "cylinder-resin-calculator"
     ],
     checklist: scenarioChecklist,
-    note: "One strong converter page covers many unit-pair searches. Do not split every conversion pair into thin near-duplicate pages.",
+    note: "Volume conversions are exact. Converting volume to weight needs the resin density from the product data sheet.",
     compareLabel: "Source value vs planning unit",
     resultEyebrow: "Converted value",
     statLabels: {
@@ -1415,7 +1442,7 @@ const basePages = [
       cost: "Planning note",
       layers: "Use case"
     },
-    lastmod: "2026-05-05"
+    lastmod: "2026-10-03"
   },
   ...firstBatchPages,
   infoPage({
@@ -1463,7 +1490,7 @@ const basePages = [
       {
         title: "What makes the site different",
         body:
-          "The core pages are organized by project intent rather than by arbitrary keyword variants. River tables, deep pours, coatings, and floor jobs each get their own logic because the underlying task is genuinely different."
+          "The calculators are organized by project type. River tables, deep pours, coatings, and floor jobs each get their own logic because the underlying task is genuinely different."
       },
       {
         title: "Who the site is for",

@@ -1721,7 +1721,8 @@ const basePages = [
         body:
           "Always verify maximum pour depth, cure windows, mix ratio, and coverage claims against the product documentation you plan to buy. This site is a planning tool, not a replacement for the manufacturer data sheet."
       }
-    ]
+    ],
+    includeInSitemap: true
   }),
   infoPage({
     slug: "about",
@@ -1810,7 +1811,8 @@ const basePages = [
           "If a calculator gives you a result that does not match your real project, we want to know. Send the page URL, your measurements, and what you expected through the contact page. Accuracy fixes always take priority over new features.",
         contactEmail
       }
-    ]
+    ],
+    includeInSitemap: true
   }),
   infoPage({
     slug: "contact",

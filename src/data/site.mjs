@@ -1,4 +1,5 @@
 import { createFirstBatchPages } from "./seo-batch-2026-05.mjs";
+import { guideAdditions } from "./guide-content.mjs";
 import { FLOOR_COST_RATES, floorCostRange } from "../assets/floor-cost-rates.js";
 import {
   applyMultilingualAlternates,
@@ -1704,24 +1705,60 @@ const basePages = [
       "Learn the formulas, conversion constants, assumptions, and planning logic behind the epoxy calculator site.",
     eyebrow: "Methodology",
     intro:
-      "This site is designed to be transparent. The goal is not to hide the math, but to make the math usable for real purchasing decisions.",
+      "These are the formulas and adjustable planning assumptions used by our calculators. Quantities refer to mixed resin and hardener, not Part A alone. Product-specific pour limits and mix ratios still come from the manufacturer's instructions.",
     sections: [
       {
         title: "What the formulas do",
         body:
-          "The calculators start from geometry or coverage math, then add practical planning adjustments. Volume pages calculate raw capacity first. Coverage pages estimate material from area and thickness. Scenario pages then layer on waste, seepage, seal coat, and ordering margin."
+          "For a rectangle, volume = length × width × depth. For a circular pour or cylinder, volume = π × (diameter / 2)² × depth. For a sphere, volume = 4π × (diameter / 2)³ / 3. All dimensions must use the same unit; the result is cubic inches for inch inputs or cubic centimeters for centimeter inputs. Hollow spaces, inserts, sloping bottoms and irregular channels need their own measured volumes rather than a bounding box."
       },
       {
         title: "Why the site reports both raw volume and recommended order quantity",
         body:
-          "Raw volume is the geometric minimum. Recommended order quantity is a planning number that reflects real project loss. Showing both values is more useful than pretending the raw number is enough."
+          "Raw volume is the geometric minimum. For the general calculator, order quantity = raw volume × (1 + waste percentage / 100). Its default 8% is an editable planning allowance, not a measured industry average or manufacturer requirement. The conservative scenario adds another eight percentage points. Record your actual cup loss, leaks and edge runoff to choose a buffer for later projects."
       },
       {
         title: "What users should still verify",
         body:
           "Always verify maximum pour depth, cure windows, mix ratio, and coverage claims against the product documentation you plan to buy. This site is a planning tool, not a replacement for the manufacturer data sheet."
+      },
+      {
+        title: "Unit conversions and a checkable example",
+        points: [
+          "1 US gallon = 231 cubic inches; 1 US fluid ounce = 231 / 128 = 1.8046875 cubic inches. These are US liquid units, not Imperial gallons or weight ounces.",
+          "1 inch = 2.54 cm; 1 liter = 1,000 cm³, or approximately 61.023744 cubic inches. Volume in liters = volume in cm³ / 1,000.",
+          "A 48 × 18 × 1.25 in cavity holds 1,080 in³. Divide by 231 to get 4.6753 US gal. Multiplying by 1.08 gives 5.0494 gal (19.114 L) to plan for, displayed as 5.05 gal.",
+          "At an illustrative $95 per mixed gallon, that order costs about $479.69 before kit rounding, tax or shipping. The calculator rounds the displayed dollar estimate."
+        ]
+      },
+      {
+        title: "Coverage, river channels and separate allowances",
+        points: [
+          "For a surface measured in square feet, raw volume in in³ = area × 144 × thickness in inches. One US gallon at 1/8 in covers 231 / (144 × 0.125) = 12.833 sq ft before edges and waste.",
+          "The river calculator divides the length into equal segments and adds segment length × segment width × depth. Width entries represent each segment's average. For unequal segment lengths or changing depths, calculate the sections separately.",
+          "The river model adds waste, an optional 8% seepage allowance and an optional 5% seal-coat allowance to the same raw volume. With 12% waste and both options selected, the factor is 1.25, not 1.12 × 1.08 × 1.05.",
+          "Coverage and surface-coat models also include edge/runoff allowances. Check the result breakdown to see each contribution; use one appropriate model rather than adding the same allowance twice."
+        ]
+      },
+      {
+        title: "Mix ratios, layers and costs",
+        points: [
+          "For a manufacturer's A:B volume ratio of a:b, Part A = total mixed volume × a / (a + b), and Part B = total × b / (a + b). Example splits in the tools are labeled examples; weight ratios require the actual product's weight instructions.",
+          "The deep-pour calculator estimates layers as ceiling(total depth / selected maximum layer depth). A 2.5 in fill at a 1 in maximum needs three layers. Actual timing, batch size and surface prep come from the product sheet.",
+          "River/general layer guidance is a planning prompt, not a tested product limit. Use the deep-pour tool with the exact manufacturer's limit before deciding a pour schedule.",
+          "Quantity-based cost = recommended mixed quantity × the entered unit price. The floor-cost model uses floor area × selected coating rate, plus specified repairs, moisture barrier or resurfacing, and a contractor minimum where applicable. U.S. floor prices have sources and dates on the floor-cost page; they are estimates, not quotations."
+        ],
+        cards: [
+          { title: "Floor cost estimates and sources", text: "See the U.S. price ranges and which preparation costs are included.", slug: "garage-floor-epoxy-calculator" },
+          { title: "Deep-pour layer planner", text: "Enter the lift limit for your actual product.", slug: "deep-pour-epoxy-calculator" }
+        ]
+      },
+      {
+        title: "Verification and limitations",
+        body: "You can reproduce the examples above with a hand calculation and compare imperial and metric inputs for the same shape. Published product limits are linked from the relevant guides. No claim is made that default buffers were established through a field trial: they are adjustable assumptions. Rounding, kit sizes, hidden voids, substrate absorption and installation conditions can change what you need to buy. Report a mismatch with the page URL, units and input values through Contact."
       }
     ],
+    lastmod: "2026-10-03",
     includeInSitemap: true
   }),
   infoPage({
@@ -1760,9 +1797,10 @@ const basePages = [
       {
         title: "Monetization and editorial independence",
         body:
-          "The site is designed to remain useful even when no advertising or commercial placement is shown. Rankings, formulas, and recommendations are not sold placement. If monetization is introduced later, it should not change the calculator logic or hide the methodology behind promotional content."
+          "Google AdSense is integrated for site verification and advertising once Google approves the site. Advertising does not enter the quantity formulas. The calculators, result breakdowns and methodology remain available without clicking an advertisement; check Privacy for advertising data disclosures and choices."
       }
     ],
+    lastmod: "2026-10-03",
     indexable: false
   }),
   infoPage({
@@ -1778,21 +1816,21 @@ const basePages = [
       {
         title: "Who builds this site",
         body:
-          "Epoxy Project Planner is built and maintained by a small team focused exclusively on resin quantity planning. We do not sell epoxy. We do not take commissions from resin brands. The only goal is to give you a number you can actually buy against without wasting money or running short mid-pour."
+          "Epoxy Project Planner is maintained by the site operator as a resin quantity and budget planning tool. This page describes the calculation approach, rather than claiming professional installer credentials or independent laboratory testing. Questions and corrections can be sent through Contact."
       },
       {
         title: "How the formulas are validated",
         points: [
-          "Every calculator is built on published geometric formulas and unit conversion constants — not guesswork or marketing claims.",
-          "Waste buffers, seepage estimates, and layer guidance come from documented project patterns, not arbitrary percentages.",
-          "The methodology page shows every formula and assumption so you can verify the math yourself before you spend money.",
-          "When a user reports a result that does not match real-world outcomes, we investigate and update the formula or assumptions."
+          "Geometry and unit conversions can be checked with the worked examples in Methodology and on the calculator pages.",
+          "Waste, seepage and seal-coat defaults are editable planning assumptions, not results from an independently documented field study.",
+          "Methodology explains the volume, coverage, ratio, layer and cost models, including the limits of the examples.",
+          "Manufacturer instructions remain the authority for a product's mix ratio, permitted batch size, lift depth and cure schedule."
         ]
       },
       {
         title: "What makes this different from a generic calculator",
         points: [
-          "Most epoxy calculators give you raw volume and stop. That number is always too low for a real project.",
+          "Raw volume shows the geometric minimum. The extra allowance you need depends on loss, absorption and measurement uncertainty.",
           "This site adds waste, seepage, seal-coat, mixing loss, and layer guidance — the things that actually determine how much resin you need to order.",
           "Each calculator is tuned for a specific project type. A river table and a garage floor do not share the same measurement logic, so they should not share the same calculator."
         ]
@@ -1812,6 +1850,7 @@ const basePages = [
         contactEmail
       }
     ],
+    lastmod: "2026-10-03",
     includeInSitemap: true
   }),
   infoPage({
@@ -1860,14 +1899,14 @@ const basePages = [
       "Read how Epoxy Project Planner handles contact messages, analytics, cookies, and advertising-related disclosures.",
     eyebrow: "Privacy",
     intro:
-      "This privacy policy explains what information the site may receive, how it may be used, and what advertising and consent-related disclosures apply if third-party services are enabled.",
+      "This policy explains contact information, hosting data and Google advertising on Epoxy Project Planner. Last updated October 3, 2026. Calculator measurements are processed in your browser; our calculator code does not send those measurements to an advertising service.",
     sections: [
       {
         title: "Information the site may receive",
         points: [
           "Information you choose to send by email, such as your name, email address, and message contents.",
           "Basic technical and server data that may be logged by the hosting provider, such as IP address, browser type, referrer, and request time.",
-          "Usage and performance information collected through analytics or similar tooling if those services are enabled."
+          "Technical information processed by Google advertising services, including cookies, IP address, device/browser information and advertising identifiers. A separate site analytics tag is not installed in the current site code."
         ]
       },
       {
@@ -1881,17 +1920,31 @@ const basePages = [
       {
         title: "Cookies, local storage, analytics, and ads",
         body:
-          "The site may use cookies or similar storage for essential functionality, analytics, and advertising if those services are activated. If Google services such as AdSense are enabled, Google and its partners may use cookies or local storage to serve and measure ads. Where required by law, the site will provide a consent mechanism before enabling non-essential storage or personalized advertising."
+          "The site includes the Google AdSense tag for verification and advertising. Third-party vendors, including Google, use cookies to serve ads based on a user's prior visits to this website or other websites. Google's advertising cookies enable Google and its partners to serve ads based on visits to our site and other sites on the Internet. Third parties may place and read cookies, use web beacons, or process IP addresses and other identifiers for ad delivery, measurement and fraud prevention."
       },
       {
         title: "Third-party services",
         body:
-          "Hosting, analytics, search, advertising, and embedded third-party services may process limited technical data in order to deliver the site. Each third-party provider operates under its own terms and privacy practices, so users should review those providers directly when relevant."
+          "Cloudflare hosts and protects the site and may process request logs. Google Fonts supplies typefaces, and Google AdSense and participating advertising providers process advertising data. Where a Google privacy message is shown, it identifies the participating providers and their purposes. Providers handle information under their own privacy policies.",
+        links: [
+          { label: "Cloudflare privacy policy", url: "https://www.cloudflare.com/privacypolicy/" },
+          { label: "Google privacy policy", url: "https://policies.google.com/privacy" },
+          { label: "How Google uses information from partner sites", url: "https://business.safety.google/privacy/" }
+        ]
       },
       {
         title: "Google advertising disclosures",
         body:
-          "If Google AdSense or related Google advertising services are enabled on the site, Google and participating advertising technology providers may access device information, cookies, local storage, IP address, and related usage data in accordance with the consent choices made by the user and the policies that apply in the user's region."
+          "You can opt out of personalized Google advertising in Google Ads Settings. Other advertising vendors may offer their own opt-out controls, and participating providers can be managed through the industry choices link below. These controls do not necessarily remove all ads; non-personalized ads may still use data for permitted purposes such as measurement or fraud prevention.",
+        links: [
+          { label: "Google Ads Settings: manage personalized advertising", url: "https://www.google.com/settings/ads" },
+          { label: "Industry advertising opt-out choices", url: "https://optout.aboutads.info/" }
+        ]
+      },
+      {
+        title: "Consent and changing your advertising choices",
+        body: "Where Google provides a consent or opt-out message for your region, use that message to review the listed providers and accept, reject or customize the relevant purposes. Open Privacy choices in a calculator or guide page's footer to reopen Google's available site consent controls and change or withdraw an earlier decision. If no site message is available, the same panel links to Google Ads Settings and this policy. The site does not treat selections in its former custom Cookie panel as consent for Google advertising. For privacy questions or a data request, contact the address below.",
+        contactEmail
       },
       {
         title: "Data retention and your choices",
@@ -1905,6 +1958,7 @@ const basePages = [
           "This policy may be updated as the site adds new features, analytics, or monetization tools. Material changes should be reflected on this page before or when the change goes live."
       }
     ],
+    lastmod: "2026-10-03",
     indexable: false
   }),
   infoPage({
@@ -2029,7 +2083,16 @@ function rewriteLinks(page) {
   };
 }
 
-const livePages = basePages.filter((page) => !Object.hasOwn(redirects, page.slug)).map(rewriteLinks);
+const livePages = basePages.filter((page) => !Object.hasOwn(redirects, page.slug)).map((page) => {
+  const addition = guideAdditions[page.slug];
+  return rewriteLinks(addition ? {
+    ...page,
+    ...addition,
+    sections: [...(page.sections || []), ...(addition.sections || [])],
+    faq: [...(addition.faq || []), ...(page.faq || [])],
+    lastmod: "2026-10-03"
+  } : page);
+});
 const liveSlugs = new Set(livePages.map((page) => page.slug));
 for (const [from, to] of Object.entries(redirects)) {
   if (!liveSlugs.has(to)) throw new Error(`Redirect target missing: /${from}/ -> /${to}/`);

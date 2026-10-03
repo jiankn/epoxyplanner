@@ -66,222 +66,73 @@ if (navMoreMenus.length) {
   });
 }
 
-const CONSENT_KEY = window.epoxyConsentKey || "epoxy_consent_v1";
-const banner = document.querySelector("[data-cookie-banner]");
-const modal = document.querySelector("[data-cookie-modal]");
-const modalPanel = modal?.querySelector(".cookie-modal__panel") || null;
-const cookieOpenButtons = document.querySelectorAll("[data-cookie-open], [data-cookie-manage]");
-const cookieCloseButtons = document.querySelectorAll("[data-cookie-close]");
-const cookieAcceptButtons = document.querySelectorAll("[data-cookie-accept]");
-const cookieRejectButtons = document.querySelectorAll("[data-cookie-reject]");
-const cookieSaveButtons = document.querySelectorAll("[data-cookie-save]");
-const analyticsField = modal?.querySelector('[data-cookie-field="analytics_storage"]') || null;
-const adStorageField = modal?.querySelector('[data-cookie-field="ad_storage"]') || null;
-const adPersonalizationField = modal?.querySelector('[data-cookie-field="ad_personalization"]') || null;
+const privacyModal = document.querySelector("[data-cookie-modal]");
+const privacyPanel = privacyModal?.querySelector(".cookie-modal__panel") || null;
+const googlePrivacyButton = privacyModal?.querySelector("[data-google-privacy]") || null;
+let privacyTrigger = null;
 
-function normalizeConsent(input = {}) {
-  const state = {
-    version: 1,
-    decision: "unknown",
-    analytics_storage: "denied",
-    ad_storage: "denied",
-    ad_user_data: "denied",
-    ad_personalization: "denied",
-    updatedAt: "",
-    ...input
-  };
-
-  const normalizeFlag = (value) => (value === "granted" ? "granted" : "denied");
-
-  state.analytics_storage = normalizeFlag(state.analytics_storage);
-  state.ad_storage = normalizeFlag(state.ad_storage);
-  state.ad_user_data = normalizeFlag(state.ad_user_data || state.ad_storage);
-  state.ad_personalization = normalizeFlag(state.ad_personalization);
-
-  if (state.ad_personalization === "granted") {
-    state.ad_storage = "granted";
-    state.ad_user_data = "granted";
-  }
-
-  if (state.ad_storage === "denied") {
-    state.ad_user_data = "denied";
-    state.ad_personalization = "denied";
-  }
-
-  return state;
-}
-
-function readStoredConsent() {
-  if (window.epoxyConsentState) {
-    return normalizeConsent(window.epoxyConsentState);
-  }
-
-  try {
-    const raw = window.localStorage.getItem(CONSENT_KEY);
-    return raw ? normalizeConsent(JSON.parse(raw)) : normalizeConsent();
-  } catch (error) {
-    return normalizeConsent();
-  }
-}
-
-function writeStoredConsent(state) {
-  const normalized = normalizeConsent(state);
-
-  try {
-    window.localStorage.setItem(CONSENT_KEY, JSON.stringify(normalized));
-  } catch (error) {
-    // Ignore storage failures and keep the in-memory state.
-  }
-
-  window.epoxyConsentState = normalized;
-  return normalized;
-}
-
-function reflectConsentState(state) {
-  const normalized = normalizeConsent(state);
-  const hasDecision = normalized.decision !== "unknown";
-
-  document.documentElement.dataset.consentDecision = normalized.decision;
-  document.documentElement.dataset.analyticsStorage = normalized.analytics_storage;
-  document.documentElement.dataset.adStorage = normalized.ad_storage;
-  document.body.dataset.cookieBanner = hasDecision ? "hidden" : "visible";
-
-  if (banner) {
-    banner.hidden = hasDecision;
-  }
-
-  if (analyticsField) {
-    analyticsField.checked = normalized.analytics_storage === "granted";
-  }
-
-  if (adStorageField) {
-    adStorageField.checked = normalized.ad_storage === "granted";
-  }
-
-  if (adPersonalizationField) {
-    adPersonalizationField.checked = normalized.ad_personalization === "granted";
-  }
-}
-
-function emitConsentChange(state) {
-  window.dispatchEvent(
-    new CustomEvent("epoxy:consent-changed", {
-      detail: normalizeConsent(state)
-    })
-  );
-}
-
-function openCookieModal() {
-  if (!modal || !modalPanel) return;
-
-  modal.hidden = false;
+function openPrivacyChoices() {
+  if (!privacyModal || !privacyPanel) return;
+  privacyTrigger = document.activeElement;
+  privacyModal.hidden = false;
   document.body.dataset.cookieModal = "open";
-  reflectConsentState(readStoredConsent());
-  modalPanel.focus();
+  privacyPanel.focus();
 }
 
-function closeCookieModal() {
-  if (!modal) return;
-
-  modal.hidden = true;
+function closePrivacyChoices() {
+  if (!privacyModal || privacyModal.hidden) return;
+  privacyModal.hidden = true;
   delete document.body.dataset.cookieModal;
+  privacyTrigger?.focus();
 }
 
-function buildConsentState(decision) {
-  const analyticsGranted = analyticsField?.checked ? "granted" : "denied";
-  const adStorageGranted = adStorageField?.checked ? "granted" : "denied";
-  const adPersonalizationGranted = adPersonalizationField?.checked ? "granted" : "denied";
-
-  return normalizeConsent({
-    version: 1,
-    decision,
-    analytics_storage: analyticsGranted,
-    ad_storage: adPersonalizationGranted === "granted" ? "granted" : adStorageGranted,
-    ad_user_data: adPersonalizationGranted === "granted" ? "granted" : adStorageGranted,
-    ad_personalization: adPersonalizationGranted,
-    updatedAt: new Date().toISOString()
-  });
-}
-
-function saveConsent(state) {
-  const saved = writeStoredConsent(state);
-  reflectConsentState(saved);
-  closeCookieModal();
-  emitConsentChange(saved);
-}
-
-function acceptAllConsent() {
-  saveConsent({
-    version: 1,
-    decision: "accepted_all",
-    analytics_storage: "granted",
-    ad_storage: "granted",
-    ad_user_data: "granted",
-    ad_personalization: "granted",
-    updatedAt: new Date().toISOString()
-  });
-}
-
-function rejectNonEssentialConsent() {
-  saveConsent({
-    version: 1,
-    decision: "rejected_non_essential",
-    analytics_storage: "denied",
-    ad_storage: "denied",
-    ad_user_data: "denied",
-    ad_personalization: "denied",
-    updatedAt: new Date().toISOString()
-  });
-}
-
-if (adStorageField && adPersonalizationField) {
-  adPersonalizationField.addEventListener("change", () => {
-    if (adPersonalizationField.checked) {
-      adStorageField.checked = true;
-    }
-  });
-
-  adStorageField.addEventListener("change", () => {
-    if (!adStorageField.checked) {
-      adPersonalizationField.checked = false;
-    }
-  });
-}
-
-cookieOpenButtons.forEach((button) => {
-  button.addEventListener("click", openCookieModal);
+document.querySelectorAll("[data-cookie-open]").forEach((button) => {
+  button.addEventListener("click", openPrivacyChoices);
+});
+document.querySelectorAll("[data-cookie-close]").forEach((button) => {
+  button.addEventListener("click", closePrivacyChoices);
 });
 
-cookieCloseButtons.forEach((button) => {
-  button.addEventListener("click", closeCookieModal);
+// Google owns advertising consent. Local preferences are not a TCF consent record.
+window.googlefc = window.googlefc || {};
+window.googlefc.callbackQueue = window.googlefc.callbackQueue || [];
+window.googlefc.callbackQueue.push({
+  CONSENT_API_READY: () => {
+    if (!googlePrivacyButton || typeof window.__tcfapi !== "function") return;
+    window.__tcfapi("addEventListener", 0, (data, success) => {
+      googlePrivacyButton.hidden = !(success && data?.gdprApplies &&
+        typeof window.googlefc.showRevocationMessage === "function");
+    });
+  }
 });
-
-cookieAcceptButtons.forEach((button) => {
-  button.addEventListener("click", acceptAllConsent);
-});
-
-cookieRejectButtons.forEach((button) => {
-  button.addEventListener("click", rejectNonEssentialConsent);
-});
-
-cookieSaveButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    saveConsent(buildConsentState("customized"));
-  });
+googlePrivacyButton?.addEventListener("click", () => {
+  if (typeof window.googlefc.showRevocationMessage !== "function") return;
+  closePrivacyChoices();
+  window.googlefc.callbackQueue.push(() => window.googlefc.showRevocationMessage());
 });
 
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
     closeLanguageSwitchers();
     closeNavMoreMenus();
+    closePrivacyChoices();
   }
-
-  if (event.key === "Escape" && modal && !modal.hidden) {
-    closeCookieModal();
+  if (event.key !== "Tab" || !privacyModal || privacyModal.hidden) return;
+  const controls = Array.from(privacyPanel.querySelectorAll("a[href], button, [tabindex='0']"))
+    .filter((element) => !element.disabled && !element.closest("[hidden]"));
+  if (!controls.length) return;
+  const first = controls[0];
+  const last = controls[controls.length - 1];
+  if (event.shiftKey && (document.activeElement === first || document.activeElement === privacyPanel)) {
+    event.preventDefault();
+    last.focus();
+  } else if (!event.shiftKey && (document.activeElement === last || document.activeElement === privacyPanel)) {
+    event.preventDefault();
+    first.focus();
   }
 });
 
-reflectConsentState(readStoredConsent());
+if (window.location.hash === "#privacy-choices") openPrivacyChoices();
 
 // 嵌入代码一键复制
 document.querySelectorAll("[data-copy-embed]").forEach((button) => {

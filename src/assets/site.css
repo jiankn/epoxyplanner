@@ -1247,7 +1247,8 @@ button {
    ============================================ */
 
 .cookie-banner[hidden],
-.cookie-modal[hidden] {
+.cookie-modal[hidden],
+.cookie-modal [hidden] {
   display: none !important;
 }
 

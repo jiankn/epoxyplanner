@@ -1057,7 +1057,7 @@ function renderFooter(site, page = {}) {
           <nav class="footer-legal">
             <a href="/privacy/">Privacy</a>
             <a href="/terms/">Terms</a>
-            <button type="button" class="footer-legal__button" data-cookie-open>Cookies</button>
+            <button type="button" class="footer-legal__button" data-cookie-open>Privacy choices</button>
           </nav>
         </div>
       </div>
@@ -1065,137 +1065,25 @@ function renderFooter(site, page = {}) {
   `;
 }
 
-function renderConsentBootstrap() {
+function renderPrivacyUi() {
   return `
-    <script>
-      (function () {
-        var key = "epoxy_consent_v1";
-        var defaultState = {
-          version: 1,
-          decision: "unknown",
-          analytics_storage: "denied",
-          ad_storage: "denied",
-          ad_user_data: "denied",
-          ad_personalization: "denied",
-          updatedAt: ""
-        };
-
-        function normalizeConsent(input) {
-          var state = Object.assign({}, defaultState, input || {});
-          var valid = { granted: true, denied: true };
-
-          if (!valid[state.analytics_storage]) state.analytics_storage = "denied";
-          if (!valid[state.ad_storage]) state.ad_storage = "denied";
-          if (!valid[state.ad_user_data]) state.ad_user_data = state.ad_storage;
-          if (!valid[state.ad_personalization]) state.ad_personalization = "denied";
-
-          if (state.ad_personalization === "granted") {
-            state.ad_storage = "granted";
-            state.ad_user_data = "granted";
-          }
-
-          if (state.ad_storage === "denied") {
-            state.ad_user_data = "denied";
-            state.ad_personalization = "denied";
-          }
-
-          return state;
-        }
-
-        var state = defaultState;
-
-        try {
-          var raw = window.localStorage.getItem(key);
-          if (raw) state = normalizeConsent(JSON.parse(raw));
-        } catch (error) {
-          state = defaultState;
-        }
-
-        window.epoxyConsentKey = key;
-        window.epoxyConsentState = state;
-        document.documentElement.dataset.consentDecision = state.decision;
-        document.documentElement.dataset.analyticsStorage = state.analytics_storage;
-        document.documentElement.dataset.adStorage = state.ad_storage;
-      })();
-    </script>
-  `;
-}
-
-function renderConsentUi() {
-  const googleBusinessDataUrl = "https://business.safety.google/privacy/";
-
-  return `
-    <section class="cookie-banner" data-cookie-banner hidden aria-label="Cookie consent">
-      <div class="cookie-banner__surface">
-        <div class="cookie-banner__layout">
-          <div class="cookie-banner__copy">
-            <h2>🍪 We value your privacy</h2>
-            <p>
-              We use essential cookies to make this site work. With your consent, we also use analytics and advertising cookies to improve your experience.
-              <a href="/privacy/">Learn more about our cookie policy</a>
-            </p>
-          </div>
-          <div class="button-row cookie-banner__actions">
-            <button class="button button--ghost button--small" type="button" data-cookie-reject>Reject all</button>
-            <button class="button button--quiet button--small" type="button" data-cookie-manage>Customize</button>
-            <button class="button button--small" type="button" data-cookie-accept>Accept all</button>
-          </div>
-        </div>
-      </div>
-    </section>
-    <div class="cookie-modal" data-cookie-modal hidden>
-      <button class="cookie-modal__backdrop" type="button" aria-label="Close cookie preferences" data-cookie-close></button>
-      <section class="cookie-modal__panel" role="dialog" aria-modal="true" aria-labelledby="cookie-preferences-title" tabindex="-1">
+    <div class="cookie-modal" id="privacy-choices" data-cookie-modal hidden>
+      <button class="cookie-modal__backdrop" type="button" aria-label="Close privacy choices" data-cookie-close></button>
+      <section class="cookie-modal__panel" role="dialog" aria-modal="true" aria-labelledby="privacy-choices-title" tabindex="-1">
         <div class="cookie-modal__head">
           <div>
-            <p class="eyebrow">Cookie Preferences</p>
-            <h2 id="cookie-preferences-title">Choose what this site can store</h2>
+            <p class="eyebrow">Privacy choices</p>
+            <h2 id="privacy-choices-title">Manage advertising privacy</h2>
           </div>
-          <button class="cookie-modal__close" type="button" aria-label="Close cookie preferences" data-cookie-close>&times;</button>
+          <button class="cookie-modal__close" type="button" aria-label="Close privacy choices" data-cookie-close>&times;</button>
         </div>
-        <p class="cookie-modal__intro">
-          Necessary storage is always on because it keeps the calculator, navigation, and saved privacy choices working. Optional categories apply only after you opt in.
-        </p>
-        <div class="cookie-options">
-          <label class="consent-option consent-option--locked">
-            <span class="consent-option__copy">
-              <strong>Necessary storage</strong>
-              <small>Required for calculator behavior, navigation, and saving your consent settings.</small>
-            </span>
-            <span class="consent-option__status">Always on</span>
-          </label>
-          <label class="consent-option" for="cookie-analytics-storage">
-            <span class="consent-option__copy">
-              <strong>Analytics storage</strong>
-              <small>Allows traffic and performance measurement to understand which pages and calculators help users most.</small>
-            </span>
-            <input id="cookie-analytics-storage" class="consent-option__toggle" type="checkbox" data-cookie-field="analytics_storage" />
-          </label>
-          <label class="consent-option" for="cookie-ad-storage">
-            <span class="consent-option__copy">
-              <strong>Ad storage and measurement</strong>
-              <small>Allows advertising-related storage used by Google or other partners for ad delivery, frequency, and measurement.</small>
-            </span>
-            <input id="cookie-ad-storage" class="consent-option__toggle" type="checkbox" data-cookie-field="ad_storage" />
-          </label>
-          <label class="consent-option" for="cookie-ad-personalization">
-            <span class="consent-option__copy">
-              <strong>Ads personalization</strong>
-              <small>Allows personalized advertising based on your activity, where that use is enabled and legally permitted.</small>
-            </span>
-            <input id="cookie-ad-personalization" class="consent-option__toggle" type="checkbox" data-cookie-field="ad_personalization" />
-          </label>
-        </div>
-        <p class="cookie-modal__disclosure">
-          If optional categories are enabled, third parties including Google may access personal data and device information in line with the choices you make here.
-          See our <a href="/privacy/">Privacy Policy</a> and
-          <a href="${googleBusinessDataUrl}" target="_blank" rel="noreferrer">Google Business Data Responsibility</a> page.
-        </p>
+        <p class="cookie-modal__intro">Where a Google consent message applies, you can reopen it to review providers and change or withdraw your site advertising choices. Google Ads Settings also lets you manage personalized Google advertising.</p>
         <div class="button-row cookie-modal__actions">
-          <button class="button button--ghost" type="button" data-cookie-reject>Reject non-essential</button>
-          <button class="button button--quiet" type="button" data-cookie-save>Save choices</button>
-          <button class="button" type="button" data-cookie-accept>Accept all</button>
+          <button class="button" type="button" data-google-privacy hidden>Change site advertising consent</button>
+          <a class="button button--quiet" href="https://www.google.com/settings/ads" target="_blank" rel="noreferrer">Google Ads Settings</a>
+          <a class="button button--ghost" href="/privacy/">Privacy Policy</a>
         </div>
+        <p class="cookie-modal__disclosure">If site consent controls are unavailable on this page, visit a <a href="/epoxy-calculator/#privacy-choices">calculator page's privacy choices</a>. Availability depends on your region and Google's message. You can also review <a href="https://optout.aboutads.info/" target="_blank" rel="noreferrer">industry advertising opt-outs</a>.</p>
       </section>
     </div>
   `;
@@ -1252,8 +1140,7 @@ export function renderPage(page, context) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="/assets/site.css" />
-    ${renderConsentBootstrap()}
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3562784107542460" crossorigin="anonymous"></script>
+    ${page.pageType !== "info" || page.slug === "" ? '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3562784107542460" crossorigin="anonymous"></script>' : ""}
     ${jsonLd(page, context)}
   </head>
   <body data-page-type="${escapeHtml(page.pageType)}" data-page-slug="${escapeHtml(page.slug)}" data-locale="${escapeHtml(page.locale || "en")}">
@@ -1263,7 +1150,7 @@ export function renderPage(page, context) {
       ${pageBody}
     </main>
     ${renderFooter(site, page)}
-    ${renderConsentUi()}
+    ${renderPrivacyUi()}
     <script type="module" src="/assets/site.js"></script>
     ${calculatorScript}
   </body>

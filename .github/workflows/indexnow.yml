@@ -1,0 +1,33 @@
+name: IndexNow
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Build previous commit
+        run: |
+          if git rev-parse HEAD~1 >/dev/null 2>&1; then
+            git worktree add ../prev HEAD~1
+            (cd ../prev && node scripts/build.mjs)
+            mv ../prev/dist ../dist-prev
+          else
+            mkdir -p ../dist-prev
+          fi
+
+      - name: Build current commit
+        run: node scripts/build.mjs
+
+      - name: Submit changed pages to IndexNow
+        run: node scripts/indexnow-changed.mjs ../dist-prev dist

@@ -6,6 +6,7 @@
   "scripts": {
     "build": "node scripts/build.mjs",
     "preview": "node scripts/preview.mjs",
-    "dev": "node scripts/build.mjs && node scripts/preview.mjs"
+    "dev": "node scripts/build.mjs && node scripts/preview.mjs",
+    "indexnow": "node scripts/indexnow.mjs"
   }
 }

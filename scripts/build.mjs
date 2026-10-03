@@ -110,6 +110,7 @@ async function main() {
     import("../src/data/site.mjs"),
     import("../src/templates/render.mjs")
   ]);
+  const { INDEXNOW_KEY } = await import("./indexnow-key.mjs");
 
   fs.rmSync(distRoot, { recursive: true, force: true });
   ensureDir(distRoot);
@@ -120,6 +121,8 @@ async function main() {
   writeFile(path.join(distRoot, "404.html"), renderNotFound(site));
   writeFile(path.join(distRoot, "robots.txt"), renderRobots(site));
   writeFile(path.join(distRoot, ".nojekyll"), "");
+  // IndexNow 验证文件：Bing 等搜索引擎通过它确认 key 归属
+  writeFile(path.join(distRoot, `${INDEXNOW_KEY}.txt`), INDEXNOW_KEY);
 
   // Path-level fallback for static hosts. Cloudflare host redirects are handled by functions/_middleware.js.
   const pageRedirects = Object.entries(redirects)

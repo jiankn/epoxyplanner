@@ -129,6 +129,7 @@ async function main() {
   buildSitemaps({ site, pages, renderSitemapIndex, renderSitemapSection });
   writeFile(path.join(distRoot, "404.html"), renderNotFound(site));
   writeFile(path.join(distRoot, "robots.txt"), renderRobots(site));
+  writeFile(path.join(distRoot, "ads.txt"), "google.com, pub-3562784107542460, DIRECT, f08c47fec0942fa0\n");
   writeFile(path.join(distRoot, ".nojekyll"), "");
   // IndexNow 验证文件：Bing 等搜索引擎通过它确认 key 归属
   writeFile(path.join(distRoot, `${INDEXNOW_KEY}.txt`), INDEXNOW_KEY);

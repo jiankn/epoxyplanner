@@ -870,7 +870,7 @@ export function renderEmbedPage(embed, context) {
           </div>
         </div>
       </div>
-      <p class="embed-credit">${escapeHtml(page.note || "")} <a href="${escapeHtml(pageUrl)}" target="_blank" rel="noopener">Full calculator, sources, and methodology at EpoxyPlanner →</a></p>
+      <p class="embed-credit">${escapeHtml(page.note || "")} <a href="${escapeHtml(pageUrl)}" target="_blank" rel="noopener">Full calculator, sources</a>, <a href="${escapeHtml(`${site.origin}/`)}" target="_blank" rel="noopener">and methodology at EpoxyPlanner →</a></p>
     </main>
     <script type="module" src="/assets/calculator.js"></script>
     <script>

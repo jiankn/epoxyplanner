@@ -778,8 +778,122 @@ function jsonLd(page, { site, urlForPath }) {
   return graph.map((item) => `<script type="application/ld+json">${JSON.stringify(item)}</script>`).join("\n");
 }
 
+// 可嵌入版计算器：给其他网站用 iframe 引用，iframe 外附一行品牌链接
+export const EMBEDS = [
+  {
+    slug: "embed/garage-floor-cost",
+    pageSlug: "garage-floor-epoxy-calculator",
+    title: "Epoxy Garage Floor Cost Calculator",
+    height: 820
+  }
+];
+
+export function embedSnippet(embed, site) {
+  const src = `${site.origin}/${embed.slug}/`;
+  const pageUrl = `${site.origin}/${embed.pageSlug}/`;
+  return `<iframe src="${src}" title="${embed.title}" width="100%" height="${embed.height}" style="border:0;max-width:720px;display:block;" loading="lazy" data-epoxyplanner-embed></iframe>
+<p style="font-size:14px;margin:6px 0 0;">${embed.title} by <a href="${pageUrl}">EpoxyPlanner</a></p>
+<script>window.addEventListener("message",function(e){if(e.origin!=="${site.origin}"||!e.data||!e.data.epoxyplannerHeight)return;document.querySelectorAll("iframe[data-epoxyplanner-embed]").forEach(function(f){if(f.contentWindow===e.source)f.style.height=e.data.epoxyplannerHeight+"px";});});</script>`;
+}
+
+function renderEmbedPromo(page, site) {
+  const embed = EMBEDS.find((item) => item.pageSlug === page.slug);
+  if (!embed || (page.locale && page.locale !== "en")) return "";
+  return `
+    <section class="section embed-promo" id="embed">
+      <div class="section-heading">
+        <p class="eyebrow">Free Widget</p>
+        <h2>Add this calculator to your website</h2>
+      </div>
+      <p>Contractors, flooring blogs, and home improvement sites can embed this cost calculator for free. Paste the code into any page that accepts HTML. It updates automatically when we revise the price ranges, and it carries no ads.</p>
+      <label class="field embed-promo__code">
+        <span>Embed code</span>
+        <textarea readonly rows="6" data-embed-code>${escapeHtml(embedSnippet(embed, site))}</textarea>
+      </label>
+      <div class="button-row">
+        <button class="button" type="button" data-copy-embed>Copy embed code</button>
+        <a class="button button--ghost" href="/${embed.slug}/" target="_blank" rel="noopener">Preview the widget</a>
+      </div>
+    </section>
+  `;
+}
+
+export function renderEmbedPage(embed, context) {
+  const { site, pageMap } = context;
+  const page = pageMap.get(embed.pageSlug);
+  const pageUrl = `${site.origin}/${embed.pageSlug}/`;
+  const formMarkup = localizeFormMarkup(FORM_TEMPLATES[page.calculatorType]({ page }), page);
+  const stat = (key, fallback, attr) => `
+            <article class="stat-card">
+              <p>${escapeHtml(page.statLabels?.[key] || fallback)}</p>
+              <strong ${attr}>--</strong>
+            </article>`;
+
+  return `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, follow" />
+    <title>${escapeHtml(embed.title)} | ${escapeHtml(site.shortName)}</title>
+    <link rel="canonical" href="${escapeHtml(pageUrl)}" />
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/assets/site.css" />
+  </head>
+  <body class="embed-body" data-page-type="embed">
+    <main class="embed-shell">
+      <div class="calculator-shell">
+        <div class="calculator-panel">
+          <h1 class="embed-title">${escapeHtml(embed.title)}</h1>
+          <form class="calculator-root" data-calculator-type="${escapeHtml(page.calculatorType)}" data-locale="en" data-number-locale="en-US" data-currency="USD" data-price-unit="gallon" novalidate>
+            ${formMarkup}
+            <p class="form-error" role="alert" aria-live="polite" data-form-error></p>
+          </form>
+        </div>
+        <div class="result-panel" data-result-panel>
+          <div class="result-panel__hero">
+            <p class="eyebrow">${escapeHtml(page.resultEyebrow || "Estimated cost")}</p>
+            <div class="result-big" data-result-primary>--</div>
+            <p class="result-caption" data-result-secondary>${escapeHtml(page.ui?.resultFallback || "")}</p>
+          </div>
+          <div class="stat-grid">
+            ${stat("raw", "Price per sq ft", "data-stat-raw")}
+            ${stat("split", "Coating", "data-stat-split")}
+            ${stat("cost", "Prep & repairs", "data-stat-cost")}
+            ${stat("layers", "DIY vs pro", "data-stat-layers")}
+          </div>
+          <div class="result-panel__why">
+            <h2 class="embed-subtitle">${escapeHtml(page.ui?.whyChangedHeading || "What makes up the estimate")}</h2>
+            <ul class="stack-list" data-breakdown-list>
+              <li>${escapeHtml(page.ui?.breakdownFallback || "")}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <p class="embed-credit">${escapeHtml(page.note || "")} <a href="${escapeHtml(pageUrl)}" target="_blank" rel="noopener">Full calculator, sources, and methodology at EpoxyPlanner →</a></p>
+    </main>
+    <script type="module" src="/assets/calculator.js"></script>
+    <script>
+      // 把内容高度告诉外层页面，嵌入代码据此自动调整 iframe 高度
+      (function () {
+        if (window.parent === window) return;
+        var last = 0;
+        function report() {
+          var height = Math.ceil(document.documentElement.scrollHeight);
+          if (height === last) return;
+          last = height;
+          window.parent.postMessage({ epoxyplannerHeight: height }, "*");
+        }
+        new ResizeObserver(report).observe(document.body);
+        window.addEventListener("load", report);
+      })();
+    </script>
+  </body>
+</html>`;
+}
+
 function renderPageBody(page, context) {
-  const { pageMap } = context;
+  const { pageMap, site } = context;
 
   if (page.pageType === "calculator") {
     return [
@@ -792,6 +906,7 @@ function renderPageBody(page, context) {
       renderBullets(uiText(page, "mistakesTitle", "Common mistakes that cost money"), page.mistakes),
       renderBullets(uiText(page, "checklistTitle", "Project checklist before you buy"), page.checklist),
       renderFaqs(page.faq, page),
+      renderEmbedPromo(page, site),
       renderRelated(page, pageMap)
     ].join("");
   }

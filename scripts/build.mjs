@@ -52,9 +52,9 @@ function urlForPath(site, slug = "") {
   return slug ? `${site.origin}/${slug}/` : `${site.origin}/`;
 }
 
-function buildFunctionRoutes({ pages, redirects }) {
-  const routes = pages
-    .map((page) => (page.slug ? `/${page.slug}/` : "/"))
+function buildFunctionRoutes({ pages, redirects, embeds }) {
+  const routes = [...pages.map((page) => page.slug), ...embeds.map((embed) => embed.slug)]
+    .map((slug) => (slug ? `/${slug}/` : "/"))
     .sort((a, b) => a.localeCompare(b));
   const routeList = routes.map((route) => `  ${JSON.stringify(route)}`).join(",\n");
   const redirectList = Object.entries(redirects)
@@ -92,6 +92,14 @@ function buildPages({ site, pages, renderPage }) {
   }
 }
 
+// 嵌入版计算器：不进 sitemap，页面本身 noindex
+function buildEmbeds({ site, pages, embeds, renderEmbedPage }) {
+  const pageMap = new Map(pages.map((page) => [page.slug, page]));
+  for (const embed of embeds) {
+    writeFile(path.join(distRoot, embed.slug, "index.html"), renderEmbedPage(embed, { site, pageMap }));
+  }
+}
+
 function buildAssets() {
   copyFile(path.join(projectRoot, "src", "assets", "site.css"), path.join(distRoot, "assets", "site.css"));
   copyFile(path.join(projectRoot, "src", "assets", "site.js"), path.join(distRoot, "assets", "site.js"));
@@ -106,7 +114,7 @@ function buildAssets() {
 async function main() {
   loadDotEnv(path.join(projectRoot, ".env"));
 
-  const [{ site, pages, redirects }, { renderPage, renderNotFound, renderRobots, renderSitemapIndex, renderSitemapSection }] = await Promise.all([
+  const [{ site, pages, redirects }, { renderPage, renderEmbedPage, EMBEDS: embeds, renderNotFound, renderRobots, renderSitemapIndex, renderSitemapSection }] = await Promise.all([
     import("../src/data/site.mjs"),
     import("../src/templates/render.mjs")
   ]);
@@ -114,9 +122,10 @@ async function main() {
 
   fs.rmSync(distRoot, { recursive: true, force: true });
   ensureDir(distRoot);
-  buildFunctionRoutes({ pages, redirects });
+  buildFunctionRoutes({ pages, redirects, embeds });
   buildAssets();
   buildPages({ site, pages, renderPage });
+  buildEmbeds({ site, pages, embeds, renderEmbedPage });
   buildSitemaps({ site, pages, renderSitemapIndex, renderSitemapSection });
   writeFile(path.join(distRoot, "404.html"), renderNotFound(site));
   writeFile(path.join(distRoot, "robots.txt"), renderRobots(site));

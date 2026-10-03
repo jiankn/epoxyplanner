@@ -13,6 +13,7 @@ export const HTML_ROUTES = new Set([
   "/de/epoxidharz-verbrauch-pro-m2/",
   "/deep-pour-epoxy-calculator/",
   "/deep-pour-vs-table-top-epoxy/",
+  "/embed/garage-floor-cost/",
   "/epoxy-bar-top-cost/",
   "/epoxy-calculator-metric/",
   "/epoxy-calculator/",

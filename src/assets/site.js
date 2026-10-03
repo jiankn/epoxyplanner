@@ -282,3 +282,20 @@ document.addEventListener("keydown", (event) => {
 });
 
 reflectConsentState(readStoredConsent());
+
+// 嵌入代码一键复制
+document.querySelectorAll("[data-copy-embed]").forEach((button) => {
+  button.addEventListener("click", async () => {
+    const code = button.closest(".embed-promo")?.querySelector("[data-embed-code]");
+    if (!code) return;
+    const label = button.textContent;
+    try {
+      await navigator.clipboard.writeText(code.value);
+    } catch {
+      code.select();
+      document.execCommand("copy");
+    }
+    button.textContent = "Copied";
+    setTimeout(() => { button.textContent = label; }, 2000);
+  });
+});

@@ -347,10 +347,10 @@ const locales = {
       "Conferir proporção, cura e espessura máxima do produto."
     ],
     hub: {
-      title: "Calculadora de resina epóxi: quantos litros você precisa",
+      title: "Calculadora de resina epóxi: quantos litros comprar com sobra",
       h1: "Calculadora de resina epóxi: quantidade, volume e custo",
       description:
-        "Calculadora grátis: informe as medidas e veja quantos litros de resina epóxi comprar, já com sobra. Regra rápida: 1 litro cobre 1 m² com 1 mm de espessura.",
+        "Informe as medidas da peça, mesa ou superfície e veja na hora quantos litros de resina epóxi comprar, já com sobra, a divisão A/B do kit e o custo em reais.",
       intro:
         "Digite comprimento, largura e profundidade: a calculadora mostra o volume bruto, a quantidade para comprar com sobra, a divisão parte A/parte B e o custo em reais. Para consumo por m², preço do piso ou piso epóxi, use as calculadoras específicas abaixo."
     }
@@ -810,9 +810,9 @@ const coverageAnswers = {
     note: "Valeurs brutes, sans marge. Pour les peintures et revêtements de sol époxy, suivez la consommation indiquée sur la fiche technique du fabricant."
   },
   "pt-BR": {
-    title: "Consumo de resina epóxi por m²: 1 litro rende 1 m² a 1 mm",
+    title: "Quantos litros de resina epóxi por m²? Tabela de 0,5 a 3 mm",
     description:
-      "1 litro de resina epóxi cobre 1 m² com 1 mm de espessura (cerca de 1,1 kg). Veja a tabela por espessura e calcule litros, sobra e custo para a sua área.",
+      "1 litro rende 1 m² a 1 mm. Veja a tabela em litros e kg por espessura, quantos m² rende 1 kg e calcule o total com sobra para a sua área.",
     answerHeading: "Quantos litros de resina epóxi por m²?",
     answer:
       "Cada milímetro de espessura consome 1 litro de resina epóxi por metro quadrado, ou cerca de 1,1 kg, porque a densidade costuma ficar entre 1,1 e 1,2 kg/L. Assim, 1 litro rende cerca de 2 m² a 0,5 mm, 1 m² a 1 mm e 0,5 m² a 2 mm. Some 10–15% de sobra para perdas e absorção.",
@@ -1009,6 +1009,28 @@ const hubExtraSections = {
   }
 };
 
+// GSC（2026-09-07 至 10-04）：这些 pt-BR 页排在第 6–8 名，但几乎没有点击。
+// 这里只改搜索结果里显示的标题和描述，页面上的 H1 和正文不变。
+const searchSnippetOverrides = {
+  "pt-BR": {
+    volume: {
+      title: "Volume de resina epóxi: calcule os litros para moldes e peças",
+      description:
+        "Informe comprimento, largura e profundidade do molde, peça ou cavidade e veja o volume em litros, a quantidade para comprar com sobra e a divisão A/B do kit."
+    },
+    amount: {
+      title: "Quanta resina epóxi preciso? Calcule a compra com sobra",
+      description:
+        "Não compre resina a menos nem a mais: informe as medidas e a calculadora mostra o volume bruto, quanto comprar com sobra para perdas e bordas, e o custo."
+    },
+    floor: {
+      title: "Calculadora de piso epóxi: quantidade e investimento por m²",
+      description:
+        "Calcule quantos litros de tinta ou resina epóxi o piso precisa por área, demãos e rendimento do fabricante, com sobra e custo do material. Exemplo: 18 m² ≈ 4,8 L."
+    }
+  }
+};
+
 function coverageAnswerFields(locale) {
   const copy = coverageAnswers[locale.code];
   const format = (value, digits) =>
@@ -1198,6 +1220,7 @@ function localizedCalculatorSpec(locale, key, values) {
     resultEyebrow: locale.ui.resultEyebrow,
     ...(key === "coverage" ? coverageAnswerFields(locale) : {}),
     ...extraSectionsFor(locale, key),
+    ...searchSnippetOverrides[locale.code]?.[key],
     ...localePageMeta(locale, key)
   };
 }

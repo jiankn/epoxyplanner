@@ -792,7 +792,7 @@ export function embedSnippet(embed, site) {
   const src = `${site.origin}/${embed.slug}/`;
   const pageUrl = `${site.origin}/${embed.pageSlug}/`;
   return `<iframe src="${src}" title="${embed.title}" width="100%" height="${embed.height}" style="border:0;max-width:720px;display:block;" loading="lazy" data-epoxyplanner-embed></iframe>
-<p style="font-size:14px;margin:6px 0 0;">${embed.title} by <a href="${pageUrl}">EpoxyPlanner</a></p>
+<p style="font-size:14px;margin:6px 0 0;">${embed.title} by <a href="${pageUrl}" rel="nofollow">EpoxyPlanner</a></p>
 <script>window.addEventListener("message",function(e){if(e.origin!=="${site.origin}"||!e.data||!e.data.epoxyplannerHeight)return;document.querySelectorAll("iframe[data-epoxyplanner-embed]").forEach(function(f){if(f.contentWindow===e.source)f.style.height=e.data.epoxyplannerHeight+"px";});});</script>`;
 }
 

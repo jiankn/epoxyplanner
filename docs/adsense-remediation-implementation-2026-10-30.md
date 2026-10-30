@@ -1,6 +1,6 @@
 # AdSense 整改实施记录
 
-实施日期：2026-10-30，Asia/Shanghai。基于同日的[拒审审计](C:/antigravity/epoxyplanner/docs/adsense-remediation-audit-2026-10-30.md)。本记录描述工作区与本地构建的最终结果；本轮没有推送或部署线上站点，也没有代为提交 AdSense 复核。
+实施日期：2026-10-30，Asia/Shanghai。基于同日的[拒审审计](C:/antigravity/epoxyplanner/docs/adsense-remediation-audit-2026-10-30.md)。本记录主要描述工作区与本地构建结果。用户随后授权提交 GitHub 并部署，发布进展见下方附记；未代为提交 AdSense 复核。
 
 ## 已完成的产品改造
 
@@ -53,7 +53,7 @@ About、Authors 和 Methodology 说明以 Epoxy Planner 品牌独立维护的性
 | 浏览器操作 | 12 组操作检查完成；最初发现的两处遮挡问题修复后，针对配比/套装与面积成本单位切换的复测通过 |
 | 响应式 | 抽查桌面及 390px 手机无整页横向溢出；手机单位/形状按钮文本宽度检查通过 |
 | 代码检查 | `git diff --check` 通过；界面机械检查运行无报告项 |
-| 生产环境 | 本轮未部署，不能将本地结果当作线上已生效或 Google 已重新抓取 |
+| 生产环境 | 用户后续授权发布；Cloudflare Pages 部署结果见相应 GitHub 提交的检查，不能将发布成功当作 Google 已重新抓取 |
 
 复用命令：
 
@@ -74,7 +74,13 @@ npm.cmd run preview
 
 网站端已落实本轮可验证的主要整改。Google 未给出本次拒审的具体页面清单，本次改造不能保证批准。可对照 [Google 内容与用户体验要求](https://support.google.com/adsense/answer/10015918?hl=en)继续维护实际工具与独立内容。
 
-本轮没有创建 subagent，没有更改现有无关未跟踪目录，也没有提交 Git、推送、部署或发送邮件。
+本轮没有创建 subagent，没有更改现有无关未跟踪目录，也没有发送邮件。
+
+## 发布验收附记
+
+用户授权后，整改提交 `1ba7432` 已推送至 GitHub `main`；Cloudflare Pages 自动部署和 IndexNow 工作流均成功。正式域名验收复现浏览器仍使用旧版缓存脚本和样式，导致新表单没有结果，因此补充了基于源码内容哈希的资源文件名，并同步改写 HTML 和 ES module 的依赖路径。保留旧的稳定资源路径兼容已有引用；构建检查同时验证新文件和依赖均可解析。该修复不改变计算公式。
+
+发布状态以 [GitHub 主分支提交检查](https://github.com/jiankn/epoxyplanner/commits/main/)及正式域名验收为准。本次发布不包含 AdSense 后台复核操作。
 
 ## 预览与证据
 

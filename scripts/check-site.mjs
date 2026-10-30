@@ -34,14 +34,20 @@ for (const page of pages) {
     if (!href.startsWith("/") && !href.startsWith("#")) continue;
     const target = new URL(decode(href), url(page.slug));
     const slug = target.pathname.replace(/^\/+|\/+$/g, "");
-    if (target.pathname.startsWith("/assets/")) check(fs.existsSync(path.join(dist, target.pathname)), `${name}: missing asset ${href}`);
+    if (target.pathname.startsWith("/assets/")) {
+      check(fs.existsSync(path.join(dist, target.pathname)), `${name}: missing asset ${href}`);
+      if (target.pathname.endsWith(".css")) check(/\.[a-f0-9]{12}\.css$/.test(target.pathname), `${name}: stylesheet needs a content version`);
+    }
     else if (!target.pathname.includes(".")) {
       check(pageMap.has(slug) || target.pathname.startsWith("/embed/"), `${name}: broken or redirected content link ${href}`);
       if (target.hash && html.has(slug)) check(html.get(slug).includes(`id="${decodeURIComponent(target.hash.slice(1))}"`), `${name}: broken anchor ${href}`);
     }
   }
   for (const [, src] of doc.matchAll(/<script[^>]*\bsrc="([^"]*)"/g)) {
-    if (src.startsWith("/")) check(fs.existsSync(path.join(dist, src)), `${name}: missing script ${src}`);
+    if (src.startsWith("/")) {
+      check(fs.existsSync(path.join(dist, src)), `${name}: missing script ${src}`);
+      check(/\.[a-f0-9]{12}\.js$/.test(src), `${name}: script needs a content version`);
+    }
   }
   const hasAdCode = doc.includes("pagead2.googlesyndication.com");
   if (hasAdCode) adScripts++;
@@ -80,6 +86,13 @@ for (const [from, to] of Object.entries(redirects)) {
   check(pageMap.has(to) && !redirects[to], `${from}: missing target or redirect chain`);
 }
 for (const from of Object.keys(redirectPresets)) check(Boolean(redirects[from]), `${from}: orphan redirect preset`);
+for (const file of fs.readdirSync(path.join(dist, "assets")).filter(file => /\.[a-f0-9]{12}\.js$/.test(file))) {
+  const script = fs.readFileSync(path.join(dist, "assets", file), "utf8");
+  for (const [, dependency] of script.matchAll(/from\s+["']\.\/([^"']+)["']/g)) {
+    check(/\.[a-f0-9]{12}\.js$/.test(dependency), `${file}: module dependency needs a content version`);
+    check(fs.existsSync(path.join(dist, "assets", dependency)), `${file}: missing module ${dependency}`);
+  }
+}
 check(fs.readFileSync(path.join(dist, "robots.txt"), "utf8").includes("Allow: /"), "robots must allow review access");
 check(fs.readFileSync(path.join(dist, "ads.txt"), "utf8").trim() === "google.com, pub-3562784107542460, DIRECT, f08c47fec0942fa0", "ads.txt seller mismatch");
 assert.equal(issues.length, 0, issues.join("\n"));

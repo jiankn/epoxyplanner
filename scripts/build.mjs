@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -83,34 +84,50 @@ function buildSitemaps({ site, pages, renderSitemapIndex, renderSitemapSection }
   writeFile(path.join(distRoot, "sitemap.xml"), sitemapIndex);
 }
 
-function buildPages({ site, pages, renderPage }) {
+function versionAssetReferences(html, assets) {
+  return html.replace(/\b(href|src)="\/assets\/([^"]+)"/g, (match, attribute, file) =>
+    assets.has(file) ? `${attribute}="/assets/${assets.get(file)}"` : match);
+}
+
+function buildPages({ site, pages, renderPage, assets }) {
   const pageMap = new Map(pages.map((page) => [page.slug, page]));
 
   for (const page of pages) {
     const html = renderPage(page, { site, pages, pageMap, urlForPath: (slug = "") => urlForPath(site, slug) });
     const outputDir = page.slug ? path.join(distRoot, page.slug) : distRoot;
-    writeFile(path.join(outputDir, "index.html"), html);
+    writeFile(path.join(outputDir, "index.html"), versionAssetReferences(html, assets));
   }
 }
 
 // 嵌入版计算器：不进 sitemap，页面本身 noindex
-function buildEmbeds({ site, pages, embeds, renderEmbedPage }) {
+function buildEmbeds({ site, pages, embeds, renderEmbedPage, assets }) {
   const pageMap = new Map(pages.map((page) => [page.slug, page]));
   for (const embed of embeds) {
-    writeFile(path.join(distRoot, embed.slug, "index.html"), renderEmbedPage(embed, { site, pageMap }));
+    writeFile(path.join(distRoot, embed.slug, "index.html"), versionAssetReferences(renderEmbedPage(embed, { site, pageMap }), assets));
   }
 }
 
 function buildAssets() {
-  copyFile(path.join(projectRoot, "src", "assets", "site.css"), path.join(distRoot, "assets", "site.css"));
-  copyFile(path.join(projectRoot, "src", "assets", "site.js"), path.join(distRoot, "assets", "site.js"));
-  copyFile(path.join(projectRoot, "src", "assets", "calculator.js"), path.join(distRoot, "assets", "calculator.js"));
-  copyFile(path.join(projectRoot, "src", "assets", "planner-text.js"), path.join(distRoot, "assets", "planner-text.js"));
-  copyFile(path.join(projectRoot, "src", "assets", "floor-cost-rates.js"), path.join(distRoot, "assets", "floor-cost-rates.js"));
+  const files = ["site.css", "site.js", "calculator.js", "planner-text.js", "floor-cost-rates.js"];
+  const sources = new Map(files.map(file => [file, fs.readFileSync(path.join(projectRoot, "src", "assets", file), "utf8").replace(/\r\n/g, "\n")]));
+  const hash = createHash("sha256").update("epoxy-assets-v1");
+  for (const [file, contents] of sources) hash.update(file).update(contents);
+  const version = hash.digest("hex").slice(0, 12);
+  const assets = new Map(files.map(file => [file, file.replace(/(\.[^.]+)$/, `.${version}$1`)]));
+  for (const [file, source] of sources) {
+    const contents = file.endsWith(".js")
+      ? source.replace(/(from\s+["']\.\/)([^"']+)(["'])/g, (match, prefix, dependency, quote) =>
+          assets.has(dependency) ? `${prefix}${assets.get(dependency)}${quote}` : match)
+      : source;
+    writeFile(path.join(distRoot, "assets", assets.get(file)), contents);
+    // Keep stable URLs available to older cached HTML and external references.
+    writeFile(path.join(distRoot, "assets", file), contents);
+  }
   copyFile(path.join(projectRoot, "src", "assets", "favicon.svg"), path.join(distRoot, "assets", "favicon.svg"));
   copyFile(path.join(projectRoot, "src", "assets", "favicon-32.png"), path.join(distRoot, "assets", "favicon-32.png"));
   copyFile(path.join(projectRoot, "src", "assets", "apple-touch-icon.png"), path.join(distRoot, "assets", "apple-touch-icon.png"));
   copyFile(path.join(projectRoot, "src", "assets", "logo.svg"), path.join(distRoot, "assets", "logo.svg"));
+  return assets;
 }
 
 async function main() {
@@ -125,11 +142,11 @@ async function main() {
   fs.rmSync(distRoot, { recursive: true, force: true });
   ensureDir(distRoot);
   buildFunctionRoutes({ pages, redirects, redirectPresets, embeds });
-  buildAssets();
-  buildPages({ site, pages, renderPage });
-  buildEmbeds({ site, pages, embeds, renderEmbedPage });
+  const assets = buildAssets();
+  buildPages({ site, pages, renderPage, assets });
+  buildEmbeds({ site, pages, embeds, renderEmbedPage, assets });
   buildSitemaps({ site, pages, renderSitemapIndex, renderSitemapSection });
-  writeFile(path.join(distRoot, "404.html"), renderNotFound(site));
+  writeFile(path.join(distRoot, "404.html"), versionAssetReferences(renderNotFound(site), assets));
   writeFile(path.join(distRoot, "robots.txt"), renderRobots(site));
   writeFile(path.join(distRoot, "ads.txt"), "google.com, pub-3562784107542460, DIRECT, f08c47fec0942fa0\n");
   writeFile(path.join(distRoot, ".nojekyll"), "");

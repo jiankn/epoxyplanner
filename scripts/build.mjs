@@ -52,7 +52,7 @@ function urlForPath(site, slug = "") {
   return slug ? `${site.origin}/${slug}/` : `${site.origin}/`;
 }
 
-function buildFunctionRoutes({ pages, redirects, embeds }) {
+function buildFunctionRoutes({ pages, redirects, redirectPresets, embeds }) {
   const routes = [...pages.map((page) => page.slug), ...embeds.map((embed) => embed.slug)]
     .map((slug) => (slug ? `/${slug}/` : "/"))
     .sort((a, b) => a.localeCompare(b));
@@ -61,7 +61,8 @@ function buildFunctionRoutes({ pages, redirects, embeds }) {
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([from, to]) => `  [${JSON.stringify(`/${from}/`)}, ${JSON.stringify(`/${to}/`)}]`)
     .join(",\n");
-  const contents = `export const HTML_ROUTES = new Set([\n${routeList}\n]);\n\nexport const REDIRECTS = new Map([\n${redirectList}\n]);\n`;
+  const presetList = Object.entries(redirectPresets).map(([slug, values]) => `  [${JSON.stringify(`/${slug}/`)}, ${JSON.stringify(values)}]`).join(",\n");
+  const contents = `export const HTML_ROUTES = new Set([\n${routeList}\n]);\n\nexport const REDIRECTS = new Map([\n${redirectList}\n]);\n\nexport const REDIRECT_PRESETS = new Map([\n${presetList}\n]);\n`;
   writeFile(path.join(projectRoot, "functions", "_generated-routes.js"), contents);
 }
 
@@ -104,6 +105,7 @@ function buildAssets() {
   copyFile(path.join(projectRoot, "src", "assets", "site.css"), path.join(distRoot, "assets", "site.css"));
   copyFile(path.join(projectRoot, "src", "assets", "site.js"), path.join(distRoot, "assets", "site.js"));
   copyFile(path.join(projectRoot, "src", "assets", "calculator.js"), path.join(distRoot, "assets", "calculator.js"));
+  copyFile(path.join(projectRoot, "src", "assets", "planner-text.js"), path.join(distRoot, "assets", "planner-text.js"));
   copyFile(path.join(projectRoot, "src", "assets", "floor-cost-rates.js"), path.join(distRoot, "assets", "floor-cost-rates.js"));
   copyFile(path.join(projectRoot, "src", "assets", "favicon.svg"), path.join(distRoot, "assets", "favicon.svg"));
   copyFile(path.join(projectRoot, "src", "assets", "favicon-32.png"), path.join(distRoot, "assets", "favicon-32.png"));
@@ -114,7 +116,7 @@ function buildAssets() {
 async function main() {
   loadDotEnv(path.join(projectRoot, ".env"));
 
-  const [{ site, pages, redirects }, { renderPage, renderEmbedPage, EMBEDS: embeds, renderNotFound, renderRobots, renderSitemapIndex, renderSitemapSection }] = await Promise.all([
+  const [{ site, pages, redirects, redirectPresets }, { renderPage, renderEmbedPage, EMBEDS: embeds, renderNotFound, renderRobots, renderSitemapIndex, renderSitemapSection }] = await Promise.all([
     import("../src/data/site.mjs"),
     import("../src/templates/render.mjs")
   ]);
@@ -122,7 +124,7 @@ async function main() {
 
   fs.rmSync(distRoot, { recursive: true, force: true });
   ensureDir(distRoot);
-  buildFunctionRoutes({ pages, redirects, embeds });
+  buildFunctionRoutes({ pages, redirects, redirectPresets, embeds });
   buildAssets();
   buildPages({ site, pages, renderPage });
   buildEmbeds({ site, pages, embeds, renderEmbedPage });
@@ -136,7 +138,10 @@ async function main() {
 
   // Path-level fallback for static hosts. Cloudflare host redirects are handled by functions/_middleware.js.
   const pageRedirects = Object.entries(redirects)
-    .flatMap(([from, to]) => [`/${from}/ /${to}/ 301`, `/${from} /${to}/ 301`])
+    .flatMap(([from, to]) => {
+      const query = redirectPresets[from] ? `?${new URLSearchParams(redirectPresets[from])}` : "";
+      return [`/${from}/ /${to}/${query} 301`, `/${from} /${to}/${query} 301`];
+    })
     .join("\n");
   const redirectsContent = `http://epoxyplanner.com/* https://epoxyplanner.com/:splat 301
 http://www.epoxyplanner.com/* https://epoxyplanner.com/:splat 301

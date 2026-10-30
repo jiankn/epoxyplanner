@@ -1,0 +1,83 @@
+[
+  {
+    "name": "main",
+    "device": "desktop",
+    "width": 1440,
+    "scrollWidth": 1425,
+    "formTop": 467.1875,
+    "resultLeft": 774.4750366210938,
+    "formRight": 755.2750244140625
+  },
+  {
+    "name": "coaster",
+    "device": "desktop",
+    "width": 1440,
+    "scrollWidth": 1425,
+    "formTop": 496.3625183105469,
+    "resultLeft": 774.4750366210938,
+    "formRight": 755.2750244140625
+  },
+  {
+    "name": "pricing",
+    "device": "desktop",
+    "width": 1440,
+    "scrollWidth": 1425,
+    "formTop": 467.1875,
+    "resultLeft": 774.4750366210938,
+    "formRight": 755.2750244140625
+  },
+  {
+    "name": "brazil-cost",
+    "device": "desktop",
+    "width": 1440,
+    "scrollWidth": 1425,
+    "formTop": 467.1875,
+    "resultLeft": 774.4750366210938,
+    "formRight": 755.2750244140625
+  },
+  {
+    "name": "main",
+    "device": "mobile",
+    "width": 390,
+    "scrollWidth": 390,
+    "formTop": 458.9875183105469,
+    "inputTop": 588.4874877929688,
+    "firstDimensionTop": 588.4874877929688
+  },
+  {
+    "name": "coaster",
+    "device": "mobile",
+    "width": 390,
+    "scrollWidth": 390,
+    "formTop": 484.5874938964844,
+    "inputTop": 655.0625,
+    "firstDimensionTop": 757.8125
+  },
+  {
+    "name": "pricing",
+    "device": "mobile",
+    "width": 390,
+    "scrollWidth": 390,
+    "formTop": 513.7000122070312,
+    "inputTop": 586.0499877929688,
+    "firstDimensionTop": null
+  },
+  {
+    "name": "brazil-cost",
+    "device": "mobile",
+    "width": 390,
+    "scrollWidth": 390,
+    "formTop": 537.9750366210938,
+    "inputTop": 667.4750366210938,
+    "firstDimensionTop": 667.4750366210938
+  },
+  {
+    "name": "home",
+    "device": "mobile",
+    "width": 390,
+    "scrollWidth": 390,
+    "formTop": 619.375,
+    "inputTop": 748.875,
+    "firstDimensionTop": 748.875
+  }
+]

@@ -1,0 +1,21 @@
+[
+  {
+    "name": "unobstructed product options, ratio and kit purchase",
+    "pass": true,
+    "data": {
+      "split": "222.4 mL A / 111.2 mL B (2:1, by volume)",
+      "kits": "1.0 kits × 500 mL; purchase 500 mL mixed.",
+      "error": ""
+    }
+  },
+  {
+    "name": "area and thickness units preserve total budget including extra costs",
+    "pass": true,
+    "data": {
+      "primary": "R$ 35,80 / m²",
+      "cost": "R$ 358,00",
+      "other": "4.999998",
+      "error": ""
+    }
+  }
+]

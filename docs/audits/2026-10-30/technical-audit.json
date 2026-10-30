@@ -1,0 +1,244 @@
+{
+  "issues": [
+    {
+      "slug": "",
+      "kind": "SearchAction without search",
+      "severity": "P2"
+    },
+    {
+      "slug": "how-much-epoxy-do-i-need",
+      "kind": "article no dates",
+      "severity": "P2"
+    },
+    {
+      "slug": "how-much-epoxy-do-i-need-for-a-river-table",
+      "kind": "article no dates",
+      "severity": "P2"
+    },
+    {
+      "slug": "how-to-measure-a-river-table-for-epoxy",
+      "kind": "article no dates",
+      "severity": "P2"
+    },
+    {
+      "slug": "deep-pour-vs-table-top-epoxy",
+      "kind": "article no dates",
+      "severity": "P2"
+    },
+    {
+      "slug": "epoxy-waste-factor-guide",
+      "kind": "article no dates",
+      "severity": "P2"
+    },
+    {
+      "slug": "epoxy-coverage-chart",
+      "kind": "article no dates",
+      "severity": "P2"
+    },
+    {
+      "slug": "epoxy-mixing-ratio-guide",
+      "kind": "article no dates",
+      "severity": "P2"
+    },
+    {
+      "slug": "river-table-epoxy-cost",
+      "kind": "article no dates",
+      "severity": "P2"
+    },
+    {
+      "slug": "epoxy-countertop-cost",
+      "kind": "article no dates",
+      "severity": "P2"
+    },
+    {
+      "slug": "epoxy-bar-top-cost",
+      "kind": "article no dates",
+      "severity": "P2"
+    },
+    {
+      "slug": "epoxy-cost-per-square-foot",
+      "kind": "article no dates",
+      "severity": "P2"
+    },
+    {
+      "slug": "how-much-epoxy-per-square-foot",
+      "kind": "article no dates",
+      "severity": "P2"
+    },
+    {
+      "slug": "how-much-does-a-gallon-of-epoxy-cover",
+      "kind": "article no dates",
+      "severity": "P2"
+    },
+    {
+      "slug": "epoxy-pour-depth-guide",
+      "kind": "article no dates",
+      "severity": "P2"
+    },
+    {
+      "slug": "maximum-epoxy-pour-depth",
+      "kind": "article no dates",
+      "severity": "P2"
+    },
+    {
+      "slug": "seal-coat-vs-flood-coat",
+      "kind": "article no dates",
+      "severity": "P2"
+    },
+    {
+      "slug": "how-to-prevent-epoxy-leaks",
+      "kind": "article no dates",
+      "severity": "P2"
+    },
+    {
+      "slug": "how-to-calculate-epoxy-pour",
+      "kind": "article no dates",
+      "severity": "P2"
+    },
+    {
+      "slug": "epoxy-mix-ratio-by-volume-vs-weight",
+      "kind": "article no dates",
+      "severity": "P2"
+    },
+    {
+      "slug": "epoxy-kit-size-guide",
+      "kind": "article no dates",
+      "severity": "P2"
+    }
+  ],
+  "duplicateTitles": [],
+  "duplicateDescriptions": [],
+  "sourceLinks": [
+    {
+      "from": "epoxy-calculator",
+      "url": "https://www.totalboat.com/cdn/shop/files/totalboat-tabletop-epoxy-tds-instructions-03.08.22_57516faf-f569-46ce-8724-286d0272ed35.pdf",
+      "label": "TotalBoat TableTop Epoxy technical data sheet"
+    },
+    {
+      "from": "epoxy-calculator",
+      "url": "https://primaloc.helpscoutdocs.com/article/789-maximum-thickness-depth",
+      "label": "Primaloc: maximum thickness for a single layer"
+    },
+    {
+      "from": "epoxy-calculator",
+      "url": "https://masepoxies.com/product/deep-pour-epoxy",
+      "label": "MAS Epoxies: Deep Pour"
+    },
+    {
+      "from": "epoxy-calculator",
+      "url": "https://masepoxies.com/product/deep-pour-x-epoxy-resin",
+      "label": "MAS Epoxies: Deep Pour X"
+    },
+    {
+      "from": "garage-floor-epoxy-calculator",
+      "url": "https://homeguide.com/costs/epoxy-flooring-cost",
+      "label": "HomeGuide: Epoxy Flooring Cost"
+    },
+    {
+      "from": "garage-floor-epoxy-calculator",
+      "url": "https://homeguide.com/costs/garage-floor-coating-cost",
+      "label": "HomeGuide: Garage Floor Coating Cost"
+    },
+    {
+      "from": "garage-floor-epoxy-calculator",
+      "url": "https://www.angi.com/articles/epoxy-flooring-costs-advantages-and-installation.htm",
+      "label": "Angi: Epoxy Flooring Cost"
+    },
+    {
+      "from": "garage-floor-epoxy-calculator",
+      "url": "https://www.thisoldhouse.com/flooring/epoxy-floor-cost",
+      "label": "This Old House: Epoxy Floor Cost"
+    },
+    {
+      "from": "garage-floor-epoxy-calculator",
+      "url": "https://www.homewyse.com/services/cost_to_epoxy_coat_garage_floor.html",
+      "label": "Homewyse: Cost to Epoxy Coat Garage Floor"
+    },
+    {
+      "from": "garage-floor-epoxy-calculator",
+      "url": "https://www.bobvila.com/articles/epoxy-garage-floor-cost/",
+      "label": "Bob Vila: Epoxy Garage Floor Cost"
+    },
+    {
+      "from": "garage-floor-epoxy-calculator",
+      "url": "https://www.bobvila.com/articles/polyaspartic-floor-coating-cost/",
+      "label": "Bob Vila: Polyaspartic Floor Coating Cost"
+    },
+    {
+      "from": "garage-floor-epoxy-calculator",
+      "url": "https://armorgarage.com/blog/epoxy-flooring-cost-per-square-foot/",
+      "label": "ArmorGarage: Epoxy Flooring Cost per Sq Ft"
+    },
+    {
+      "from": "deep-pour-vs-table-top-epoxy",
+      "url": "https://primaloc.helpscoutdocs.com/article/789-maximum-thickness-depth",
+      "label": "PrimaLoc: maximum thickness for a single layer"
+    },
+    {
+      "from": "epoxy-mixing-ratio-guide",
+      "url": "https://crosslinktech.com/support/trouble-shooting-guide/mix-ratio-related-problems.html",
+      "label": "Crosslink Technology: mix ratio related problems"
+    },
+    {
+      "from": "epoxy-cost-calculator",
+      "url": "https://www.angi.com/articles/epoxy-flooring-costs-advantages-and-installation.htm",
+      "label": "Angi: Epoxy Flooring Cost"
+    },
+    {
+      "from": "epoxy-cost-calculator",
+      "url": "https://homeguide.com/costs/epoxy-flooring-cost",
+      "label": "HomeGuide: Epoxy Flooring Cost"
+    },
+    {
+      "from": "epoxy-cost-calculator",
+      "url": "https://www.thisoldhouse.com/flooring/epoxy-floor-cost",
+      "label": "This Old House: Epoxy Floor Cost"
+    },
+    {
+      "from": "epoxy-bar-top-cost",
+      "url": "https://primaloc.helpscoutdocs.com/article/789-maximum-thickness-depth",
+      "label": "PrimaLoc: maximum thickness for a single layer"
+    },
+    {
+      "from": "epoxy-pour-depth-guide",
+      "url": "https://primaloc.helpscoutdocs.com/article/789-maximum-thickness-depth",
+      "label": "PrimaLoc: maximum thickness for a single layer"
+    },
+    {
+      "from": "maximum-epoxy-pour-depth",
+      "url": "https://primaloc.helpscoutdocs.com/article/789-maximum-thickness-depth",
+      "label": "PrimaLoc: maximum thickness for a single layer"
+    },
+    {
+      "from": "privacy",
+      "url": "https://www.cloudflare.com/privacypolicy/",
+      "label": "Cloudflare privacy policy"
+    },
+    {
+      "from": "privacy",
+      "url": "https://policies.google.com/privacy",
+      "label": "Google privacy policy"
+    },
+    {
+      "from": "privacy",
+      "url": "https://business.safety.google/privacy/",
+      "label": "How Google uses information from partner sites"
+    },
+    {
+      "from": "privacy",
+      "url": "https://www.google.com/settings/ads",
+      "label": "Google Ads Settings: manage personalized advertising"
+    },
+    {
+      "from": "privacy",
+      "url": "https://optout.aboutads.info/",
+      "label": "Industry advertising opt-out choices"
+    }
+  ],
+  "images": [],
+  "calcOwnBelow200": 17,
+  "calcsNoSource": 48,
+  "guidesNoSource": 15,
+  "faqRepeated": 3,
+  "allAdScripts": 72
+}

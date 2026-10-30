@@ -1,0 +1,1031 @@
+[
+  {
+    "test": "general default",
+    "url": "https://epoxyplanner.com/epoxy-calculator/",
+    "unit": "imperial",
+    "inputs": [
+      {
+        "name": "unit",
+        "value": "imperial"
+      },
+      {
+        "name": "shape",
+        "value": "rectangle"
+      },
+      {
+        "name": "wastePct",
+        "value": "8",
+        "label": "Waste buffer (%)"
+      },
+      {
+        "name": "length",
+        "value": "48",
+        "label": "Length (in)"
+      },
+      {
+        "name": "width",
+        "value": "18",
+        "label": "Width (in)"
+      },
+      {
+        "name": "depth",
+        "value": "1.25",
+        "label": "Depth (in)"
+      },
+      {
+        "name": "diameter",
+        "value": "24",
+        "label": "\n      Diameter (in)\n      \n    "
+      },
+      {
+        "name": "depthRound",
+        "value": "0.5",
+        "label": "\n      Depth (in)\n      \n    "
+      },
+      {
+        "name": "pricePerGallon",
+        "value": "85",
+        "label": "Price / gallon"
+      }
+    ],
+    "primary": "5.05 gal",
+    "raw": "4.68 gal / 17.7 L",
+    "split": "3.37 gal A / 1.68 gal B (2:1 example)",
+    "error": "",
+    "buttons": [
+      "Imperial",
+      "Metric",
+      "Rectangle",
+      "Round"
+    ],
+    "formTop": 1167.0625,
+    "scrollWidth": 1425,
+    "viewport": 1440
+  },
+  {
+    "test": "metric conversion",
+    "url": "https://epoxyplanner.com/epoxy-calculator/",
+    "unit": "metric",
+    "inputs": [
+      {
+        "name": "unit",
+        "value": "metric"
+      },
+      {
+        "name": "shape",
+        "value": "rectangle"
+      },
+      {
+        "name": "wastePct",
+        "value": "8",
+        "label": "Waste buffer (%)"
+      },
+      {
+        "name": "length",
+        "value": "121.92",
+        "label": "Length (cm)"
+      },
+      {
+        "name": "width",
+        "value": "45.72",
+        "label": "Width (cm)"
+      },
+      {
+        "name": "depth",
+        "value": "3.175",
+        "label": "Depth (cm)"
+      },
+      {
+        "name": "diameter",
+        "value": "60.96",
+        "label": "\n      Diameter (cm)\n      \n    "
+      },
+      {
+        "name": "depthRound",
+        "value": "1.27",
+        "label": "\n      Depth (cm)\n      \n    "
+      },
+      {
+        "name": "pricePerGallon",
+        "value": "85",
+        "label": "Price / gallon"
+      }
+    ],
+    "primary": "19.11 L",
+    "raw": "4.68 gal / 17.7 L",
+    "split": "12.74 L A / 6.37 L B (2:1 example)",
+    "error": "",
+    "buttons": [
+      "Imperial",
+      "Metric",
+      "Rectangle",
+      "Round"
+    ],
+    "formTop": 1167.0625305175781,
+    "scrollWidth": 1425,
+    "viewport": 1440
+  },
+  {
+    "test": "invalid length",
+    "url": "https://epoxyplanner.com/epoxy-calculator/",
+    "unit": "metric",
+    "inputs": [
+      {
+        "name": "unit",
+        "value": "metric"
+      },
+      {
+        "name": "shape",
+        "value": "rectangle"
+      },
+      {
+        "name": "wastePct",
+        "value": "8",
+        "label": "Waste buffer (%)"
+      },
+      {
+        "name": "length",
+        "value": "0",
+        "label": "Length (cm)"
+      },
+      {
+        "name": "width",
+        "value": "45.72",
+        "label": "Width (cm)"
+      },
+      {
+        "name": "depth",
+        "value": "3.175",
+        "label": "Depth (cm)"
+      },
+      {
+        "name": "diameter",
+        "value": "60.96",
+        "label": "\n      Diameter (cm)\n      \n    "
+      },
+      {
+        "name": "depthRound",
+        "value": "1.27",
+        "label": "\n      Depth (cm)\n      \n    "
+      },
+      {
+        "name": "pricePerGallon",
+        "value": "85",
+        "label": "Price / gallon"
+      }
+    ],
+    "primary": "--",
+    "raw": "--",
+    "split": "--",
+    "error": "Enter positive length, width, and depth.",
+    "buttons": [
+      "Imperial",
+      "Metric",
+      "Rectangle",
+      "Round"
+    ],
+    "formTop": 1167.0625305175781,
+    "scrollWidth": 1425,
+    "viewport": 1440
+  },
+  {
+    "test": "metric page initial",
+    "url": "https://epoxyplanner.com/epoxy-calculator-metric/",
+    "unit": "imperial",
+    "inputs": [
+      {
+        "name": "unit",
+        "value": "imperial"
+      },
+      {
+        "name": "shape",
+        "value": "rectangle"
+      },
+      {
+        "name": "wastePct",
+        "value": "8",
+        "label": "Waste buffer (%)"
+      },
+      {
+        "name": "length",
+        "value": "48",
+        "label": "Length (in)"
+      },
+      {
+        "name": "width",
+        "value": "18",
+        "label": "Width (in)"
+      },
+      {
+        "name": "depth",
+        "value": "1.25",
+        "label": "Depth (in)"
+      },
+      {
+        "name": "diameter",
+        "value": "24",
+        "label": "\n      Diameter (in)\n      \n    "
+      },
+      {
+        "name": "depthRound",
+        "value": "0.5",
+        "label": "\n      Depth (in)\n      \n    "
+      },
+      {
+        "name": "pricePerGallon",
+        "value": "85",
+        "label": "Price / gallon"
+      }
+    ],
+    "primary": "5.05 gal",
+    "raw": "4.68 gal / 17.7 L",
+    "split": "3.37 gal A / 1.68 gal B (2:1 example)",
+    "error": "",
+    "buttons": [
+      "Imperial",
+      "Metric",
+      "Rectangle",
+      "Round"
+    ],
+    "formTop": 523.6375122070312,
+    "scrollWidth": 1425,
+    "viewport": 1440
+  },
+  {
+    "test": "coaster initial",
+    "url": "https://epoxyplanner.com/resin-coaster-calculator/",
+    "unit": "imperial",
+    "inputs": [
+      {
+        "name": "unit",
+        "value": "imperial"
+      },
+      {
+        "name": "diameter",
+        "value": "28",
+        "label": "Diameter (in)"
+      },
+      {
+        "name": "depth",
+        "value": "0.75",
+        "label": "Depth (in)"
+      },
+      {
+        "name": "wastePct",
+        "value": "8",
+        "label": "Waste buffer (%)"
+      },
+      {
+        "name": "pricePerGallon",
+        "value": "85",
+        "label": "Price / gallon"
+      }
+    ],
+    "primary": "2.16 gal",
+    "raw": "2.0 gal / 7.57 L",
+    "split": "1.08 gal A / 1.08 gal B (1:1 example)",
+    "error": "",
+    "buttons": [
+      "Imperial",
+      "Metric"
+    ],
+    "formTop": 1043.3375244140625,
+    "scrollWidth": 1425,
+    "viewport": 1440
+  },
+  {
+    "test": "art pricing initial",
+    "url": "https://epoxyplanner.com/resin-art-pricing-calculator/",
+    "inputs": [
+      {
+        "name": "costUnit",
+        "value": "gallons"
+      },
+      {
+        "name": "quantity",
+        "value": "3",
+        "label": "Quantity needed"
+      },
+      {
+        "name": "wastePct",
+        "value": "8",
+        "label": "Waste buffer (%)"
+      },
+      {
+        "name": "pricePerGallon",
+        "value": "95",
+        "label": "Price / gallon"
+      }
+    ],
+    "primary": "3.24 gal",
+    "raw": "3.0 gal / 11.36 L",
+    "split": "Budget based on entered gallons",
+    "error": "",
+    "buttons": [
+      "Gallons",
+      "Liters"
+    ],
+    "formTop": 523.6375122070312,
+    "scrollWidth": 1425,
+    "viewport": 1440
+  },
+  {
+    "test": "coverage initial",
+    "url": "https://epoxyplanner.com/epoxy-coverage-calculator/",
+    "unit": "imperial",
+    "inputs": [
+      {
+        "name": "unit",
+        "value": "imperial"
+      },
+      {
+        "name": "wastePct",
+        "value": "10",
+        "label": "Waste buffer (%)"
+      },
+      {
+        "name": "depth",
+        "value": "0.125",
+        "label": "Thickness (in)"
+      },
+      {
+        "name": "length",
+        "value": "72",
+        "label": "Length (in)"
+      },
+      {
+        "name": "width",
+        "value": "30",
+        "label": "Width (in)"
+      },
+      {
+        "name": "pricePerGallon",
+        "value": "85",
+        "label": "Price / gallon"
+      }
+    ],
+    "primary": "1.33 gal",
+    "raw": "1.17 gal / 4.42 L",
+    "split": "0.67 gal A / 0.67 gal B (1:1 example)",
+    "error": "",
+    "buttons": [
+      "Imperial",
+      "Metric"
+    ],
+    "formTop": 966.1749877929688,
+    "scrollWidth": 1425,
+    "viewport": 1440
+  },
+  {
+    "test": "brazil floor price initial",
+    "url": "https://epoxyplanner.com/pt-br/preco-piso-epoxi-m2/",
+    "unit": "metric",
+    "inputs": [
+      {
+        "name": "unit",
+        "value": "metric"
+      },
+      {
+        "name": "wastePct",
+        "value": "10",
+        "label": "Sobra (%)"
+      },
+      {
+        "name": "depth",
+        "value": "0.125",
+        "label": "Espessura (cm)"
+      },
+      {
+        "name": "length",
+        "value": "72",
+        "label": "Comprimento (cm)"
+      },
+      {
+        "name": "width",
+        "value": "30",
+        "label": "Largura (cm)"
+      },
+      {
+        "name": "pricePerGallon",
+        "value": "28",
+        "label": "Preço / L"
+      }
+    ],
+    "primary": "0,31 L",
+    "raw": "0,27 L",
+    "split": "0,15 L A / 0,15 L B (exemplo 1:1)",
+    "error": "",
+    "buttons": [
+      "Imperial",
+      "Métrico"
+    ],
+    "formTop": 494.4624938964844,
+    "scrollWidth": 1425,
+    "viewport": 1440
+  },
+  {
+    "test": "mobile home",
+    "width": 390,
+    "scrollWidth": 390,
+    "nav": [
+      {
+        "text": "Epoxy Planner\nPrecision resin planning",
+        "rect": {
+          "left": 28.80000114440918,
+          "right": 194.88751029968262,
+          "width": 166.08750915527344,
+          "height": 47.42499923706055
+        }
+      },
+      {
+        "text": "",
+        "rect": {
+          "left": 210.8874969482422,
+          "right": 246.8874969482422,
+          "width": 36,
+          "height": 36
+        }
+      },
+      {
+        "text": "Epoxy Calculator",
+        "rect": {
+          "left": 0,
+          "right": 0,
+          "width": 0,
+          "height": 0
+        }
+      },
+      {
+        "text": "River Table",
+        "rect": {
+          "left": 0,
+          "right": 0,
+          "width": 0,
+          "height": 0
+        }
+      },
+      {
+        "text": "Floor Cost",
+        "rect": {
+          "left": 0,
+          "right": 0,
+          "width": 0,
+          "height": 0
+        }
+      },
+      {
+        "text": "Coverage",
+        "rect": {
+          "left": 0,
+          "right": 0,
+          "width": 0,
+          "height": 0
+        }
+      },
+      {
+        "text": "More",
+        "rect": {
+          "left": 0,
+          "right": 0,
+          "width": 0,
+          "height": 0
+        }
+      },
+      {
+        "text": "Deep Pour",
+        "rect": {
+          "left": 0,
+          "right": 0,
+          "width": 0,
+          "height": 0
+        }
+      },
+      {
+        "text": "Cost",
+        "rect": {
+          "left": 0,
+          "right": 0,
+          "width": 0,
+          "height": 0
+        }
+      },
+      {
+        "text": "Converter",
+        "rect": {
+          "left": 0,
+          "right": 0,
+          "width": 0,
+          "height": 0
+        }
+      },
+      {
+        "text": "Guides",
+        "rect": {
+          "left": 0,
+          "right": 0,
+          "width": 0,
+          "height": 0
+        }
+      },
+      {
+        "text": "🌐\nEN",
+        "rect": {
+          "left": 262.88751220703125,
+          "right": 361.60001373291016,
+          "width": 98.7125015258789,
+          "height": 44
+        }
+      },
+      {
+        "text": "",
+        "rect": {
+          "left": 179.60000610351562,
+          "right": 353.6000061035156,
+          "width": 174,
+          "height": 44.150001525878906
+        }
+      },
+      {
+        "text": "",
+        "rect": {
+          "left": 179.60000610351562,
+          "right": 353.6000061035156,
+          "width": 174,
+          "height": 44.150001525878906
+        }
+      },
+      {
+        "text": "",
+        "rect": {
+          "left": 179.60000610351562,
+          "right": 353.6000061035156,
+          "width": 174,
+          "height": 44.150001525878906
+        }
+      },
+      {
+        "text": "",
+        "rect": {
+          "left": 179.60000610351562,
+          "right": 353.6000061035156,
+          "width": 174,
+          "height": 44.150001525878906
+        }
+      },
+      {
+        "text": "",
+        "rect": {
+          "left": 179.60000610351562,
+          "right": 353.6000061035156,
+          "width": 174,
+          "height": 44.150001525878906
+        }
+      },
+      {
+        "text": "",
+        "rect": {
+          "left": 179.60000610351562,
+          "right": 353.6000061035156,
+          "width": 174,
+          "height": 44.150001525878906
+        }
+      }
+    ],
+    "h1": "Plan Your Epoxy Resin Project"
+  },
+  {
+    "test": "mobile menu opened",
+    "expanded": "true",
+    "navVisible": [
+      "Epoxy Calculator",
+      "River Table",
+      "Floor Cost",
+      "Coverage",
+      "",
+      "",
+      "",
+      ""
+    ]
+  },
+  {
+    "test": "mobile calculator",
+    "formTop": 1573.3125,
+    "width": 390,
+    "scrollWidth": 390,
+    "overflow": [
+      {
+        "tag": "TABLE",
+        "class": "data-table",
+        "width": 440.07501220703125
+      },
+      {
+        "tag": "THEAD",
+        "class": "",
+        "width": 440.07501220703125
+      },
+      {
+        "tag": "TR",
+        "class": "",
+        "width": 440.07501220703125
+      },
+      {
+        "tag": "TBODY",
+        "class": "",
+        "width": 440.07501220703125
+      },
+      {
+        "tag": "TR",
+        "class": "",
+        "width": 440.07501220703125
+      },
+      {
+        "tag": "TR",
+        "class": "",
+        "width": 440.07501220703125
+      },
+      {
+        "tag": "TR",
+        "class": "",
+        "width": 440.07501220703125
+      },
+      {
+        "tag": "TR",
+        "class": "",
+        "width": 440.07501220703125
+      }
+    ],
+    "tcf": "undefined",
+    "fc": "object",
+    "resources": [
+      {
+        "name": "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap",
+        "duration": 69.70000000018626
+      },
+      {
+        "name": "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3562784107542460",
+        "duration": 1746.4000000003725
+      }
+    ]
+  },
+  {
+    "test": "privacy escape",
+    "hidden": true
+  },
+  {
+    "test": "engine garage-floor-epoxy-calculator",
+    "slug": "garage-floor-epoxy-calculator",
+    "type": "floor-cost",
+    "inputs": [
+      {
+        "name": "sizePreset",
+        "value": "20x20"
+      },
+      {
+        "name": "length",
+        "value": "20"
+      },
+      {
+        "name": "width",
+        "value": "20"
+      },
+      {
+        "name": "system",
+        "value": "pro-epoxy"
+      },
+      {
+        "name": "condition",
+        "value": "good"
+      },
+      {
+        "name": "needsGrinding",
+        "value": "on"
+      }
+    ],
+    "primary": "$1,600 – $4,000",
+    "raw": "$4.00 – $10.00",
+    "error": ""
+  },
+  {
+    "test": "engine river-table-epoxy-calculator",
+    "slug": "river-table-epoxy-calculator",
+    "type": "river",
+    "inputs": [
+      {
+        "name": "unit",
+        "value": "imperial"
+      },
+      {
+        "name": "riverMode",
+        "value": "quick"
+      },
+      {
+        "name": "wastePct",
+        "value": "12"
+      },
+      {
+        "name": "pricePerGallon",
+        "value": "95"
+      },
+      {
+        "name": "length",
+        "value": "72"
+      },
+      {
+        "name": "depth",
+        "value": "1.5"
+      },
+      {
+        "name": "avgWidth",
+        "value": "6"
+      },
+      {
+        "name": "includeSeepage",
+        "value": "on"
+      },
+      {
+        "name": "includeSeal",
+        "value": "on"
+      },
+      {
+        "name": "segmentWidth1",
+        "value": "4.5"
+      },
+      {
+        "name": "segmentWidth2",
+        "value": "6.0"
+      },
+      {
+        "name": "segmentWidth3",
+        "value": "7.5"
+      }
+    ],
+    "primary": "3.51 gal",
+    "raw": "2.81 gal / 10.62 L",
+    "error": ""
+  },
+  {
+    "test": "engine deep-pour-epoxy-calculator",
+    "slug": "deep-pour-epoxy-calculator",
+    "type": "deep-pour",
+    "inputs": [
+      {
+        "name": "unit",
+        "value": "imperial"
+      },
+      {
+        "name": "wastePct",
+        "value": "10"
+      },
+      {
+        "name": "maxDepth",
+        "value": "2"
+      },
+      {
+        "name": "pricePerGallon",
+        "value": "105"
+      },
+      {
+        "name": "length",
+        "value": "48"
+      },
+      {
+        "name": "width",
+        "value": "14"
+      },
+      {
+        "name": "depth",
+        "value": "2.5"
+      }
+    ],
+    "primary": "8.0 gal",
+    "raw": "7.27 gal / 27.53 L",
+    "error": ""
+  },
+  {
+    "test": "engine epoxy-seal-coat-calculator",
+    "slug": "epoxy-seal-coat-calculator",
+    "type": "surface",
+    "inputs": [
+      {
+        "name": "unit",
+        "value": "imperial"
+      },
+      {
+        "name": "wastePct",
+        "value": "8"
+      },
+      {
+        "name": "depth",
+        "value": "0.125"
+      },
+      {
+        "name": "pricePerGallon",
+        "value": "78"
+      },
+      {
+        "name": "length",
+        "value": "72"
+      },
+      {
+        "name": "width",
+        "value": "24"
+      }
+    ],
+    "primary": "1.05 gal",
+    "raw": "0.94 gal / 3.54 L",
+    "error": ""
+  },
+  {
+    "test": "engine resin-dice-calculator",
+    "slug": "resin-dice-calculator",
+    "type": "cube",
+    "inputs": [
+      {
+        "name": "unit",
+        "value": "imperial"
+      },
+      {
+        "name": "length",
+        "value": "1.5"
+      },
+      {
+        "name": "wastePct",
+        "value": "12"
+      },
+      {
+        "name": "pricePerGallon",
+        "value": "90"
+      }
+    ],
+    "primary": "0.02 gal",
+    "raw": "0.01 gal / 0.06 L",
+    "error": ""
+  },
+  {
+    "test": "engine sphere-resin-calculator",
+    "slug": "sphere-resin-calculator",
+    "type": "sphere",
+    "inputs": [
+      {
+        "name": "unit",
+        "value": "imperial"
+      },
+      {
+        "name": "diameter",
+        "value": "4"
+      },
+      {
+        "name": "wastePct",
+        "value": "10"
+      },
+      {
+        "name": "pricePerGallon",
+        "value": "90"
+      }
+    ],
+    "primary": "0.16 gal",
+    "raw": "0.15 gal / 0.55 L",
+    "error": ""
+  },
+  {
+    "test": "engine cylinder-resin-calculator",
+    "slug": "cylinder-resin-calculator",
+    "type": "cylinder",
+    "inputs": [
+      {
+        "name": "unit",
+        "value": "imperial"
+      },
+      {
+        "name": "diameter",
+        "value": "3"
+      },
+      {
+        "name": "depth",
+        "value": "5"
+      },
+      {
+        "name": "wastePct",
+        "value": "10"
+      },
+      {
+        "name": "pricePerGallon",
+        "value": "85"
+      }
+    ],
+    "primary": "0.17 gal",
+    "raw": "0.15 gal / 0.58 L",
+    "error": ""
+  },
+  {
+    "test": "engine cube-resin-calculator",
+    "slug": "cube-resin-calculator",
+    "type": "cube",
+    "inputs": [
+      {
+        "name": "unit",
+        "value": "imperial"
+      },
+      {
+        "name": "length",
+        "value": "1.5"
+      },
+      {
+        "name": "wastePct",
+        "value": "12"
+      },
+      {
+        "name": "pricePerGallon",
+        "value": "90"
+      }
+    ],
+    "primary": "0.02 gal",
+    "raw": "0.01 gal / 0.06 L",
+    "error": ""
+  },
+  {
+    "test": "engine epoxy-unit-converter",
+    "slug": "epoxy-unit-converter",
+    "type": "converter",
+    "inputs": [
+      {
+        "name": "quantity",
+        "value": "231"
+      },
+      {
+        "name": "fromUnit",
+        "value": "cubicInches"
+      },
+      {
+        "name": "toUnit",
+        "value": "gallons"
+      },
+      {
+        "name": "unit",
+        "value": "imperial"
+      }
+    ],
+    "primary": "1.0 gal",
+    "raw": "231 cu in",
+    "error": ""
+  },
+  {
+    "test": "negative waste",
+    "primary": "-0.47 gal",
+    "error": "",
+    "cost": "-$40"
+  },
+  {
+    "test": "language navigation",
+    "url": "https://epoxyplanner.com/pt-br/"
+  },
+  {
+    "test": "river segment",
+    "primary": "3.51 gal",
+    "segmentVisible": true,
+    "error": ""
+  },
+  {
+    "test": "fourth segment",
+    "primary": "3.94 gal",
+    "error": ""
+  },
+  {
+    "test": "DIY selected",
+    "primary": "$200 – $600",
+    "error": ""
+  },
+  {
+    "test": "deep max layer 1 inch",
+    "layers": "3 lifts at about 1.0 in max"
+  },
+  {
+    "slug": "resin-mold-calculator",
+    "type": "volume",
+    "result": "3.37 gal",
+    "error": ""
+  },
+  {
+    "slug": "epoxy-floor-coverage-calculator",
+    "type": "garage-floor",
+    "result": "5.89 gal",
+    "error": ""
+  },
+  {
+    "slug": "void-fill-epoxy-calculator",
+    "type": "void-fill",
+    "result": "0.08 gal",
+    "error": ""
+  },
+  {
+    "test": "actual privacy panel",
+    "text": "PRIVACY CHOICES\n\nManage advertising privacy\n×\n\nWhere a Google consent message applies, you can reopen it to review providers and change or withdraw your site advertising choices. Google Ads Settings also lets you manage personalized Google advertising.\n\nGoogle Ads Settings\nPrivacy Policy\n\nIf site consent controls are unavailable on this page, visit a calculator page's privacy choices. Availability depends on your region and Google's message. You can also review industry advertising opt-outs.",
+    "open": true,
+    "googleButtonVisible": false,
+    "tcf": "undefined"
+  },
+  {
+    "test": "closed",
+    "closed": true
+  }
+]

@@ -1,0 +1,136 @@
+[
+  {
+    "name": "metric alias keeps its metric task",
+    "pass": true,
+    "data": {
+      "primary": "19.11 L",
+      "error": "",
+      "raw": "4.68 gal / 17.7 L",
+      "split": "Enter your product's ratio",
+      "cost": "$429.19",
+      "layers": "Confirm product depth and batch limits",
+      "kits": "Add the kit's mixed yield"
+    }
+  },
+  {
+    "name": "circle alias opens the actual round mode",
+    "pass": true,
+    "data": {
+      "primary": "1.06 gal",
+      "error": "",
+      "raw": "0.98 gal / 3.71 L",
+      "split": "Enter your product's ratio",
+      "cost": "$89.89",
+      "layers": "Confirm product depth and batch limits",
+      "kits": "Add the kit's mixed yield"
+    }
+  },
+  {
+    "name": "coaster count, square mode and unit conversion",
+    "pass": true,
+    "data": {
+      "primary": "70.79 mL",
+      "error": "",
+      "raw": "65.55 mL / 2.22 US fl oz",
+      "split": "Enter your product's ratio",
+      "cost": "$1.59",
+      "layers": "Confirm product depth and batch limits",
+      "kits": "Add the kit's mixed yield"
+    }
+  },
+  {
+    "name": "invalid loss clears stale results and confirmed product inputs are applied",
+    "pass": false,
+    "error": "page.click timed out after 3000ms: Selector .product-options summary matched 1 elements, but none can receive input; <div> intercepts pointer events"
+  },
+  {
+    "name": "known jewelry capacity disables unrelated geometry",
+    "pass": true,
+    "data": {
+      "primary": "57.5 mL",
+      "error": "",
+      "raw": "50 mL / 1.69 US fl oz",
+      "split": "Enter your product's ratio",
+      "cost": "$1.61",
+      "layers": "Confirm product depth and batch limits",
+      "kits": "Add the kit's mixed yield"
+    }
+  },
+  {
+    "name": "dice measured-set capacity is separate from cube geometry",
+    "pass": true,
+    "data": {
+      "primary": "39.2 mL",
+      "error": "",
+      "raw": "35 mL / 1.18 US fl oz",
+      "split": "Enter your product's ratio",
+      "cost": "$1.10",
+      "layers": "Confirm product depth and batch limits",
+      "kits": "Add the kit's mixed yield"
+    }
+  },
+  {
+    "name": "selling price reacts to labor and rejects impossible fee/margin totals",
+    "pass": true,
+    "data": {
+      "primary": "$47.20",
+      "error": "",
+      "raw": "$28.86",
+      "split": "$20.00",
+      "cost": "$5.02",
+      "layers": "$11.80"
+    }
+  },
+  {
+    "name": "localized area price and optional costs survive area-unit conversion",
+    "pass": false,
+    "error": "page.click timed out after 3000ms: Selector [data-pill-name=\"areaUnit\"] button[data-value=\"sqft\"] matched 1 elements, but none can receive input; <div> intercepts pointer events"
+  },
+  {
+    "name": "label coverage can change its units without changing required material",
+    "pass": true,
+    "data": {
+      "primary": "R$ 3,85 / m²",
+      "error": "",
+      "raw": "1,25 L",
+      "split": "Informe a proporção do seu produto",
+      "cost": "R$ 38,50",
+      "layers": "Confira os limites de espessura e mistura",
+      "kits": "Informe o rendimento misturado do kit"
+    }
+  },
+  {
+    "name": "confirmed depth and batch limits produce independent counts",
+    "pass": true,
+    "data": {
+      "primary": "8.0 gal",
+      "error": "",
+      "raw": "7.27 gal / 27.53 L",
+      "split": "Enter your product's ratio",
+      "cost": "$840.00",
+      "layers": "3 lifts from the entered depth limit · 3 batches from the entered volume limit",
+      "kits": "Add the kit's mixed yield"
+    }
+  },
+  {
+    "name": "unit buttons also work from the keyboard",
+    "pass": true,
+    "data": {
+      "primary": "19.11 L",
+      "error": "",
+      "raw": "4.68 gal / 17.7 L",
+      "split": "Enter your product's ratio",
+      "cost": "$429.19",
+      "layers": "Confirm product depth and batch limits",
+      "kits": "Add the kit's mixed yield"
+    }
+  },
+  {
+    "name": "mobile menu and privacy help remain keyboard-closable",
+    "pass": true,
+    "data": {
+      "menu": true,
+      "privacyHelp": true
+    }
+  }
+]

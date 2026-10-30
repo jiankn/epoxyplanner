@@ -1,0 +1,839 @@
+[
+  {
+    "slug": "",
+    "url": "https://epoxyplanner.com/",
+    "action": "保留并改首页",
+    "reason": "加入可直接使用的快速估算；主任务清晰排序，减少卡片目录占比。",
+    "historicalGsc": {
+      "clicks": 3,
+      "impressions": 273,
+      "position": 49.81684981684982
+    }
+  },
+  {
+    "slug": "epoxy-calculator",
+    "url": "https://epoxyplanner.com/epoxy-calculator/",
+    "action": "保留为核心工具",
+    "reason": "修输入校验、参数边界与首屏位置；用形状和单位预设接纳同义入口任务。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 294,
+      "position": 70.6938775510204
+    }
+  },
+  {
+    "slug": "epoxy-coverage-calculator",
+    "url": "https://epoxyplanner.com/epoxy-coverage-calculator/",
+    "action": "保留并改工具",
+    "reason": "提供直接面积、独立厚度单位、可解释边缘和每面积成本。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 161,
+      "position": 48.285714285714285
+    }
+  },
+  {
+    "slug": "river-table-epoxy-calculator",
+    "url": "https://epoxyplanner.com/river-table-epoxy-calculator/",
+    "action": "保留并强化",
+    "reason": "增加测宽图与完整算例；解释等长分段、渗漏和封闭层假设。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 14,
+      "position": 25.571428571428573
+    }
+  },
+  {
+    "slug": "deep-pour-epoxy-calculator",
+    "url": "https://epoxyplanner.com/deep-pour-epoxy-calculator/",
+    "action": "保留并强化",
+    "reason": "确认真实产品层厚与批量限制；未知条件时不把默认值当许可。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 15,
+      "position": 45.8
+    }
+  },
+  {
+    "slug": "table-top-epoxy-calculator",
+    "url": "https://epoxyplanner.com/table-top-epoxy-calculator/",
+    "action": "保留并强化",
+    "reason": "成为表面涂层任务入口，补面积、边缘、圆形与各层分项能力。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 3,
+      "position": 35.333333333333336
+    }
+  },
+  {
+    "slug": "bar-top-epoxy-calculator",
+    "url": "https://epoxyplanner.com/bar-top-epoxy-calculator/",
+    "action": "整合候选",
+    "reason": "考虑进入 tabletop 的吧台预设；先补端头/边缘任务并核对最新查询。",
+    "historicalGsc": null
+  },
+  {
+    "slug": "countertop-epoxy-calculator",
+    "url": "https://epoxyplanner.com/countertop-epoxy-calculator/",
+    "action": "保留或实质区分",
+    "reason": "需要台面边缘、挡水边、封闭/面层和耗材分项；资源不足时再审整合。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 8,
+      "position": 9.5
+    }
+  },
+  {
+    "slug": "garage-floor-epoxy-calculator",
+    "url": "https://epoxyplanner.com/garage-floor-epoxy-calculator/",
+    "action": "保留为核心工具",
+    "reason": "保留美国安装成本口径与出处，清楚区分 DIY 材料和专业施工。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 324,
+      "position": 38.98148148148148
+    }
+  },
+  {
+    "slug": "void-fill-epoxy-calculator",
+    "url": "https://epoxyplanner.com/void-fill-epoxy-calculator/",
+    "action": "保留并强化",
+    "reason": "小体积用 ml，说明不规则空腔近似和实测容量，补独立算例。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 10,
+      "position": 9.7
+    }
+  },
+  {
+    "slug": "round-epoxy-table-calculator",
+    "url": "https://epoxyplanner.com/round-epoxy-table-calculator/",
+    "action": "整合候选",
+    "reason": "与 tabletop/通用圆形模式整合；目标先支持圆形面积、厚度和桌边。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 22,
+      "position": 10.136363636363637
+    }
+  },
+  {
+    "slug": "how-much-epoxy-do-i-need",
+    "url": "https://epoxyplanner.com/how-much-epoxy-do-i-need/",
+    "action": "保留为任务总入口",
+    "reason": "把不同任务的测量依据与工具选择讲清；避免与首页重复罗列卡片。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 126,
+      "position": 72.05555555555556
+    }
+  },
+  {
+    "slug": "how-much-epoxy-do-i-need-for-a-river-table",
+    "url": "https://epoxyplanner.com/how-much-epoxy-do-i-need-for-a-river-table/",
+    "action": "保留完善",
+    "reason": "保留现有采购算例，增加测量图和与实际表单一致的参数说明。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 15,
+      "position": 23.266666666666666
+    }
+  },
+  {
+    "slug": "how-to-measure-a-river-table-for-epoxy",
+    "url": "https://epoxyplanner.com/how-to-measure-a-river-table-for-epoxy/",
+    "action": "保留完善",
+    "reason": "测宽位置、等长分段和深度图是本页独立任务。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 6,
+      "position": 57.333333333333336
+    }
+  },
+  {
+    "slug": "deep-pour-vs-table-top-epoxy",
+    "url": "https://epoxyplanner.com/deep-pour-vs-table-top-epoxy/",
+    "action": "保留完善",
+    "reason": "用厂家应用限制比较，表明产品类名不能直接确定配比或层厚。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 3,
+      "position": 6
+    }
+  },
+  {
+    "slug": "epoxy-waste-factor-guide",
+    "url": "https://epoxyplanner.com/epoxy-waste-factor-guide/",
+    "action": "保留完善",
+    "reason": "保留假设/算例，区分百分比增量与经验记录；不制造行业实测均值。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 6,
+      "position": 5
+    }
+  },
+  {
+    "slug": "epoxy-coverage-chart",
+    "url": "https://epoxyplanner.com/epoxy-coverage-chart/",
+    "action": "保留为参考中心",
+    "reason": "统一薄层/厚度覆盖换算及厂家覆盖率的不同口径。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 192,
+      "position": 45.244791666666664
+    }
+  },
+  {
+    "slug": "epoxy-mixing-ratio-guide",
+    "url": "https://epoxyplanner.com/epoxy-mixing-ratio-guide/",
+    "action": "保留完善",
+    "reason": "保持体积比/重量比边界，补与真实产品输入一致的算例。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 36,
+      "position": 37.583333333333336
+    }
+  },
+  {
+    "slug": "epoxy-cost-calculator",
+    "url": "https://epoxyplanner.com/epoxy-cost-calculator/",
+    "action": "保留并强化",
+    "reason": "接续数量结果，提供套装产量、取整采购与材料成本；避免重复加损耗。",
+    "historicalGsc": {
+      "clicks": 2,
+      "impressions": 98,
+      "position": 9.887755102040817
+    }
+  },
+  {
+    "slug": "epoxy-unit-converter",
+    "url": "https://epoxyplanner.com/epoxy-unit-converter/",
+    "action": "保护并优化",
+    "reason": "已有历史点击；保留精确换算，改进小量精度与后续任务连接。",
+    "historicalGsc": {
+      "clicks": 6,
+      "impressions": 284,
+      "position": 7.024647887323944
+    }
+  },
+  {
+    "slug": "epoxy-pour-calculator",
+    "url": "https://epoxyplanner.com/epoxy-pour-calculator/",
+    "action": "整合候选",
+    "reason": "与 deep-pour 是同类任务；有用说明迁入后再一跳 301。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 5,
+      "position": 9
+    }
+  },
+  {
+    "slug": "epoxy-calculator-metric",
+    "url": "https://epoxyplanner.com/epoxy-calculator-metric/",
+    "action": "先修默认，后审整合",
+    "reason": "立刻公制默认；如果仅单位差异，整合为主工具的公制预设。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 6,
+      "position": 5.833333333333333
+    }
+  },
+  {
+    "slug": "epoxy-circle-calculator",
+    "url": "https://epoxyplanner.com/epoxy-circle-calculator/",
+    "action": "整合候选",
+    "reason": "由主工具圆形模式承接；保留圆形测量和换算说明。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 14,
+      "position": 10.5
+    }
+  },
+  {
+    "slug": "epoxy-rectangle-calculator",
+    "url": "https://epoxyplanner.com/epoxy-rectangle-calculator/",
+    "action": "整合候选",
+    "reason": "由主工具矩形模式承接；独立纯公式入口价值不足。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 4,
+      "position": 4.75
+    }
+  },
+  {
+    "slug": "epoxy-floor-coverage-calculator",
+    "url": "https://epoxyplanner.com/epoxy-floor-coverage-calculator/",
+    "action": "保护并强化",
+    "reason": "按每层实际覆盖率、涂层次数与套装产量算数量，成本链接到正确工具。",
+    "historicalGsc": {
+      "clicks": 1,
+      "impressions": 133,
+      "position": 8.496240601503759
+    }
+  },
+  {
+    "slug": "two-car-garage-epoxy-calculator",
+    "url": "https://epoxyplanner.com/two-car-garage-epoxy-calculator/",
+    "action": "整合候选",
+    "reason": "可作为 floor-coverage 的车库尺寸预设；先保留有用尺寸表和预算说明。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 66,
+      "position": 8.196969696969697
+    }
+  },
+  {
+    "slug": "epoxy-flood-coat-calculator",
+    "url": "https://epoxyplanner.com/epoxy-flood-coat-calculator/",
+    "action": "整合候选",
+    "reason": "与 tabletop/coverage 共同处理，确保保留涂层厚度与流挂任务。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 26,
+      "position": 7.3076923076923075
+    }
+  },
+  {
+    "slug": "epoxy-seal-coat-calculator",
+    "url": "https://epoxyplanner.com/epoxy-seal-coat-calculator/",
+    "action": "重做专用模型",
+    "reason": "以产品封闭层覆盖率或已知用量估算，不沿用 1/8 in 洪流层默认。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 7,
+      "position": 7.428571428571429
+    }
+  },
+  {
+    "slug": "resin-mold-calculator",
+    "url": "https://epoxyplanner.com/resin-mold-calculator/",
+    "action": "保留并强化",
+    "reason": "支持实际模具容量、单件数量、插入物扣除与 ml；承接部分几何预设。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 25,
+      "position": 17.96
+    }
+  },
+  {
+    "slug": "resin-coaster-calculator",
+    "url": "https://epoxyplanner.com/resin-coaster-calculator/",
+    "action": "修成真实杯垫工具",
+    "reason": "修 28 in 默认值，增加圆/方、单件/套数和 ml 输出。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 14,
+      "position": 8
+    }
+  },
+  {
+    "slug": "resin-jewelry-calculator",
+    "url": "https://epoxyplanner.com/resin-jewelry-calculator/",
+    "action": "整合候选或重做",
+    "reason": "当前 void-fill 通用表单不足；小模具容量与件数可由 mold 工具承接。",
+    "historicalGsc": null
+  },
+  {
+    "slug": "resin-dice-calculator",
+    "url": "https://epoxyplanner.com/resin-dice-calculator/",
+    "action": "保护并重做任务",
+    "reason": "有少量点击；区分立方体骰坯与多面骰容量，支持整套/件数与 ml。",
+    "historicalGsc": {
+      "clicks": 2,
+      "impressions": 25,
+      "position": 5.44
+    }
+  },
+  {
+    "slug": "resin-tray-calculator",
+    "url": "https://epoxyplanner.com/resin-tray-calculator/",
+    "action": "整合候选",
+    "reason": "区分有边空腔与表面涂层；先让 mold/tabletop 目标分别覆盖相应任务。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 4,
+      "position": 7.75
+    }
+  },
+  {
+    "slug": "sphere-resin-calculator",
+    "url": "https://epoxyplanner.com/sphere-resin-calculator/",
+    "action": "保护并优化",
+    "reason": "有少量点击；保留球体任务，补直径图、数量和小体积单位。",
+    "historicalGsc": {
+      "clicks": 2,
+      "impressions": 20,
+      "position": 5.45
+    }
+  },
+  {
+    "slug": "cylinder-resin-calculator",
+    "url": "https://epoxyplanner.com/cylinder-resin-calculator/",
+    "action": "保护并优化",
+    "reason": "有历史点击；保留圆柱任务，说明实心/中空限制并补数量。",
+    "historicalGsc": {
+      "clicks": 1,
+      "impressions": 21,
+      "position": 6.428571428571429
+    }
+  },
+  {
+    "slug": "cube-resin-calculator",
+    "url": "https://epoxyplanner.com/cube-resin-calculator/",
+    "action": "保留为形状工具或预设",
+    "reason": "与 dice 区分；若并入 mold，先保留立方体公式、尺寸图与对应例子。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 19,
+      "position": 6.526315789473684
+    }
+  },
+  {
+    "slug": "resin-art-pricing-calculator",
+    "url": "https://epoxyplanner.com/resin-art-pricing-calculator/",
+    "action": "实现售价或准确改名",
+    "reason": "当前只有树脂材料费；补人工、费用、利润口径，或整合材料预算。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 52,
+      "position": 8.48076923076923
+    }
+  },
+  {
+    "slug": "river-table-epoxy-cost",
+    "url": "https://epoxyplanner.com/river-table-epoxy-cost/",
+    "action": "保留完善",
+    "reason": "保留数量到预算的完整例子，强调材料费而非整张桌子售价。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 7,
+      "position": 8.285714285714285
+    }
+  },
+  {
+    "slug": "epoxy-countertop-cost",
+    "url": "https://epoxyplanner.com/epoxy-countertop-cost/",
+    "action": "保留完善",
+    "reason": "台面边缘、封闭层、辅料与人工范围要清楚，来源/假设分开。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 2,
+      "position": 31.5
+    }
+  },
+  {
+    "slug": "epoxy-bar-top-cost",
+    "url": "https://epoxyplanner.com/epoxy-bar-top-cost/",
+    "action": "保留并区分",
+    "reason": "保留长吧台和端头场景，避免复制 countertop 的预算表。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 2,
+      "position": 9
+    }
+  },
+  {
+    "slug": "epoxy-cost-per-square-foot",
+    "url": "https://epoxyplanner.com/epoxy-cost-per-square-foot/",
+    "action": "保留并纠正 alternate",
+    "reason": "这是台面材料成本页；不能与外国施工地坪价格页直接视为等价。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 2,
+      "position": 6
+    }
+  },
+  {
+    "slug": "how-much-epoxy-per-square-foot",
+    "url": "https://epoxyplanner.com/how-much-epoxy-per-square-foot/",
+    "action": "整合候选",
+    "reason": "可合入 coverage-chart 的直接答案；先核对最新查询与反向覆盖任务。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 29,
+      "position": 42.58620689655172
+    }
+  },
+  {
+    "slug": "how-much-does-a-gallon-of-epoxy-cover",
+    "url": "https://epoxyplanner.com/how-much-does-a-gallon-of-epoxy-cover/",
+    "action": "整合候选",
+    "reason": "可合入覆盖率参考中心，保留每加仑反向计算和适用厚度。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 30,
+      "position": 39.13333333333333
+    }
+  },
+  {
+    "slug": "epoxy-pour-depth-guide",
+    "url": "https://epoxyplanner.com/epoxy-pour-depth-guide/",
+    "action": "保留既有分工",
+    "reason": "在用户已知产品限制后讲分层规划，保留现有假设与体积提醒。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 1,
+      "position": 2
+    }
+  },
+  {
+    "slug": "maximum-epoxy-pour-depth",
+    "url": "https://epoxyplanner.com/maximum-epoxy-pour-depth/",
+    "action": "保留既有分工",
+    "reason": "讲如何读取产品层厚/体积/温度条件；与分层教程不同。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 7,
+      "position": 9
+    }
+  },
+  {
+    "slug": "seal-coat-vs-flood-coat",
+    "url": "https://epoxyplanner.com/seal-coat-vs-flood-coat/",
+    "action": "保留并连接新模型",
+    "reason": "现有指南区分较清楚，工具应实现它描述的两种不同用量模型。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 63,
+      "position": 10.984126984126984
+    }
+  },
+  {
+    "slug": "how-to-prevent-epoxy-leaks",
+    "url": "https://epoxyplanner.com/how-to-prevent-epoxy-leaks/",
+    "action": "保留完善",
+    "reason": "补真实或自绘检查位置图，任何漏检方法都需满足材料适用条件。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 1,
+      "position": 5
+    }
+  },
+  {
+    "slug": "how-to-calculate-epoxy-pour",
+    "url": "https://epoxyplanner.com/how-to-calculate-epoxy-pour/",
+    "action": "保留为操作教程",
+    "reason": "用一次从测量到采购的完整演算区分于主计算器和总入口。",
+    "historicalGsc": null
+  },
+  {
+    "slug": "epoxy-mix-ratio-by-volume-vs-weight",
+    "url": "https://epoxyplanner.com/epoxy-mix-ratio-by-volume-vs-weight/",
+    "action": "保留完善",
+    "reason": "保持密度与厂家比率边界，不能给跨品牌通用重量比。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 6,
+      "position": 7.833333333333333
+    }
+  },
+  {
+    "slug": "epoxy-kit-size-guide",
+    "url": "https://epoxyplanner.com/epoxy-kit-size-guide/",
+    "action": "保留并连接采购功能",
+    "reason": "保留组分/混合总量示例，增加包装向上取整与实际可购数量。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 22,
+      "position": 7.2272727272727275
+    }
+  },
+  {
+    "slug": "methodology",
+    "url": "https://epoxyplanner.com/methodology/",
+    "action": "保留完善",
+    "reason": "逐项对应实际算法、固定与可调参数；说明示例比率和默认层厚的边界。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 2,
+      "position": 6
+    }
+  },
+  {
+    "slug": "about",
+    "url": "https://epoxyplanner.com/about/",
+    "action": "保留完善",
+    "reason": "介绍真实运营主体、产品范围与维护方式；保持政策页可访问。",
+    "historicalGsc": null
+  },
+  {
+    "slug": "authors",
+    "url": "https://epoxyplanner.com/authors/",
+    "action": "保留完善",
+    "reason": "用真实维护与复核说明替代笼统保证；修正“全部参数可调”等承诺。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 2,
+      "position": 4
+    }
+  },
+  {
+    "slug": "contact",
+    "url": "https://epoxyplanner.com/contact/",
+    "action": "保留",
+    "reason": "核实邮箱实际收件，提供纠错所需 URL/单位/输入信息，不发送测试邮件。",
+    "historicalGsc": null
+  },
+  {
+    "slug": "privacy",
+    "url": "https://epoxyplanner.com/privacy/",
+    "action": "保留",
+    "reason": "现有 Google 披露保留；跟随后台广告服务及消息配置同步更新。",
+    "historicalGsc": null
+  },
+  {
+    "slug": "terms",
+    "url": "https://epoxyplanner.com/terms/",
+    "action": "保留",
+    "reason": "保持真实规划边界及访问入口，继续不加载广告。",
+    "historicalGsc": null
+  },
+  {
+    "slug": "faq",
+    "url": "https://epoxyplanner.com/faq/",
+    "action": "保留为辅助页",
+    "reason": "当前 noindex 和无广告可保留；不要反复用同一组 FAQ 增厚每页。",
+    "historicalGsc": null
+  },
+  {
+    "slug": "de",
+    "url": "https://epoxyplanner.com/de/",
+    "action": "保护语言主入口",
+    "reason": "补可直接使用的工具、真实维护说明和本语言算例；不因多语言本身删除。",
+    "historicalGsc": {
+      "clicks": 1,
+      "impressions": 209,
+      "position": 14.138755980861244
+    }
+  },
+  {
+    "slug": "de/epoxidharz-verbrauch-pro-m2",
+    "url": "https://epoxyplanner.com/de/epoxidharz-verbrauch-pro-m2/",
+    "action": "保护并强化用量任务",
+    "reason": "增加直接 m²、独立 mm 厚度和清晰损耗，补产品覆盖率与几何量的区别。",
+    "historicalGsc": {
+      "clicks": 1,
+      "impressions": 100,
+      "position": 24.19
+    }
+  },
+  {
+    "slug": "de/epoxidharz-kosten-pro-m2",
+    "url": "https://epoxyplanner.com/de/epoxidharz-kosten-pro-m2/",
+    "action": "修正㎡价格任务",
+    "reason": "增加直接面积和每㎡成本输出；明确材料/施工范围，纠正不等价的 alternate，缺资料用用户单价。",
+    "historicalGsc": {
+      "clicks": 1,
+      "impressions": 82,
+      "position": 17.451219512195124
+    }
+  },
+  {
+    "slug": "de/epoxidboden-rechner",
+    "url": "https://epoxyplanner.com/de/epoxidboden-rechner/",
+    "action": "保留并强化地坪数量",
+    "reason": "按每层产品覆盖率、实际套装产量及本地单位计算，加入完整算例。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 109,
+      "position": 51.440366972477065
+    }
+  },
+  {
+    "slug": "fr",
+    "url": "https://epoxyplanner.com/fr/",
+    "action": "保护语言主入口",
+    "reason": "补可直接使用的工具、真实维护说明和本语言算例；不因多语言本身删除。",
+    "historicalGsc": {
+      "clicks": 6,
+      "impressions": 326,
+      "position": 10.828220858895705
+    }
+  },
+  {
+    "slug": "fr/quantite-resine-epoxy-par-m2",
+    "url": "https://epoxyplanner.com/fr/quantite-resine-epoxy-par-m2/",
+    "action": "保护并强化用量任务",
+    "reason": "增加直接 m²、独立 mm 厚度和清晰损耗，补产品覆盖率与几何量的区别。",
+    "historicalGsc": {
+      "clicks": 1,
+      "impressions": 101,
+      "position": 17.07920792079208
+    }
+  },
+  {
+    "slug": "fr/prix-resine-epoxy-m2",
+    "url": "https://epoxyplanner.com/fr/prix-resine-epoxy-m2/",
+    "action": "修正㎡价格任务",
+    "reason": "增加直接面积和每㎡成本输出；明确材料/施工范围，纠正不等价的 alternate，缺资料用用户单价。",
+    "historicalGsc": {
+      "clicks": 1,
+      "impressions": 45,
+      "position": 12.044444444444444
+    }
+  },
+  {
+    "slug": "fr/calculateur-sol-epoxy",
+    "url": "https://epoxyplanner.com/fr/calculateur-sol-epoxy/",
+    "action": "保留并强化地坪数量",
+    "reason": "按每层产品覆盖率、实际套装产量及本地单位计算，加入完整算例。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 12,
+      "position": 30.583333333333332
+    }
+  },
+  {
+    "slug": "pt-br",
+    "url": "https://epoxyplanner.com/pt-br/",
+    "action": "保护语言主入口",
+    "reason": "补可直接使用的工具、真实维护说明和本语言算例；不因多语言本身删除。",
+    "historicalGsc": {
+      "clicks": 8,
+      "impressions": 1355,
+      "position": 7.645756457564576
+    }
+  },
+  {
+    "slug": "pt-br/calculadora-volume-resina-epoxi",
+    "url": "https://epoxyplanner.com/pt-br/calculadora-volume-resina-epoxi/",
+    "action": "优先审查整合",
+    "reason": "两页专属说明高度相似；有用内容迁入葡语主工具，目标先覆盖对应问题。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 301,
+      "position": 7.352159468438538
+    }
+  },
+  {
+    "slug": "pt-br/quanta-resina-epoxi-preciso",
+    "url": "https://epoxyplanner.com/pt-br/quanta-resina-epoxi-preciso/",
+    "action": "优先审查整合",
+    "reason": "两页专属说明高度相似；有用内容迁入葡语主工具，目标先覆盖对应问题。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 149,
+      "position": 8.013422818791947
+    }
+  },
+  {
+    "slug": "pt-br/consumo-resina-epoxi-por-m2",
+    "url": "https://epoxyplanner.com/pt-br/consumo-resina-epoxi-por-m2/",
+    "action": "保护并强化用量任务",
+    "reason": "增加直接 m²、独立 mm 厚度和清晰损耗，补产品覆盖率与几何量的区别。",
+    "historicalGsc": {
+      "clicks": 6,
+      "impressions": 461,
+      "position": 7.036876355748373
+    }
+  },
+  {
+    "slug": "pt-br/preco-piso-epoxi-m2",
+    "url": "https://epoxyplanner.com/pt-br/preco-piso-epoxi-m2/",
+    "action": "修正㎡价格任务",
+    "reason": "增加直接面积和每㎡成本输出；明确材料/施工范围，纠正不等价的 alternate，缺资料用用户单价。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 21,
+      "position": 14.285714285714286
+    }
+  },
+  {
+    "slug": "pt-br/calculadora-piso-epoxi",
+    "url": "https://epoxyplanner.com/pt-br/calculadora-piso-epoxi/",
+    "action": "保护并强化地坪数量",
+    "reason": "按每层产品覆盖率、实际套装产量及本地单位计算，加入完整算例。",
+    "historicalGsc": {
+      "clicks": 2,
+      "impressions": 628,
+      "position": 6.227707006369426
+    }
+  },
+  {
+    "slug": "es",
+    "url": "https://epoxyplanner.com/es/",
+    "action": "保护语言主入口",
+    "reason": "补可直接使用的工具、真实维护说明和本语言算例；不因多语言本身删除。",
+    "historicalGsc": {
+      "clicks": 1,
+      "impressions": 292,
+      "position": 34.53767123287671
+    }
+  },
+  {
+    "slug": "es/consumo-resina-epoxi-por-m2",
+    "url": "https://epoxyplanner.com/es/consumo-resina-epoxi-por-m2/",
+    "action": "保护并强化用量任务",
+    "reason": "增加直接 m²、独立 mm 厚度和清晰损耗，补产品覆盖率与几何量的区别。",
+    "historicalGsc": {
+      "clicks": 2,
+      "impressions": 222,
+      "position": 35.36486486486486
+    }
+  },
+  {
+    "slug": "es/precio-suelo-epoxi-m2",
+    "url": "https://epoxyplanner.com/es/precio-suelo-epoxi-m2/",
+    "action": "修正㎡价格任务",
+    "reason": "增加直接面积和每㎡成本输出；明确材料/施工范围，纠正不等价的 alternate，缺资料用用户单价。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 87,
+      "position": 26.17241379310345
+    }
+  },
+  {
+    "slug": "es/calculadora-suelo-epoxi",
+    "url": "https://epoxyplanner.com/es/calculadora-suelo-epoxi/",
+    "action": "保护并强化地坪数量",
+    "reason": "按每层产品覆盖率、实际套装产量及本地单位计算，加入完整算例。",
+    "historicalGsc": {
+      "clicks": 1,
+      "impressions": 125,
+      "position": 58.256
+    }
+  },
+  {
+    "slug": "it",
+    "url": "https://epoxyplanner.com/it/",
+    "action": "保留语言主入口",
+    "reason": "补可直接使用的工具、真实维护说明和本语言算例；不因多语言本身删除。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 58,
+      "position": 25.20689655172414
+    }
+  },
+  {
+    "slug": "it/consumo-resina-epossidica-m2",
+    "url": "https://epoxyplanner.com/it/consumo-resina-epossidica-m2/",
+    "action": "保留并强化用量任务",
+    "reason": "增加直接 m²、独立 mm 厚度和清晰损耗，补产品覆盖率与几何量的区别。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 39,
+      "position": 17.487179487179485
+    }
+  },
+  {
+    "slug": "it/prezzo-pavimento-resina-epossidica-m2",
+    "url": "https://epoxyplanner.com/it/prezzo-pavimento-resina-epossidica-m2/",
+    "action": "修正㎡价格任务",
+    "reason": "增加直接面积和每㎡成本输出；明确材料/施工范围，纠正不等价的 alternate，缺资料用用户单价。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 7,
+      "position": 9
+    }
+  },
+  {
+    "slug": "it/calcolatore-pavimento-epossidico",
+    "url": "https://epoxyplanner.com/it/calcolatore-pavimento-epossidico/",
+    "action": "保留并强化地坪数量",
+    "reason": "按每层产品覆盖率、实际套装产量及本地单位计算，加入完整算例。",
+    "historicalGsc": {
+      "clicks": 0,
+      "impressions": 18,
+      "position": 37.94444444444444
+    }
+  }
+]

@@ -2,6 +2,7 @@ import http from "node:http";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { redirects, redirectPresets } from "../src/data/site.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -20,25 +21,41 @@ const contentTypes = {
 };
 
 function resolveRequestPath(urlPath) {
-  const cleaned = (urlPath || "/").split("?")[0];
+  const cleaned = decodeURIComponent((urlPath || "/").split("?")[0]);
   const tentative = cleaned.endsWith("/") ? `${cleaned}index.html` : cleaned;
-  const localPath = path.join(distRoot, tentative);
+  const localPath = path.resolve(distRoot, `.${tentative}`);
+  if (!localPath.startsWith(distRoot + path.sep)) return null;
   if (fs.existsSync(localPath) && fs.statSync(localPath).isFile()) return localPath;
   const withIndex = path.join(distRoot, cleaned, "index.html");
   if (fs.existsSync(withIndex)) return withIndex;
-  return path.join(distRoot, "index.html");
+  return null;
 }
 
 const server = http.createServer((req, res) => {
-  const filePath = resolveRequestPath(req.url);
-  const ext = path.extname(filePath);
-  const contentType = contentTypes[ext] || "application/octet-stream";
-
   try {
+    const url = new URL(req.url, `http://localhost:${port}`);
+    const slug = url.pathname.replace(/^\/+|\/+$/g, "");
+    if (redirects[slug]) {
+      url.pathname = `/${redirects[slug]}/`;
+      for (const [name, value] of Object.entries(redirectPresets[slug] || {})) url.searchParams.set(name, value);
+      res.writeHead(301, { Location: url.pathname + url.search });
+      res.end();
+      return;
+    }
+    const resolved = resolveRequestPath(url.pathname);
+    if (resolved && !url.pathname.endsWith("/") && !path.extname(url.pathname)) {
+      res.writeHead(301, { Location: url.pathname + "/" + url.search });
+      res.end();
+      return;
+    }
+    const filePath = resolved || path.join(distRoot, "404.html");
+    const ext = path.extname(filePath);
+    const contentType = contentTypes[ext] || "application/octet-stream";
     const content = fs.readFileSync(filePath);
-    res.writeHead(200, {
+    res.writeHead(!resolved || url.pathname === "/404.html" ? 404 : 200, {
       "Content-Type": contentType,
-      "Referrer-Policy": "strict-origin-when-cross-origin"
+      "Referrer-Policy": "strict-origin-when-cross-origin",
+      "Content-Security-Policy": "script-src 'self'; object-src 'none'; base-uri 'self'"
     });
     res.end(content);
   } catch {

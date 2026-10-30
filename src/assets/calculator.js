@@ -1,12 +1,13 @@
 import { FLOOR_COST_RATES, FLOOR_PRO_MINIMUM, floorCostRange } from "./floor-cost-rates.js";
+import { plannerText } from "./planner-text.js";
 
 const CUBIC_INCHES_PER_GALLON = 231;
-const CUBIC_INCHES_PER_LITER = 61.0237440947;
+const CUBIC_INCHES_PER_LITER = 1000 / 2.54 ** 3;
 const CUBIC_INCHES_PER_QUART = CUBIC_INCHES_PER_GALLON / 4;
 const CUBIC_INCHES_PER_FLUID_OUNCE = CUBIC_INCHES_PER_GALLON / 128;
 const CM_PER_INCH = 2.54;
-const FEET_PER_METER = 3.280839895;
-const SQUARE_FEET_PER_SQUARE_METER = 10.763910417;
+const FEET_PER_METER = 1 / 0.3048;
+const SQUARE_FEET_PER_SQUARE_METER = 1 / 0.3048 ** 2;
 
 const NUMBER_FORMAT = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 2
@@ -24,12 +25,12 @@ function formatMoney(value, locale = "en-US", currency = "USD") {
   return new Intl.NumberFormat(locale, {
     style: "currency",
     currency,
-    maximumFractionDigits: 0
+    maximumFractionDigits: 2
   }).format(value);
 }
 
 function roundForInput(value) {
-  return Number.isFinite(value) ? String(Number(value.toFixed(3))) : "";
+  return Number.isFinite(value) ? String(Number(value.toFixed(6))) : "";
 }
 
 function toNumber(value) {
@@ -42,7 +43,8 @@ function runtimeOptions(data) {
     locale: data.locale || "en",
     numberLocale: data.numberLocale || "en-US",
     currency: data.currency || "USD",
-    priceUnit: data.priceUnit || "gallon"
+    priceUnit: data.priceUnit || "gallon",
+    sourceData: data
   };
 }
 
@@ -117,7 +119,7 @@ const RESULT_TEXT = {
     secondaryDefault: (p) => `Recommended order quantity based on raw volume plus planning buffer. Equivalent to ${p.equivalent}.`,
     split: (p) => `${p.a} A / ${p.b} B (${p.ratio} example)`,
     splitUnknown: "Verify brand ratio",
-    addPrice: "Add price / gallon",
+    addPrice: (p) => p.priceUnit === "liter" ? "Add price / liter" : "Add price / US gallon",
     errGeneric: "Please check the form inputs.",
     errDiameterDepth: "Enter a positive diameter and depth.",
     errLengthWidthDepth: "Enter positive length, width, and depth.",
@@ -713,11 +715,15 @@ function createResultText({ locale = "en", numberLocale = "en-US", priceUnit = "
   };
 
   const volume = (cubicInches, unit) => {
+    const ml = litersFromCubicInches(cubicInches) * 1000;
+    if (ml > 0 && ml < 1000) return `${num(ml, ml < 0.1 ? 4 : 2)} mL`;
     if (!localized) return displayVolume(cubicInches, unit);
     return unit === "metric" ? liters(cubicInches) : `${num(gallonsFromCubicInches(cubicInches))} gal`;
   };
 
   const dual = (cubicInches, unit) => {
+    const ml = litersFromCubicInches(cubicInches) * 1000;
+    if (ml > 0 && ml < 1000) return `${volume(cubicInches, unit)} / ${num(cubicInches / CUBIC_INCHES_PER_FLUID_OUNCE)} US fl oz`;
     if (!localized) return displayVolumeDual(cubicInches);
     return unit === "metric" ? liters(cubicInches) : `${liters(cubicInches)} / ${num(gallonsFromCubicInches(cubicInches))} gal`;
   };
@@ -732,7 +738,7 @@ function createResultText({ locale = "en", numberLocale = "en-US", priceUnit = "
     unitLabel: (label) => (localized && label === "cu in" ? "in³" : label),
     // 主结果旁的换算值；公制的本地化页面主结果已经是升，不再重复
     equivalent: (cubicInches, unit) => {
-      if (!localized) return displayVolumeDual(cubicInches);
+      if (!localized) return dual(cubicInches, unit);
       return unit === "metric" ? "" : liters(cubicInches);
     },
     areaUnit: (unit, areaKind = "surface") => {
@@ -962,6 +968,8 @@ function convertGarageFloorInputs(form, toUnit) {
 function updateUnitLabels(form) {
   const type = form.dataset.calculatorType;
   const unit = form.querySelector('[name="unit"]')?.value;
+  const areaUnit = form.querySelector('[name="areaUnit"]')?.value;
+  if (areaUnit) setFieldLabel(form, "otherCost", `${planningMessage({ locale: form.dataset.locale }, "otherCost")} (${areaUnit === "sqm" ? "m²" : "ft²"})`);
 
   if (!unit) return;
 
@@ -977,6 +985,11 @@ function updateUnitLabels(form) {
 
   const linearSuffix = unit === "metric" ? "cm" : "in";
   const labelMaps = {
+    coating: { length: "Length", width: "Width", diameter: "Diameter" },
+    "area-cost": { length: "Length", width: "Width", diameter: "Diameter" },
+    coaster: { length: "Length", width: "Width", diameter: "Diameter", depth: "Depth" },
+    mold: { length: "Length", width: "Width", diameter: "Diameter", depth: "Depth", depthRound: "Depth" },
+    dice: { length: "Side length" },
     coverage: {
       length: "Length",
       width: "Width",
@@ -1027,6 +1040,7 @@ function updateUnitLabels(form) {
   Object.entries(labelMap).forEach(([name, baseLabel]) => {
     setFieldLabel(form, name, `${baseLabel} (${linearSuffix})`);
   });
+  setFieldLabel(form, "maxDepth", `${planningMessage({ locale: form.dataset.locale }, "maxDepth")} (${linearSuffix})`);
 
   setSegmentLabels(form, unit);
   applyFormTranslations(form);
@@ -1037,10 +1051,12 @@ function serializeForm(form) {
     locale: form.dataset.locale || "en",
     numberLocale: form.dataset.numberLocale || "en-US",
     currency: form.dataset.currency || "USD",
-    priceUnit: form.dataset.priceUnit || "gallon"
+    priceUnit: form.dataset.priceUnit || "gallon",
+    fieldLabels: {}
   };
   form.querySelectorAll("input, select, textarea").forEach((element) => {
-    if (!element.name) return;
+    if (!element.name || element.disabled) return;
+    data.fieldLabels[element.name] = element.closest(".field")?.querySelector("span")?.textContent || element.name;
     if (element.type === "checkbox") {
       data[element.name] = element.checked;
       return;
@@ -1211,6 +1227,76 @@ function englishProductRecommendation(type, depthInches, recommendedCubicInches)
   }
 }
 
+function planningMessage(data, key, values) {
+  return plannerText(data.locale || "en", key, values);
+}
+
+const NUMERIC_FIELDS = new Set([
+  "length", "width", "depth", "depthRound", "diameter", "avgWidth", "maxDepth", "maxBatchLiters",
+  "wastePct", "edgePct", "seepagePct", "sealPct", "conservativePct", "pricePerGallon", "quantity",
+  "coats", "count", "coverageRate", "surfaceArea", "thickness", "capacityMl", "kitSize", "ratioA", "ratioB",
+  "resinMl", "resinPrice", "supplies", "packaging", "laborHours", "hourlyRate", "overhead", "failurePct",
+  "feePct", "fixedFee", "marginPct", "otherCost"
+]);
+
+function validatePlanningInputs(data) {
+  for (const [name, value] of Object.entries(data)) {
+    if (!NUMERIC_FIELDS.has(name) && !/^segmentWidth\d+$/.test(name)) continue;
+    const field = data.fieldLabels?.[name] || name;
+    if (value === "" || value === undefined || value === null) {
+      if (["count", "coats"].includes(name)) throw new Error(planningMessage(data, "invalidCount", { field }));
+      continue;
+    }
+    const number = Number(value);
+    if (!Number.isFinite(number) || number < 0) {
+      throw new Error(planningMessage(data, "invalidNumber", { field }));
+    }
+    if (name.endsWith("Pct") && number > 100) {
+      throw new Error(planningMessage(data, "invalidPercent", { field }));
+    }
+    if (["count", "coats"].includes(name) && (!Number.isInteger(number) || number < 1)) {
+      throw new Error(planningMessage(data, "invalidCount", { field }));
+    }
+  }
+}
+
+function positiveInput(data, name) {
+  const value = Number(data[name]);
+  if (!Number.isFinite(value) || value <= 0) {
+    throw new Error(planningMessage(data, "positive", { field: data.fieldLabels?.[name] || name }));
+  }
+  return value;
+}
+
+function productLayerPlan(data, depthInches, rawCubicInches) {
+  const parts = [];
+  if (data.maxDepth !== "" && data.maxDepth !== undefined) {
+    const limit = toInches(positiveInput(data, "maxDepth"), data.unit || "imperial");
+    if (depthInches > 0) parts.push(planningMessage(data, "layers", { count: Math.ceil(depthInches / limit - 1e-12) }));
+  }
+  if (data.maxBatchLiters !== "" && data.maxBatchLiters !== undefined) {
+    const limit = positiveInput(data, "maxBatchLiters");
+    parts.push(planningMessage(data, "batches", { count: Math.ceil(litersFromCubicInches(rawCubicInches) / limit - 1e-12) }));
+  }
+  return parts.join(" · ") || planningMessage(data, "layersUnknown");
+}
+
+function productMixSplit(data, quantity, unit, text) {
+  if (!data.mixRatio || data.mixRatio === "unknown") return planningMessage(data, "ratioUnknown");
+  if (data.ratioBasis === "weight") return planningMessage(data, "weightRatio");
+  let a, b;
+  if (data.mixRatio === "custom") {
+    a = positiveInput(data, "ratioA");
+    b = positiveInput(data, "ratioB");
+  } else {
+    if (!["1:1", "2:1", "3:1"].includes(data.mixRatio)) throw new Error(planningMessage(data, "ratioUnknown"));
+    [a, b] = data.mixRatio.split(":").map(Number);
+  }
+  const scale = Math.max(a, b);
+  const total = a / scale + b / scale;
+  return planningMessage(data, "split", { a: text.volume(quantity * (a / scale) / total, unit), b: text.volume(quantity * (b / scale) / total, unit), ratio: `${a}:${b}` });
+}
+
 function finalizeResult({
   type,
   unit,
@@ -1230,22 +1316,45 @@ function finalizeResult({
   locale = "en",
   numberLocale = "en-US",
   currency = "USD",
-  priceUnit = "gallon"
+  priceUnit = "gallon",
+  sourceData = {}
 }) {
   const text = createResultText({ locale, numberLocale, priceUnit });
-  const product = productRecommendation(type, depthInches, recommendedCubicInches, locale);
+  const count = sourceData.count === undefined ? 1 : positiveInput(sourceData, "count");
+  rawCubicInches *= count;
+  recommendedCubicInches *= count;
+  conservativeCubicInches *= count;
+  if (![rawCubicInches, recommendedCubicInches, conservativeCubicInches].every(Number.isFinite)) {
+    throw new Error(planningMessage(sourceData, "invalidNumber", { field: planningMessage(sourceData, "quantity") }));
+  }
+  if (count !== 1) breakdown.push(planningMessage(sourceData, "pieces", { count: text.num(count) }));
+  const { ratio: unusedCategoryRatio, ...product } = productRecommendation(type, depthInches, recommendedCubicInches, locale);
   const projectedCost =
     Number.isFinite(pricePerGallon) && pricePerGallon > 0
       ? (priceUnit === "liter" ? litersFromCubicInches(recommendedCubicInches) : gallonsFromCubicInches(recommendedCubicInches)) * pricePerGallon
       : Number.NaN;
 
+  let kitText = planningMessage(sourceData, "kitUnknown");
+  let kits;
+  if (sourceData.kitSize !== "" && sourceData.kitSize !== undefined) {
+    const kitSize = positiveInput(sourceData, "kitSize");
+    const kitVolume = sourceData.kitUnit === "gallons" ? cubicInchesFromGallons(kitSize) : cubicInchesFromLiters(kitSize);
+    kits = Math.ceil(recommendedCubicInches / kitVolume - 1e-12);
+    if (!Number.isFinite(kits)) throw new Error(planningMessage(sourceData, "invalidNumber", { field: planningMessage(sourceData, "kitCount") }));
+    kitText = planningMessage(sourceData, "kitPlan", { count: text.num(kits), size: text.volume(kitVolume, unit), total: text.volume(kits * kitVolume, unit) });
+  }
   return {
+    rawLiters: litersFromCubicInches(rawCubicInches),
+    recommendedLiters: litersFromCubicInches(recommendedCubicInches),
+    projectedCost,
+    kits,
+    kitText,
     primary: text.volume(recommendedCubicInches, unit),
     secondary: secondary || text.t("secondaryDefault", { equivalent: text.equivalent(recommendedCubicInches, unit) }),
     rawText: text.dual(rawCubicInches, unit),
-    splitText: splitTextOverride || text.split(recommendedCubicInches, unit, product.ratio),
+    splitText: splitTextOverride || productMixSplit(sourceData, recommendedCubicInches, unit, text),
     costText: costTextOverride || text.money(projectedCost, currency),
-    layersText,
+    layersText: ["cost", "garage-floor"].includes(type) ? layersText : productLayerPlan(sourceData, depthInches, rawCubicInches),
     breakdown,
     standardText: compareStandard || text.volume(recommendedCubicInches, unit),
     conservativeText: compareConservative || text.volume(conservativeCubicInches, unit),
@@ -1418,8 +1527,8 @@ function computeRiver(data) {
   const lengthInches = toInches(lengthInput, unit);
   const depthInches = toInches(depthInput, unit);
   const mode = data.riverMode || "quick";
-  const seepagePct = data.includeSeepage ? 8 : 0;
-  const sealPct = data.includeSeal ? 5 : 0;
+  const seepagePct = data.includeSeepage ? toNumber(data.seepagePct ?? 8) : 0;
+  const sealPct = data.includeSeal ? toNumber(data.sealPct ?? 5) : 0;
 
   let rawCubicInches;
   let modeLine;
@@ -1429,6 +1538,7 @@ function computeRiver(data) {
       .filter(([key, value]) => key.startsWith("segmentWidth") && Number(value) > 0)
       .map(([, value]) => toInches(toNumber(value), unit));
 
+    if (!widths.length) throw new Error(text.t("errSegments"));
     requirePositive(widths, text.t("errSegments"));
     const segmentLength = lengthInches / widths.length;
     rawCubicInches = widths.reduce(
@@ -1480,13 +1590,11 @@ function computeDeepPour(data) {
   const lengthInches = toInches(toNumber(data.length), unit);
   const widthInches = toInches(toNumber(data.width), unit);
   const depthInches = toInches(toNumber(data.depth), unit);
-  const maxDepthInches = toInches(toNumber(data.maxDepth), unit);
-  requirePositive([lengthInches, widthInches, depthInches, maxDepthInches], text.t("errDeepPour"));
+  requirePositive([lengthInches, widthInches, depthInches], text.t("errDeepPour"));
 
   const rawCubicInches = volumeFromRectangle(lengthInches, widthInches, depthInches);
   const recommendedCubicInches = rawCubicInches * (1 + wastePct / 100);
   const conservativeCubicInches = rawCubicInches * (1 + wastePct / 100 + 0.08);
-  const layers = Math.max(1, Math.ceil(depthInches / maxDepthInches));
 
   return finalizeResult({
     ...runtime,
@@ -1497,12 +1605,11 @@ function computeDeepPour(data) {
     conservativeCubicInches,
     pricePerGallon,
     depthInches,
-    layersText: text.t("liftsAtMax", { n: layers, max: text.depth(maxDepthInches, unit) }),
+    layersText: productLayerPlan(data, depthInches, rawCubicInches),
     breakdown: buildBreakdown([
       text.t("rawCastingVolume", { dual: text.dual(rawCubicInches, unit) }),
       text.t("wasteBuffer", { pct: text.pct(wastePct) }),
-      text.t("plannedMaxLift", { depth: text.depth(maxDepthInches, unit) }),
-      text.t("stagedPours", { n: layers })
+      productLayerPlan(data, depthInches, rawCubicInches)
     ])
   });
 }
@@ -1552,7 +1659,7 @@ function computeGarageFloor(data) {
   const runtime = runtimeOptions(data);
   const text = createResultText(runtime);
   const unit = data.unit || "imperial";
-  const coats = Math.max(1, Math.round(toNumber(data.coats)));
+  const coats = positiveInput(data, "coats");
   const coverageRate = toNumber(data.coverageRate);
   const wastePct = toNumber(data.wastePct);
   const pricePerGallon = toNumber(data.pricePerGallon);
@@ -1766,7 +1873,7 @@ function computeCost(data) {
   const recommendedCubicInches = rawCubicInches * (1 + wastePct / 100);
   const conservativeCubicInches = rawCubicInches * (1 + wastePct / 100 + 0.05);
 
-  return finalizeResult({
+  const result = finalizeResult({
     ...runtime,
     type: "cost",
     unit,
@@ -1784,6 +1891,133 @@ function computeCost(data) {
       text.t("kitSizesNote")
     ])
   });
+  return {
+    ...result,
+    primary: result.costText,
+    stickyCost: "",
+    secondary: `${planningMessage(data, "purchase")}: ${result.standardText}.`,
+    standardText: text.money((runtime.priceUnit === "liter" ? litersFromCubicInches(rawCubicInches) : gallonsFromCubicInches(rawCubicInches)) * pricePerGallon, runtime.currency),
+    conservativeText: text.money((runtime.priceUnit === "liter" ? litersFromCubicInches(conservativeCubicInches) : gallonsFromCubicInches(conservativeCubicInches)) * pricePerGallon, runtime.currency),
+    productText: result.standardText
+  };
+}
+
+function coatingArea(data) {
+  if (data.dimensionMode === "dimensions") {
+    if (data.shape === "round") {
+      return Math.PI * (toInches(positiveInput(data, "diameter"), data.unit) / 2) ** 2;
+    }
+    return toInches(positiveInput(data, "length"), data.unit) * toInches(positiveInput(data, "width"), data.unit);
+  }
+  const area = positiveInput(data, "surfaceArea");
+  return data.areaUnit === "sqm" ? area * 10000 / CM_PER_INCH ** 2 : area * 144;
+}
+
+function computeCoating(data) {
+  const runtime = runtimeOptions(data);
+  const text = createResultText(runtime);
+  const areaInches = coatingArea(data);
+  const coats = positiveInput(data, "coats");
+  const waste = toNumber(data.wastePct);
+  const edge = toNumber(data.edgePct);
+  let rawCubicInches, thicknessInches = 0;
+  if (data.coverageMethod === "label" || data.calculationKind === "seal-coat") {
+    const rate = positiveInput(data, "coverageRate");
+    rawCubicInches = data.coverageUnit === "sqm-liter"
+      ? cubicInchesFromLiters(areaInches * CM_PER_INCH ** 2 / 10000 * coats / rate)
+      : cubicInchesFromGallons(areaInches / 144 * coats / rate);
+  } else {
+    const thickness = positiveInput(data, "thickness");
+    const factors = { mm: 1 / 25.4, in: 1, mil: 0.001 };
+    if (!factors[data.thicknessUnit]) throw new Error(planningMessage(data, "positive", { field: planningMessage(data, "thicknessUnit") }));
+    thicknessInches = thickness * factors[data.thicknessUnit];
+    rawCubicInches = areaInches * thicknessInches * coats;
+  }
+  const result = finalizeResult({
+    ...runtime,
+    type: "coverage",
+    unit: data.unit || "imperial",
+    rawCubicInches,
+    recommendedCubicInches: rawCubicInches * (1 + (waste + edge) / 100),
+    conservativeCubicInches: rawCubicInches * (1 + (waste + edge + 5) / 100),
+    pricePerGallon: toNumber(data.pricePerGallon),
+    depthInches: thicknessInches,
+    breakdown: [
+      `${planningMessage(data, "area")}: ${text.num(areaInches / 144)} ft² / ${text.num(areaInches * CM_PER_INCH ** 2 / 10000)} m².`,
+      `${planningMessage(data, "coats")}: ${text.num(coats)}.`,
+      text.t("rawVolume", { dual: text.dual(rawCubicInches, data.unit) }),
+      text.t("wasteBuffer", { pct: text.pct(waste) }),
+      `${planningMessage(data, "edgePct")}: ${text.pct(edge)}%.`,
+      planningMessage(data, "extraMargin", { pct: 5 })
+    ]
+  });
+  return { ...result, areaSquareMeters: areaInches * CM_PER_INCH ** 2 / 10000 };
+}
+
+function computeAreaCost(data) {
+  const result = computeCoating(data);
+  const runtime = runtimeOptions(data);
+  const text = createResultText(runtime);
+  const area = data.areaUnit === "sqm" ? result.areaSquareMeters : result.areaSquareMeters * SQUARE_FEET_PER_SQUARE_METER;
+  const otherCost = toNumber(data.otherCost) * area;
+  const budget = (Number.isFinite(result.projectedCost) ? result.projectedCost : 0) + otherCost;
+  positiveInput(data, "pricePerGallon");
+  return {
+    ...result,
+    primary: planningMessage(data, "perArea", { cost: text.money(budget / area, runtime.currency), unit: data.areaUnit === "sqm" ? "m²" : "ft²" }),
+    secondary: planningMessage(data, "scope"),
+    costText: text.money(budget, runtime.currency),
+    budgetCost: budget,
+    costPerArea: budget / area,
+    breakdown: [...result.breakdown, `${planningMessage(data, "totalCost")}: ${text.money(budget, runtime.currency)} (${planningMessage(data, "otherCost")}: ${text.money(otherCost, runtime.currency)}).`]
+  };
+}
+
+function computeMold(data) {
+  if (data.moldMethod !== "capacity") return computeVolume(data);
+  const runtime = runtimeOptions(data);
+  const text = createResultText(runtime);
+  const raw = cubicInchesFromLiters(positiveInput(data, "capacityMl") / 1000);
+  const waste = toNumber(data.wastePct);
+  return finalizeResult({
+    ...runtime, type: "volume", unit: data.unit || "metric", rawCubicInches: raw,
+    recommendedCubicInches: raw * (1 + waste / 100), conservativeCubicInches: raw * (1 + (waste + 5) / 100),
+    pricePerGallon: toNumber(data.pricePerGallon), depthInches: 0,
+    breakdown: [`${planningMessage(data, "capacityMl")}: ${text.volume(raw, data.unit)}.`, text.t("wasteBuffer", { pct: text.pct(waste) })]
+  });
+}
+
+function computeDice(data) {
+  return data.moldMethod === "capacity" ? computeMold(data) : computeCube(data);
+}
+
+function computePricing(data) {
+  const runtime = runtimeOptions(data), text = createResultText(runtime);
+  const resinMl = positiveInput(data, "resinMl");
+  const resinPrice = positiveInput(data, "resinPrice");
+  const failure = toNumber(data.failurePct) / 100;
+  const fee = toNumber(data.feePct) / 100;
+  const margin = toNumber(data.marginPct) / 100;
+  if (failure >= 1) throw new Error(planningMessage(data, "invalidPercent", { field: data.fieldLabels?.failurePct || "failurePct" }));
+  if (fee + margin >= 1) throw new Error(planningMessage(data, "combinedFees"));
+  const labor = toNumber(data.laborHours) * toNumber(data.hourlyRate);
+  const direct = resinMl / 1000 * resinPrice + toNumber(data.supplies) + toNumber(data.packaging) + labor + toNumber(data.overhead);
+  const adjusted = direct / (1 - failure);
+  const price = (adjusted + toNumber(data.fixedFee)) / (1 - fee - margin);
+  if (!Number.isFinite(price)) throw new Error(planningMessage(data, "invalidNumber", { field: planningMessage(data, "revenue") }));
+  const fees = price * fee + toNumber(data.fixedFee);
+  const profit = price - fees - adjusted;
+  return {
+    price, directCost: direct, adjustedCost: adjusted, profit, sellingFees: fees,
+    stickyCost: "",
+    primary: text.money(price, runtime.currency), secondary: planningMessage(data, "pricingNote"),
+    rawText: text.money(direct, runtime.currency), splitText: text.money(labor, runtime.currency),
+    costText: text.money(fees, runtime.currency), layersText: text.money(profit, runtime.currency),
+    standardText: text.money(adjusted, runtime.currency), conservativeText: text.money(price, runtime.currency),
+    productText: `${text.num(margin * 100)}%`,
+    breakdown: [planningMessage(data, "pricingBreakdown", { direct: text.money(direct, runtime.currency), adjusted: text.money(adjusted, runtime.currency), fees: text.money(fees, runtime.currency), profit: text.money(profit, runtime.currency) }), planningMessage(data, "pricingFormula")],
+    product: { heading: planningMessage(data, "perPiece"), copy: planningMessage(data, "pricingNote") }
+  };
 }
 
 function computeConverter(data) {
@@ -1898,6 +2132,13 @@ function applySizePreset(form, value) {
 }
 
 const COMPUTERS = {
+  coating: computeCoating,
+  "seal-coat": (data) => computeCoating({ ...data, calculationKind: "seal-coat" }),
+  "area-cost": computeAreaCost,
+  coaster: (data) => computeGeneral({ ...data, depthRound: data.depth }),
+  mold: computeMold,
+  dice: computeDice,
+  pricing: computePricing,
   "floor-cost": computeFloorCost,
   general: computeGeneral,
   coverage: computeCoverage,
@@ -1915,7 +2156,21 @@ const COMPUTERS = {
   converter: computeConverter
 };
 
+export function calculate(type, data) {
+  validatePlanningInputs(data);
+  if (!COMPUTERS[type]) throw new Error("Unknown calculator type");
+  const result = COMPUTERS[type](data);
+  if (result.projectedCost === Infinity || result.projectedCost === -Infinity) {
+    throw new Error(planningMessage(data, "invalidNumber", { field: planningMessage(data, "totalCost") }));
+  }
+  return result;
+}
+
 function updateConditionalGroups(form) {
+  form.querySelectorAll("[data-visible-if]").forEach((group) => {
+    const value = form.querySelector(`[name="${group.dataset.visibleIf}"]`)?.value;
+    group.classList.toggle("is-hidden", value !== group.dataset.visibleValue);
+  });
   const shape = form.querySelector('[name="shape"]')?.value;
   const rectangleGroup = form.querySelector('[data-group="rectangle"]');
   const roundGroup = form.querySelector('[data-group="round"]');
@@ -1937,6 +2192,9 @@ function updateConditionalGroups(form) {
   if (avgWidthField) {
     avgWidthField.classList.toggle("is-hidden", riverMode === "segment");
   }
+  form.querySelectorAll("input, select, textarea").forEach((input) => {
+    input.disabled = Boolean(input.closest(".is-hidden"));
+  });
 }
 
 function addSegmentField(form) {
@@ -1972,6 +2230,7 @@ const PANEL_FALLBACK_SELECTORS = [
   "[data-stat-split]",
   "[data-stat-cost]",
   "[data-stat-layers]",
+  "[data-stat-kits]",
   "[data-compare-standard]",
   "[data-compare-conservative]",
   "[data-compare-product]",
@@ -2027,6 +2286,7 @@ function updatePanel(form, result) {
   setText("[data-stat-split]", result.splitText);
   setText("[data-stat-cost]", result.costText);
   setText("[data-stat-layers]", result.layersText);
+  setText("[data-stat-kits]", result.kitText || "");
   setText("[data-compare-standard]", result.standardText);
   setText("[data-compare-conservative]", result.conservativeText);
   setText("[data-compare-product]", result.productText);
@@ -2062,7 +2322,7 @@ function compute(form) {
 
   try {
     clearError(form);
-    const result = computer(serializeForm(form));
+    const result = calculate(type, serializeForm(form));
     updatePanel(form, result);
   } catch (error) {
     showError(form, error instanceof Error ? error.message : createResultText({ locale: form.dataset.locale }).t("errGeneric"));
@@ -2096,6 +2356,28 @@ function handleUnitChange(form, nextUnit) {
 
 function initCalculator(form) {
   capturePanelFallbacks(form.closest(".calculator-shell"));
+  const unit = form.querySelector('[name="unit"]');
+  form.dataset.unitState = unit?.value || "";
+  const params = new URLSearchParams(window.location.search);
+  const allowedPresets = { unit: ["metric", "imperial"], shape: ["round", "rectangle"], dimensionMode: ["area", "dimensions"], moldMethod: ["geometry", "capacity", "cube"] };
+  for (const [name, values] of Object.entries(allowedPresets)) {
+    const value = params.get(name);
+    const input = form.querySelector(`[name="${name}"]`);
+    if (input && values.includes(value)) input.value = value;
+  }
+  form.querySelectorAll("[data-pill-toggle]").forEach((toggle) => {
+    const value = toggle.querySelector("input")?.value;
+    toggle.querySelectorAll(".pill-toggle__btn").forEach((button) => {
+      button.classList.toggle("is-active", button.dataset.value === value);
+      button.setAttribute("aria-pressed", String(button.dataset.value === value));
+    });
+  });
+  const unitFactors = {
+    areaUnit: { sqft: 144, sqm: 10000 / CM_PER_INCH ** 2 },
+    thicknessUnit: { in: 1, mm: 1 / 25.4, mil: 0.001 },
+    coverageUnit: { "sqft-gallon": 0.09290304 / 3.785411784, "sqm-liter": 1 }
+  };
+  const previousUnits = Object.fromEntries(Object.keys(unitFactors).map(name => [name, form.querySelector(`[name="${name}"]`)?.value]));
   updateConditionalGroups(form);
   handleUnitChange(form, form.querySelector('[name="unit"]')?.value || "");
   compute(form);
@@ -2117,6 +2399,19 @@ function initCalculator(form) {
 
     if (target.matches('[name="unit"]')) {
       handleUnitChange(form, target.value);
+    }
+    if (unitFactors[target.name]) {
+      const valueField = { areaUnit: "surfaceArea", thicknessUnit: "thickness", coverageUnit: "coverageRate" }[target.name];
+      const input = form.querySelector(`[name="${valueField}"]`);
+      const previous = previousUnits[target.name];
+      const next = target.value;
+      if (input?.value && previous && previous !== next) input.value = roundForInput(Number(input.value) * unitFactors[target.name][previous] / unitFactors[target.name][next]);
+      if (target.name === "areaUnit" && previous && previous !== next) {
+        const otherCost = form.querySelector('[name="otherCost"]');
+        if (otherCost?.value) otherCost.value = roundForInput(Number(otherCost.value) * unitFactors.areaUnit[next] / unitFactors.areaUnit[previous]);
+      }
+      previousUnits[target.name] = next;
+      updateUnitLabels(form);
     }
 
     // 选了车库尺寸预设就填入长宽；手动改长宽时预设切回“自定义”
@@ -2141,6 +2436,7 @@ function initCalculator(form) {
   }
 }
 
+if (typeof document !== "undefined") {
 document.querySelectorAll(".calculator-root").forEach((form) => {
   if (form instanceof HTMLFormElement) {
     initCalculator(form);
@@ -2159,8 +2455,9 @@ document.addEventListener("click", (event) => {
   if (!hiddenInput) return;
 
   // Update active state
-  toggle.querySelectorAll(".pill-toggle__btn").forEach((b) => b.classList.remove("is-active"));
+  toggle.querySelectorAll(".pill-toggle__btn").forEach((b) => { b.classList.remove("is-active"); b.setAttribute("aria-pressed", "false"); });
   btn.classList.add("is-active");
+  btn.setAttribute("aria-pressed", "true");
 
   // Update value
   hiddenInput.value = btn.dataset.value;
@@ -2172,3 +2469,4 @@ document.addEventListener("click", (event) => {
     hiddenInput.dispatchEvent(new Event("input", { bubbles: true }));
   }
 });
+}

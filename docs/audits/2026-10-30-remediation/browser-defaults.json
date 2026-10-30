@@ -1,0 +1,348 @@
+[
+  {
+    "slug": "",
+    "type": "general",
+    "primary": "5.05 gal",
+    "error": "",
+    "unit": "imperial",
+    "kit": "Add the kit's mixed yield"
+  },
+  {
+    "slug": "epoxy-calculator",
+    "type": "general",
+    "primary": "5.05 gal",
+    "error": "",
+    "unit": "imperial",
+    "kit": "Add the kit's mixed yield"
+  },
+  {
+    "slug": "epoxy-coverage-calculator",
+    "type": "coating",
+    "primary": "1.78 gal",
+    "error": "",
+    "unit": "imperial",
+    "kit": "Add the kit's mixed yield"
+  },
+  {
+    "slug": "river-table-epoxy-calculator",
+    "type": "river",
+    "primary": "3.51 gal",
+    "error": "",
+    "unit": "imperial",
+    "kit": "Add the kit's mixed yield"
+  },
+  {
+    "slug": "deep-pour-epoxy-calculator",
+    "type": "deep-pour",
+    "primary": "8.0 gal",
+    "error": "",
+    "unit": "imperial",
+    "kit": "Add the kit's mixed yield"
+  },
+  {
+    "slug": "table-top-epoxy-calculator",
+    "type": "coating",
+    "primary": "1.78 gal",
+    "error": "",
+    "unit": "imperial",
+    "kit": "Add the kit's mixed yield"
+  },
+  {
+    "slug": "countertop-epoxy-calculator",
+    "type": "coating",
+    "primary": "1.78 gal",
+    "error": "",
+    "unit": "imperial",
+    "kit": "Add the kit's mixed yield"
+  },
+  {
+    "slug": "garage-floor-epoxy-calculator",
+    "type": "floor-cost",
+    "primary": "$1,600.00 – $4,000.00",
+    "error": ""
+  },
+  {
+    "slug": "void-fill-epoxy-calculator",
+    "type": "void-fill",
+    "primary": "302.34 mL",
+    "error": "",
+    "unit": "imperial",
+    "kit": "Add the kit's mixed yield"
+  },
+  {
+    "slug": "epoxy-cost-calculator",
+    "type": "cost",
+    "primary": "3.24 gal",
+    "error": "",
+    "kit": "Add the kit's mixed yield"
+  },
+  {
+    "slug": "epoxy-unit-converter",
+    "type": "converter",
+    "primary": "1.0 gal",
+    "error": "",
+    "unit": "imperial"
+  },
+  {
+    "slug": "epoxy-floor-coverage-calculator",
+    "type": "garage-floor",
+    "primary": "5.89 gal",
+    "error": "",
+    "unit": "imperial",
+    "kit": "Add the kit's mixed yield"
+  },
+  {
+    "slug": "two-car-garage-epoxy-calculator",
+    "type": "garage-floor",
+    "primary": "5.35 gal",
+    "error": "",
+    "unit": "imperial",
+    "kit": "Add the kit's mixed yield"
+  },
+  {
+    "slug": "epoxy-seal-coat-calculator",
+    "type": "seal-coat",
+    "primary": "0.4 gal",
+    "error": "",
+    "unit": "imperial",
+    "kit": "Add the kit's mixed yield"
+  },
+  {
+    "slug": "resin-mold-calculator",
+    "type": "mold",
+    "primary": "103.68 mL",
+    "error": "",
+    "unit": "metric",
+    "kit": "Add the kit's mixed yield"
+  },
+  {
+    "slug": "resin-coaster-calculator",
+    "type": "coaster",
+    "primary": "333.6 mL",
+    "error": "",
+    "unit": "imperial",
+    "kit": "Add the kit's mixed yield"
+  },
+  {
+    "slug": "resin-jewelry-calculator",
+    "type": "mold",
+    "primary": "34.5 mL",
+    "error": "",
+    "unit": "metric",
+    "kit": "Add the kit's mixed yield"
+  },
+  {
+    "slug": "resin-dice-calculator",
+    "type": "dice",
+    "primary": "32.11 mL",
+    "error": "",
+    "unit": "metric",
+    "kit": "Add the kit's mixed yield"
+  },
+  {
+    "slug": "resin-tray-calculator",
+    "type": "mold",
+    "primary": "477.85 mL",
+    "error": "",
+    "unit": "metric",
+    "kit": "Add the kit's mixed yield"
+  },
+  {
+    "slug": "sphere-resin-calculator",
+    "type": "sphere",
+    "primary": "604.05 mL",
+    "error": "",
+    "unit": "imperial",
+    "kit": "Add the kit's mixed yield"
+  },
+  {
+    "slug": "cylinder-resin-calculator",
+    "type": "cylinder",
+    "primary": "637.08 mL",
+    "error": "",
+    "unit": "imperial",
+    "kit": "Add the kit's mixed yield"
+  },
+  {
+    "slug": "cube-resin-calculator",
+    "type": "cube",
+    "primary": "61.94 mL",
+    "error": "",
+    "unit": "imperial",
+    "kit": "Add the kit's mixed yield"
+  },
+  {
+    "slug": "resin-art-pricing-calculator",
+    "type": "pricing",
+    "primary": "$31.00",
+    "error": ""
+  },
+  {
+    "slug": "epoxy-cost-per-square-foot",
+    "type": "area-cost",
+    "primary": "$7.29 / ft²",
+    "error": "",
+    "unit": "imperial",
+    "kit": "Add the kit's mixed yield"
+  },
+  {
+    "slug": "de",
+    "type": "general",
+    "primary": "7,78 L",
+    "error": "",
+    "unit": "metric",
+    "kit": "Gemischte Menge pro Set eingeben"
+  },
+  {
+    "slug": "de/epoxidharz-verbrauch-pro-m2",
+    "type": "coating",
+    "primary": "11 L",
+    "error": "",
+    "unit": "metric",
+    "kit": "Gemischte Menge pro Set eingeben"
+  },
+  {
+    "slug": "de/epoxidharz-kosten-pro-m2",
+    "type": "area-cost",
+    "primary": "30,80 € / m²",
+    "error": "",
+    "unit": "metric",
+    "kit": "Gemischte Menge pro Set eingeben"
+  },
+  {
+    "slug": "de/epoxidboden-rechner",
+    "type": "garage-floor",
+    "primary": "5,35 L",
+    "error": "",
+    "unit": "metric",
+    "kit": "Gemischte Menge pro Set eingeben"
+  },
+  {
+    "slug": "fr",
+    "type": "general",
+    "primary": "7,78 L",
+    "error": "",
+    "unit": "metric",
+    "kit": "Indiquer le volume mélangé par kit"
+  },
+  {
+    "slug": "fr/quantite-resine-epoxy-par-m2",
+    "type": "coating",
+    "primary": "11 L",
+    "error": "",
+    "unit": "metric",
+    "kit": "Indiquer le volume mélangé par kit"
+  },
+  {
+    "slug": "fr/prix-resine-epoxy-m2",
+    "type": "area-cost",
+    "primary": "30,80 € / m²",
+    "error": "",
+    "unit": "metric",
+    "kit": "Indiquer le volume mélangé par kit"
+  },
+  {
+    "slug": "fr/calculateur-sol-epoxy",
+    "type": "garage-floor",
+    "primary": "5,35 L",
+    "error": "",
+    "unit": "metric",
+    "kit": "Indiquer le volume mélangé par kit"
+  },
+  {
+    "slug": "pt-br",
+    "type": "general",
+    "primary": "7,78 L",
+    "error": "",
+    "unit": "metric",
+    "kit": "Informe o rendimento misturado do kit"
+  },
+  {
+    "slug": "pt-br/consumo-resina-epoxi-por-m2",
+    "type": "coating",
+    "primary": "11 L",
+    "error": "",
+    "unit": "metric",
+    "kit": "Informe o rendimento misturado do kit"
+  },
+  {
+    "slug": "pt-br/preco-piso-epoxi-m2",
+    "type": "area-cost",
+    "primary": "R$ 30,80 / m²",
+    "error": "",
+    "unit": "metric",
+    "kit": "Informe o rendimento misturado do kit"
+  },
+  {
+    "slug": "pt-br/calculadora-piso-epoxi",
+    "type": "garage-floor",
+    "primary": "5,35 L",
+    "error": "",
+    "unit": "metric",
+    "kit": "Informe o rendimento misturado do kit"
+  },
+  {
+    "slug": "es",
+    "type": "general",
+    "primary": "7,78 L",
+    "error": "",
+    "unit": "metric",
+    "kit": "Introduce el volumen mezclado del kit"
+  },
+  {
+    "slug": "es/consumo-resina-epoxi-por-m2",
+    "type": "coating",
+    "primary": "11 L",
+    "error": "",
+    "unit": "metric",
+    "kit": "Introduce el volumen mezclado del kit"
+  },
+  {
+    "slug": "es/precio-suelo-epoxi-m2",
+    "type": "area-cost",
+    "primary": "30,80 € / m²",
+    "error": "",
+    "unit": "metric",
+    "kit": "Introduce el volumen mezclado del kit"
+  },
+  {
+    "slug": "es/calculadora-suelo-epoxi",
+    "type": "garage-floor",
+    "primary": "5,35 L",
+    "error": "",
+    "unit": "metric",
+    "kit": "Introduce el volumen mezclado del kit"
+  },
+  {
+    "slug": "it",
+    "type": "general",
+    "primary": "7,78 L",
+    "error": "",
+    "unit": "metric",
+    "kit": "Inserisci il volume miscelato del kit"
+  },
+  {
+    "slug": "it/consumo-resina-epossidica-m2",
+    "type": "coating",
+    "primary": "11 L",
+    "error": "",
+    "unit": "metric",
+    "kit": "Inserisci il volume miscelato del kit"
+  },
+  {
+    "slug": "it/prezzo-pavimento-resina-epossidica-m2",
+    "type": "area-cost",
+    "primary": "30,80 € / m²",
+    "error": "",
+    "unit": "metric",
+    "kit": "Inserisci il volume miscelato del kit"
+  },
+  {
+    "slug": "it/calcolatore-pavimento-epossidico",
+    "type": "garage-floor",
+    "primary": "5,35 L",
+    "error": "",
+    "unit": "metric",
+    "kit": "Inserisci il volume miscelato del kit"
+  }
+]

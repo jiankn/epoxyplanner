@@ -1,4 +1,4 @@
-import { HTML_ROUTES, REDIRECTS } from "./_generated-routes.js";
+import { HTML_ROUTES, REDIRECTS, REDIRECT_PRESETS } from "./_generated-routes.js";
 
 const CANONICAL_HOST = "epoxyplanner.com";
 
@@ -50,24 +50,28 @@ function notFoundHtml() {
 
 export async function onRequest(context) {
   const url = new URL(context.request.url);
+  let canonicalRedirect = false;
 
   if (url.hostname === `www.${CANONICAL_HOST}`) {
     url.hostname = CANONICAL_HOST;
     url.protocol = "https:";
-    return Response.redirect(url.toString(), 301);
+    canonicalRedirect = true;
   }
 
   if (url.protocol !== "https:" && url.hostname === CANONICAL_HOST) {
     url.protocol = "https:";
-    return Response.redirect(url.toString(), 301);
+    canonicalRedirect = true;
   }
 
   // 已合并页面的旧地址：301 到保留页
-  const redirectTarget = REDIRECTS.get(url.pathname.endsWith("/") ? url.pathname : `${url.pathname}/`);
+  const redirectPath = url.pathname.endsWith("/") ? url.pathname : `${url.pathname}/`;
+  const redirectTarget = REDIRECTS.get(redirectPath);
   if (redirectTarget) {
     url.pathname = redirectTarget;
+    for (const [name, value] of Object.entries(REDIRECT_PRESETS.get(redirectPath) || {})) url.searchParams.set(name, value);
     return Response.redirect(url.toString(), 301);
   }
+  if (canonicalRedirect) return Response.redirect(url.toString(), 301);
 
   if (STATIC_ROOT_FILES.has(url.pathname) || isAssetPath(url.pathname)) {
     return context.next();

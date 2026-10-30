@@ -1,0 +1,190 @@
+{
+  "checks": 25,
+  "passed": 25,
+  "failures": [],
+  "cases": [
+    {
+      "name": "rectangle and 8 percent",
+      "actual": "5.05 gal",
+      "ok": true
+    },
+    {
+      "name": "rectangle raw",
+      "actual": "4.68 gal / 17.7 L",
+      "ok": true
+    },
+    {
+      "name": "rectangle price",
+      "actual": "$429",
+      "ok": true
+    },
+    {
+      "name": "metric same geometry",
+      "actual": "19.11 L",
+      "ok": true
+    },
+    {
+      "name": "US gallon constant",
+      "actual": "1.0 gal",
+      "ok": true
+    },
+    {
+      "name": "floor cost range",
+      "actual": "$1,600 – $4,000",
+      "ok": true
+    },
+    {
+      "name": "user-provided max lift",
+      "actual": "3 lifts at about 1.0 in max",
+      "ok": true
+    },
+    {
+      "name": "sphere finite result",
+      "actual": "0.15 gal",
+      "ok": true
+    },
+    {
+      "name": "cylinder finite result",
+      "actual": "0.22 gal",
+      "ok": true
+    },
+    {
+      "name": "cube finite result",
+      "actual": "0.28 gal",
+      "ok": true
+    },
+    {
+      "name": "general blank invalid",
+      "actual": true,
+      "ok": true
+    },
+    {
+      "name": "coverage blank invalid",
+      "actual": true,
+      "ok": true
+    },
+    {
+      "name": "volume blank invalid",
+      "actual": true,
+      "ok": true
+    },
+    {
+      "name": "river blank invalid",
+      "actual": true,
+      "ok": true
+    },
+    {
+      "name": "deep-pour blank invalid",
+      "actual": true,
+      "ok": true
+    },
+    {
+      "name": "surface blank invalid",
+      "actual": true,
+      "ok": true
+    },
+    {
+      "name": "garage-floor blank invalid",
+      "actual": true,
+      "ok": true
+    },
+    {
+      "name": "void-fill blank invalid",
+      "actual": true,
+      "ok": true
+    },
+    {
+      "name": "round blank invalid",
+      "actual": true,
+      "ok": true
+    },
+    {
+      "name": "sphere blank invalid",
+      "actual": true,
+      "ok": true
+    },
+    {
+      "name": "cylinder blank invalid",
+      "actual": true,
+      "ok": true
+    },
+    {
+      "name": "cube blank invalid",
+      "actual": true,
+      "ok": true
+    },
+    {
+      "name": "cost blank invalid",
+      "actual": true,
+      "ok": true
+    },
+    {
+      "name": "converter blank invalid",
+      "actual": true,
+      "ok": true
+    },
+    {
+      "name": "floor-cost blank invalid",
+      "actual": true,
+      "ok": true
+    }
+  ],
+  "evidence": [
+    {
+      "type": "general",
+      "data": {
+        "length": 48,
+        "width": 18,
+        "depth": 1.25,
+        "wastePct": -110,
+        "pricePerGallon": 85
+      },
+      "primary": "-0.47 gal",
+      "cost": "-$40",
+      "layers": "Single lift if product allows",
+      "raw": "4.68 gal / 17.7 L"
+    },
+    {
+      "type": "general",
+      "data": {
+        "length": 1,
+        "width": 1,
+        "depth": 1,
+        "wastePct": "abc",
+        "pricePerGallon": 85
+      },
+      "primary": "0.0 gal",
+      "cost": "$0",
+      "layers": "Single lift if product allows",
+      "raw": "0.0 gal / 0.02 L"
+    },
+    {
+      "type": "garage-floor",
+      "data": {
+        "length": 20,
+        "width": 20,
+        "coverageRate": 160,
+        "coats": 1.4,
+        "wastePct": 7,
+        "pricePerGallon": 62
+      },
+      "primary": "2.68 gal",
+      "cost": "$166",
+      "layers": "1 coat planned",
+      "raw": "2.5 gal / 9.46 L"
+    },
+    {
+      "type": "round",
+      "data": {
+        "diameter": 4,
+        "depth": 0.25,
+        "wastePct": 8,
+        "pricePerGallon": 85
+      },
+      "primary": "0.01 gal",
+      "cost": "$1",
+      "layers": "Single coat / shallow fill",
+      "raw": "0.01 gal / 0.05 L"
+    }
+  ]
+}

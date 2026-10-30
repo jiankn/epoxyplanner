@@ -321,7 +321,7 @@ export const guideAdditions = {
       },
       {
         title: "What to do when the calculator's example ratio differs",
-        body: "The quantity result is total mixed resin; the displayed A/B split is a labeled example associated with a resin class. Use your own product ratio for the final split. Choosing a different ratio does not change the cavity's geometric volume. If a kit is described only by component weight, check the manufacturer's stated yield rather than assuming kilograms equal liters."
+        body: "The quantity result is total mixed resin. An A/B split is shown only after you enter a product's volume ratio; the tool does not infer that ratio from a resin class. Weight ratios require the product's weight quantities or component data. Choosing a different ratio does not change the cavity's geometric volume. If a kit is described only by component weight, check the manufacturer's stated yield rather than assuming kilograms equal liters."
       }
     ]
   },

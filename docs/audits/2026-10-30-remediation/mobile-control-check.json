@@ -1,0 +1,60 @@
+[
+  {
+    "slug": "epoxy-calculator",
+    "width": 390,
+    "scrollWidth": 390,
+    "formTop": 458.9875183105469,
+    "firstDimensionTop": 685.6375122070312,
+    "buttons": [
+      {
+        "text": "Imperial",
+        "width": 143,
+        "scrollWidth": 143
+      },
+      {
+        "text": "Metric",
+        "width": 143,
+        "scrollWidth": 143
+      },
+      {
+        "text": "Rectangle",
+        "width": 143,
+        "scrollWidth": 143
+      },
+      {
+        "text": "Round",
+        "width": 143,
+        "scrollWidth": 143
+      }
+    ]
+  },
+  {
+    "slug": "resin-coaster-calculator",
+    "width": 390,
+    "scrollWidth": 390,
+    "formTop": 484.5874938964844,
+    "firstDimensionTop": 831.4125366210938,
+    "buttons": [
+      {
+        "text": "Imperial",
+        "width": 143,
+        "scrollWidth": 143
+      },
+      {
+        "text": "Metric",
+        "width": 143,
+        "scrollWidth": 143
+      },
+      {
+        "text": "Round",
+        "width": 143,
+        "scrollWidth": 143
+      },
+      {
+        "text": "Square / rectangle",
+        "width": 143,
+        "scrollWidth": 143
+      }
+    ]
+  }
+]

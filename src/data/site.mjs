@@ -1,5 +1,6 @@
 import { createFirstBatchPages } from "./seo-batch-2026-05.mjs";
 import { guideAdditions } from "./guide-content.mjs";
+import { improvePages, remediationRedirects, redirectPresets } from "./remediation-2026-10.mjs";
 import { FLOOR_COST_RATES, floorCostRange } from "../assets/floor-cost-rates.js";
 import {
   applyMultilingualAlternates,
@@ -2052,7 +2053,8 @@ const englishRedirects = {
   "epoxy-garage-floor-cost": "garage-floor-epoxy-calculator"
 };
 
-export const redirects = { ...englishRedirects, ...createMultilingualRedirects() };
+export const redirects = { ...englishRedirects, ...createMultilingualRedirects(), ...remediationRedirects };
+export { redirectPresets };
 
 function resolveSlug(slug) {
   return Object.hasOwn(redirects, slug) ? redirects[slug] : slug;
@@ -2069,8 +2071,15 @@ function uniqueBySlug(items) {
 }
 
 function rewriteLinks(page) {
+  const rewriteNav = (items) => items && uniqueBySlug(items.map(item => ({
+    ...item,
+    ...(item.slug ? { slug: resolveSlug(item.slug) } : {}),
+    ...(item.children ? { children: rewriteNav(item.children) } : {})
+  })));
   return {
     ...page,
+    nav: rewriteNav(page.nav),
+    footerNav: rewriteNav(page.footerNav),
     related: [...new Set((page.related || []).map(resolveSlug))].filter((slug) => slug !== page.slug),
     heroActions: page.heroActions && uniqueBySlug(page.heroActions.map((action) => ({ ...action, slug: resolveSlug(action.slug) }))),
     sections:
@@ -2083,7 +2092,7 @@ function rewriteLinks(page) {
   };
 }
 
-const livePages = basePages.filter((page) => !Object.hasOwn(redirects, page.slug)).map((page) => {
+const preparedPages = basePages.filter((page) => !Object.hasOwn(redirects, page.slug)).map((page) => {
   const addition = guideAdditions[page.slug];
   return rewriteLinks(addition ? {
     ...page,
@@ -2093,9 +2102,13 @@ const livePages = basePages.filter((page) => !Object.hasOwn(redirects, page.slug
     lastmod: "2026-10-03"
   } : page);
 });
+const livePages = improvePages(preparedPages).map(rewriteLinks);
 const liveSlugs = new Set(livePages.map((page) => page.slug));
 for (const [from, to] of Object.entries(redirects)) {
   if (!liveSlugs.has(to)) throw new Error(`Redirect target missing: /${from}/ -> /${to}/`);
 }
 
-export const pages = applyMultilingualAlternates(livePages);
+export const pages = applyMultilingualAlternates(livePages).map((page) => ({
+  ...page,
+  alternates: page.alternates && Object.fromEntries(Object.entries(page.alternates).filter(([, slug]) => liveSlugs.has(slug)))
+}));

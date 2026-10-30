@@ -1,12 +1,14 @@
+import { plannerText } from "../assets/planner-text.js";
+import { renderMeasurement } from "./measurement.mjs";
+
 const FORM_TEMPLATES = {
   general: ({ page }) => `
-    <div class="field-grid field-grid--three">
+    <div class="field-grid field-grid--two input-settings">
       ${unitToggle(page)}
       ${shapeSelect("Shape", "shape", [
         ["rectangle", "Rectangle"],
         ["round", "Round"]
       ])}
-      ${numberField("Waste buffer (%)", "wastePct", "8", "0.1")}
     </div>
     <div class="field-grid field-grid--three" data-group="rectangle">
       ${numberField("Length", "length", "48", "0.1")}
@@ -17,20 +19,12 @@ const FORM_TEMPLATES = {
       ${numberField("Diameter", "diameter", "24", "0.1")}
       ${numberField("Depth", "depthRound", "0.5", "0.01")}
     </div>
-    ${priceField(page)}
+    <div class="field-grid field-grid--two">${numberField("Waste buffer (%)", "wastePct", "8", "0.1")}${priceField(page)}</div>
   `,
-  coverage: ({ page }) => `
-    <div class="field-grid field-grid--three">
-      ${unitToggle(page)}
-      ${numberField("Waste buffer (%)", "wastePct", "10", "0.1")}
-      ${numberField("Thickness", "depth", "0.125", "0.001")}
-    </div>
-    <div class="field-grid field-grid--two">
-      ${numberField("Length", "length", "72", "0.1")}
-      ${numberField("Width", "width", "30", "0.1")}
-    </div>
-    ${priceField(page)}
-  `,
+  coverage: ({ page }) => coatingForm(page),
+  coating: ({ page }) => coatingForm(page),
+  "area-cost": ({ page }) => coatingForm(page, true),
+  "seal-coat": ({ page }) => coatingForm(page, false, true),
   volume: ({ page }) => `
     <div class="field-grid field-grid--three">
       ${unitToggle(page)}
@@ -86,7 +80,7 @@ const FORM_TEMPLATES = {
     <div class="field-grid field-grid--four">
       ${unitToggle(page)}
       ${numberField("Waste buffer (%)", "wastePct", "10", "0.1")}
-      ${numberField("Max layer depth", "maxDepth", "2", "0.01")}
+      ${numberField("Product max layer depth (optional)", "maxDepth", "", "0.01")}
       ${numberField("Price / gallon", "pricePerGallon", "105", "0.01")}
     </div>
     <div class="field-grid field-grid--three">
@@ -212,6 +206,65 @@ const FORM_TEMPLATES = {
       ${numberField("Price / gallon", "pricePerGallon", "90", "0.01")}
     </div>
   `,
+  coaster: ({ page }) => `
+    <div class="field-grid field-grid--three input-settings">
+      ${unitToggle(page)}
+      ${shapeSelect("Shape", "shape", [["round", "Round"], ["rectangle", "Square / rectangle"]])}
+      ${numberField(plannerText(page.locale, "count"), "count", "6", "1")}
+    </div>
+    <div class="field-grid field-grid--two" data-group="round">
+      ${numberField("Diameter", "diameter", "4", "0.1")}
+    </div>
+    <div class="field-grid field-grid--two is-hidden" data-group="rectangle">
+      ${numberField("Length", "length", "4", "0.1")}
+      ${numberField("Width", "width", "4", "0.1")}
+    </div>
+    <div class="field-grid field-grid--two">
+      ${numberField("Depth", "depth", "0.25", "0.01")}
+      ${numberField("Waste buffer (%)", "wastePct", "8", "0.1")}
+    </div>
+    ${priceField(page)}
+  `,
+  mold: ({ page }) => `
+    <div class="field-grid field-grid--two">
+      ${shapeSelect(plannerText(page.locale, "moldMethod"), "moldMethod", [["geometry", plannerText(page.locale, "geometry")], ["capacity", plannerText(page.locale, "capacity")]])}
+      ${numberField(plannerText(page.locale, "count"), "count", "1", "1")}
+    </div>
+    ${unitToggle(page)}
+    <div data-visible-if="moldMethod" data-visible-value="geometry">
+      ${shapeSelect("Shape", "shape", [["rectangle", "Rectangle"], ["round", "Round"]])}
+      <div class="field-grid field-grid--three" data-group="rectangle">
+        ${numberField("Length", "length", "12", "0.1")}
+        ${numberField("Width", "width", "8", "0.1")}
+        ${numberField("Depth", "depth", "1", "0.01")}
+      </div>
+      <div class="field-grid field-grid--two is-hidden" data-group="round">
+        ${numberField("Diameter", "diameter", "10", "0.1")}
+        ${numberField("Depth", "depthRound", "1", "0.01")}
+      </div>
+    </div>
+    <div class="field-grid field-grid--three is-hidden" data-visible-if="moldMethod" data-visible-value="capacity">
+      ${numberField(plannerText(page.locale, "capacityMl"), "capacityMl", "50", "0.1")}
+    </div>
+    ${numberField("Waste buffer (%)", "wastePct", "8", "0.1")}
+    ${priceField(page)}
+  `,
+  dice: ({ page }) => `
+    <div class="field-grid field-grid--two">
+      ${shapeSelect(plannerText(page.locale, "moldMethod"), "moldMethod", [["cube", plannerText(page.locale, "cubeBlank")], ["capacity", plannerText(page.locale, "measuredDice")]])}
+      ${numberField(plannerText(page.locale, "count"), "count", "7", "1")}
+    </div>
+    ${unitToggle(page)}
+    <div data-visible-if="moldMethod" data-visible-value="cube">
+      ${numberField("Side length", "length", "1.6", "0.01")}
+    </div>
+    <div class="is-hidden" data-visible-if="moldMethod" data-visible-value="capacity">
+      ${numberField(plannerText(page.locale, "capacityMl"), "capacityMl", "35", "0.1")}
+    </div>
+    ${numberField("Waste buffer (%)", "wastePct", "12", "0.1")}
+    ${priceField(page)}
+  `,
+  pricing: ({ page }) => pricingForm(page),
   cost: () => `
     <div class="field-grid field-grid--four">
       ${shapeSelect("Quantity unit", "costUnit", [
@@ -295,13 +348,13 @@ function shapeSelect(label, name, options, defaultValue = options[0]?.[0]) {
   if (options.length <= 3) {
     const buttons = options
       .map(([value, text], i) =>
-        `<button type="button" class="pill-toggle__btn${value === defaultValue ? " is-active" : ""}" data-value="${escapeHtml(value)}">${escapeHtml(text)}</button>`
+        `<button type="button" class="pill-toggle__btn${value === defaultValue ? " is-active" : ""}" aria-pressed="${value === defaultValue}" data-value="${escapeHtml(value)}">${escapeHtml(text)}</button>`
       )
       .join("");
     return `
       <div class="field">
         <span>${escapeHtml(label)}</span>
-        <div class="pill-toggle" data-pill-toggle data-pill-name="${escapeHtml(name)}">
+        <div class="pill-toggle" role="group" aria-label="${escapeHtml(label)}" data-pill-toggle data-pill-name="${escapeHtml(name)}">
           <input type="hidden" name="${escapeHtml(name)}" value="${escapeHtml(defaultValue)}" />
           ${buttons}
         </div>
@@ -323,10 +376,12 @@ function shapeSelect(label, name, options, defaultValue = options[0]?.[0]) {
 }
 
 function numberField(label, name, value, step) {
+  const minimum = ["count", "coats"].includes(name) ? "1" : "0";
+  const maximum = name.endsWith("Pct") ? ' max="100"' : "";
   return `
     <label class="field">
       <span>${escapeHtml(label)}</span>
-      <input type="number" name="${escapeHtml(name)}" value="${escapeHtml(value)}" step="${escapeHtml(step)}" inputmode="decimal" />
+      <input type="number" name="${escapeHtml(name)}" value="${escapeHtml(value)}" step="${escapeHtml(step)}" min="${minimum}"${maximum} inputmode="decimal" />
     </label>
   `;
 }
@@ -348,12 +403,111 @@ function unitToggle(page = {}) {
 }
 
 function priceField(page = {}) {
-  const priceLabel = page.priceUnit === "liter" ? "Price / gallon" : "Price / gallon";
+  const priceLabel = plannerText(page.locale, page.priceUnit === "liter" ? "priceLiter" : "priceGallon");
   return `
     <div class="field-grid field-grid--one">
       ${numberField(priceLabel, "pricePerGallon", page.priceUnit === "liter" ? "28" : "85", "0.01")}
     </div>
   `;
+}
+
+function coatingForm(page, areaCost = false, sealCoat = false) {
+  const t = (key) => plannerText(page.locale, key);
+  const metric = page.defaultUnit === "metric";
+  return `
+    <div class="field-grid field-grid--two">
+      ${unitToggle(page)}
+      ${areaCost || sealCoat ? '<input type="hidden" name="dimensionMode" value="area" />' : shapeSelect(t("inputMode"), "dimensionMode", [["area", t("directArea")], ["dimensions", t("dimensions")]])}
+    </div>
+    <div class="field-grid field-grid--two" data-visible-if="dimensionMode" data-visible-value="area">
+      ${numberField(t("area"), "surfaceArea", metric ? "10" : "20", "0.1")}
+      ${shapeSelect(t("areaUnit"), "areaUnit", [["sqft", "ft²"], ["sqm", "m²"]], metric ? "sqm" : "sqft")}
+    </div>
+    <div class="is-hidden" data-visible-if="dimensionMode" data-visible-value="dimensions">
+      ${shapeSelect("Shape", "shape", [["rectangle", "Rectangle"], ["round", "Round"]])}
+      <div class="field-grid field-grid--two" data-group="rectangle">
+        ${numberField("Length", "length", "72", "0.1")}${numberField("Width", "width", "30", "0.1")}
+      </div>
+      <div data-group="round" class="is-hidden">${numberField("Diameter", "diameter", "24", "0.1")}</div>
+    </div>
+    ${sealCoat ? '<input type="hidden" name="coverageMethod" value="label" />' : shapeSelect(t("coverageMethod"), "coverageMethod", [["thickness", t("thicknessMethod")], ["label", t("labelMethod")]])}
+    <div class="field-grid field-grid--two${sealCoat ? " is-hidden" : ""}" data-visible-if="coverageMethod" data-visible-value="thickness">
+      ${numberField(t("thickness"), "thickness", metric ? "1" : "0.125", "0.001")}
+      ${shapeSelect(t("thicknessUnit"), "thicknessUnit", [["mm", "mm"], ["in", "in"], ["mil", "mil (0.001 in)"]], metric ? "mm" : "in")}
+    </div>
+    <div class="field-grid field-grid--two${sealCoat ? "" : " is-hidden"}" data-visible-if="coverageMethod" data-visible-value="label">
+      ${numberField(t("coverage"), "coverageRate", metric ? "8" : sealCoat ? "42.7" : "160", "0.1")}
+      ${shapeSelect(t("coverageUnit"), "coverageUnit", [["sqft-gallon", "ft² / US gal"], ["sqm-liter", "m² / L"]], metric ? "sqm-liter" : "sqft-gallon")}
+    </div>
+    <div class="field-grid field-grid--three">
+      ${numberField(t("coats"), "coats", "1", "1")}
+      ${numberField("Waste buffer (%)", "wastePct", "10", "0.1")}
+      ${numberField(t("edgePct"), "edgePct", sealCoat || areaCost ? "0" : "4", "0.1")}
+    </div>
+    <div class="field-grid field-grid--two">
+      ${priceField(page)}
+      ${areaCost ? numberField(t("otherCost"), "otherCost", "0", "0.01") : ""}
+    </div>
+    ${areaCost ? `<p class="field-note">${escapeHtml(t("scope"))}</p>` : ""}
+    ${sealCoat ? `<p class="field-note">${escapeHtml(t("sealNote"))}</p>` : ""}
+  `;
+}
+
+function pricingForm(page) {
+  const t = (key) => plannerText(page.locale, key);
+  const fields = [
+    ["resinMl", "resinMl", "120"], ["resinPrice", "resinPrice", "28"],
+    ["supplies", "supplies", "2"], ["packaging", "packaging", "1.5"],
+    ["laborHours", "laborHours", "0.5"], ["hourlyRate", "hourlyRate", "20"],
+    ["overhead", "overhead", "2"], ["failurePct", "failurePct", "5"],
+    ["feePct", "feePct", "10"], ["fixedFee", "fixedFee", "0.3"], ["marginPct", "marginPct", "25"]
+  ];
+  return `<p class="field-note">${escapeHtml(t("perPiece"))} · ${escapeHtml(page.currency || "USD")}</p>
+    <div class="field-grid field-grid--two">${fields.map(([key, name, value]) => numberField(t(key), name, value, "0.01")).join("")}</div>
+    <p class="field-note">${escapeHtml(t("pricingNote"))}</p>`;
+}
+
+function productFields(page) {
+  const type = page.calculatorType;
+  if (["floor-cost", "converter", "pricing"].includes(type)) return "";
+  const t = (key) => plannerText(page.locale, key);
+  const mixing = type !== "cost";
+  return `<details class="product-options"${type === "deep-pour" ? " open" : ""}>
+    <summary>${escapeHtml(t("productDetails"))}</summary>
+    ${mixing ? `<div class="field-grid field-grid--two">
+      ${shapeSelect(t("ratio"), "mixRatio", [["unknown", t("unknown")], ["1:1", "1:1"], ["2:1", "2:1"], ["3:1", "3:1"], ["custom", t("custom")]])}
+      ${shapeSelect(t("ratioBasis"), "ratioBasis", [["volume", t("byVolume")], ["weight", t("byWeight")]])}
+    </div>
+    <div class="field-grid field-grid--two is-hidden" data-visible-if="mixRatio" data-visible-value="custom">
+      ${numberField(t("ratioA"), "ratioA", "2", "0.01")}${numberField(t("ratioB"), "ratioB", "1", "0.01")}
+    </div>
+    <div class="field-grid field-grid--two">
+      ${type === "deep-pour" ? "" : numberField(t("maxDepth"), "maxDepth", "", "0.01")}
+      ${numberField(t("maxBatch"), "maxBatchLiters", "", "0.01")}
+    </div>` : ""}
+    <div class="field-grid field-grid--two">
+      ${numberField(t("kitSize"), "kitSize", "", "0.01")}
+      ${shapeSelect(t("kitUnit"), "kitUnit", [["liters", "L"], ["gallons", "US gal"]])}
+    </div>
+  </details>`;
+}
+
+function configuredForm(page) {
+  const template = FORM_TEMPLATES[page.calculatorType];
+  if (!template) return "";
+  let markup = template({ page });
+  if (page.supportsCount && !markup.includes('name="count"')) {
+    markup += numberField(plannerText(page.locale, "count"), "count", "1", "1");
+  }
+  if (page.calculatorType === "river") {
+    markup += `<div class="field-grid field-grid--two">${numberField("Seepage allowance (%)", "seepagePct", "8", "0.1")}${numberField("Seal-coat allowance (%)", "sealPct", "5", "0.1")}</div>`;
+  }
+  markup += productFields(page);
+  markup = localizeFormMarkup(markup, page);
+  for (const [name, value] of Object.entries(page.formDefaults || {})) {
+    markup = markup.replace(new RegExp(`(name="${name}"[^>]*?value=")[^"]*(")`, "g"), (_, before, after) => `${before}${escapeHtml(value)}${after}`);
+  }
+  return markup;
 }
 
 function segmentField(index, value) {
@@ -513,6 +667,9 @@ function renderGuideSections(sections = [], page = {}) {
 
 function renderHeroActions(page) {
   if (!page.heroActions?.length) return "";
+  if (page.slug === "") {
+    return `<nav class="task-links" aria-label="Project calculators">${page.heroActions.filter(action => ["garage-floor-epoxy-calculator", "river-table-epoxy-calculator", "epoxy-coverage-calculator"].includes(action.slug)).map((action) => `<a href="${hrefFor(action.slug)}">${escapeHtml(action.label || action.title)}</a>`).join("")}</nav>`;
+  }
   return `
     <div class="hero-actions">
       ${page.heroActions.map((action) => `
@@ -530,7 +687,6 @@ function renderHero(page) {
   return `
     <section class="hero">
       <div class="hero__copy">
-        <p class="eyebrow">${escapeHtml(page.eyebrow || "Epoxy Planner")}</p>
         <h1>${escapeHtml(page.h1)}</h1>
         <p class="hero__intro">${escapeHtml(page.intro || page.description)}</p>
         ${renderHeroActions(page)}
@@ -540,28 +696,28 @@ function renderHero(page) {
 }
 
 function renderCalculator(page) {
-  const formMarkup = FORM_TEMPLATES[page.calculatorType]
-    ? localizeFormMarkup(FORM_TEMPLATES[page.calculatorType]({ page }), page)
-    : "";
+  const formMarkup = configuredForm(page);
+  const t = (key) => plannerText(page.locale, key);
   return `
     <section class="section">
       <div class="calculator-shell">
         <div class="calculator-panel">
           <div class="section-heading section-heading--compact">
-            <p class="eyebrow">${escapeHtml(uiText(page, "calculatorEyebrow", "Calculator"))}</p>
-            <h2>${escapeHtml(uiText(page, "calculatorHeading", "Plan the project in one pass"))}</h2>
+            <h2>${escapeHtml(uiText(page, "calculatorHeading", "Enter your measurements"))}</h2>
           </div>
+          <details class="input-explanation"><summary>${escapeHtml(t("defaultNotice"))}</summary><p class="example-input-note">${escapeHtml(t("examples"))}</p></details>
           <form class="calculator-root" data-calculator-type="${escapeHtml(page.calculatorType)}" data-locale="${escapeHtml(page.locale || "en")}" data-number-locale="${escapeHtml(page.numberLocale || "en-US")}" data-currency="${escapeHtml(page.currency || "USD")}" data-price-unit="${escapeHtml(page.priceUnit || "gallon")}" novalidate>
             ${formMarkup}
             <p class="field-note">${escapeHtml(page.note || uiText(page, "fieldNote", "Results update as you type. Use the breakdown to compare raw math, planning buffers, and the order-ready recommendation."))}</p>
             <p class="form-error" role="alert" aria-live="polite" data-form-error></p>
           </form>
+          <noscript><p class="form-error">${escapeHtml(t("noScript"))}</p></noscript>
           <div class="scroll-to-result">
             <a href="#result-panel">${escapeHtml(uiText(page, "viewDetails", "View result"))}</a>
           </div>
         </div>
         <div class="result-panel" id="result-panel" data-result-panel>
-          <div class="result-panel__hero">
+          <div class="result-panel__hero" aria-live="polite" aria-atomic="true">
             <p class="eyebrow">${escapeHtml(page.resultEyebrow || uiText(page, "resultEyebrow", "Recommended order"))}</p>
             <div class="result-big" data-result-primary>--</div>
             <p class="result-caption" data-result-secondary>${escapeHtml(uiText(page, "resultFallback", "Start with the inputs to generate an order-ready estimate."))}</p>
@@ -583,6 +739,7 @@ function renderCalculator(page) {
               <p>${escapeHtml(page.statLabels?.layers || uiText(page, "layers", "Layer guidance"))}</p>
               <strong data-stat-layers>--</strong>
             </article>
+            ${!["pricing", "floor-cost", "converter"].includes(page.calculatorType) ? `<article class="stat-card stat-card--kits"><p>${escapeHtml(t("kitCount"))}</p><strong data-stat-kits>--</strong></article>` : ""}
           </div>
           <div class="result-panel__why">
             <div class="section-heading section-heading--compact">
@@ -728,6 +885,8 @@ function jsonLd(page, { site, urlForPath }) {
       "@context": "https://schema.org",
       "@type": "Article",
       headline: page.h1,
+      dateModified: page.lastmod,
+      ...(page.publishedOn ? { datePublished: page.publishedOn } : {}),
       description: page.description,
       author: {
         "@type": "Organization",
@@ -749,14 +908,6 @@ function jsonLd(page, { site, urlForPath }) {
       alternateName: site.shortName,
       url: site.origin + "/",
       description: site.description,
-      potentialAction: {
-        "@type": "SearchAction",
-        target: {
-          "@type": "EntryPoint",
-          urlTemplate: site.origin + "/?q={search_term_string}"
-        },
-        "query-input": "required name=search_term_string"
-      }
     });
   }
 
@@ -898,8 +1049,9 @@ function renderPageBody(page, context) {
   if (page.pageType === "calculator") {
     return [
       renderHero(page),
-      renderAnswerBlock(page),
       renderCalculator(page),
+      renderMeasurement(page),
+      renderAnswerBlock(page),
       page.sections ? renderInfoSections(page) : "",
       renderBullets(uiText(page, "whyTitle", "What this calculator covers"), page.bullets),
       renderBullets(uiText(page, "howToTitle", "How to measure or set the inputs"), page.howTo),
@@ -914,6 +1066,8 @@ function renderPageBody(page, context) {
   if (page.pageType === "guide") {
     return `
       ${renderHero(page)}
+      ${page.embeddedCalculator ? renderCalculator({ ...page, ...page.embeddedCalculator }) : ""}
+      ${renderMeasurement(page)}
       <section class="section answer-section">
         <div class="answer-grid">
           <article class="answer-card answer-card--lead">
@@ -937,6 +1091,7 @@ function renderPageBody(page, context) {
 
   return `
     ${renderHero(page)}
+    ${page.quickCalculator ? renderCalculator({ ...page, ...page.quickCalculator }) : ""}
     ${renderInfoSections(page)}
     ${renderRelated(page, pageMap)}
   `;
@@ -1105,7 +1260,7 @@ export function renderPage(page, context) {
   const canonical = urlForPath(page.slug);
   const pageTitle = `${page.title} | ${site.shortName}`;
   const pageBody = renderPageBody(page, context);
-  const calculatorScript = page.pageType === "calculator" ? `<script type="module" src="/assets/calculator.js"></script>` : "";
+  const calculatorScript = page.pageType === "calculator" || page.quickCalculator || page.embeddedCalculator ? `<script type="module" src="/assets/calculator.js"></script>` : "";
   const robots = page.indexable === false ? "noindex, follow" : "index, follow";
 
   return `<!DOCTYPE html>
@@ -1116,7 +1271,6 @@ export function renderPage(page, context) {
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <meta name="robots" content="${robots}" />
     <meta name="author" content="${escapeHtml(site.name)}" />
-    ${page.primaryKeyword ? `<meta name="keywords" content="${escapeHtml([page.primaryKeyword, ...(page.supportingKeywords || [])].join(", "))}" />` : ""}
     <title>${escapeHtml(pageTitle)}</title>
     <meta name="description" content="${escapeHtml(page.description)}" />
     ${renderAlternateLinks(page, context)}
@@ -1143,11 +1297,13 @@ export function renderPage(page, context) {
     ${page.pageType !== "info" || page.slug === "" ? '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3562784107542460" crossorigin="anonymous"></script>' : ""}
     ${jsonLd(page, context)}
   </head>
-  <body data-page-type="${escapeHtml(page.pageType)}" data-page-slug="${escapeHtml(page.slug)}" data-locale="${escapeHtml(page.locale || "en")}">
+  <body data-page-type="${escapeHtml(page.pageType)}" data-page-slug="${escapeHtml(page.slug)}" data-locale="${escapeHtml(page.locale || "en")}" data-has-calculator="${Boolean(page.pageType === "calculator" || page.quickCalculator || page.embeddedCalculator)}">
+    <a class="skip-link" href="#main-content">${escapeHtml(plannerText(page.locale, "skip"))}</a>
     ${renderHeader(site, page)}
-    <main class="page-shell">
+    <main class="page-shell" id="main-content">
       ${breadcrumb(page)}
       ${pageBody}
+      ${page.reviewedOn ? `<p class="review-note">${escapeHtml(plannerText(page.locale, "updated"))} <time datetime="${escapeHtml(page.reviewedOn)}">${escapeHtml(new Intl.DateTimeFormat(page.numberLocale || "en-US", { dateStyle: "medium", timeZone: "UTC" }).format(new Date(`${page.reviewedOn}T00:00:00Z`)))}</time> · <a href="/methodology/">${escapeHtml(plannerText(page.locale, "revision"))}</a></p>` : ""}
     </main>
     ${renderFooter(site, page)}
     ${renderPrivacyUi()}

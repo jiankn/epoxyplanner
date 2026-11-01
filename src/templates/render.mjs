@@ -773,6 +773,21 @@ function defaultNextSteps(page) {
   ];
 }
 
+// 结果清单：原来的统计卡片和对比卡片合成一张紧凑的标签/数值表，顺序按下单时最常看的排
+function resultRows(page) {
+  const t = (key) => plannerText(page.locale, key);
+  const rows = [
+    [page.statLabels?.raw || uiText(page, "rawVolume", "Raw volume"), "data-stat-raw"],
+    [uiText(page, "conservative", "Conservative"), "data-compare-conservative"],
+    [page.statLabels?.cost || uiText(page, "cost", "Projected cost"), "data-stat-cost"],
+    [page.statLabels?.split || uiText(page, "split", "Part A / Part B"), "data-stat-split"],
+    [page.statLabels?.layers || uiText(page, "layers", "Layer guidance"), "data-stat-layers"]
+  ];
+  if (!["pricing", "floor-cost", "converter", "flake", "film-thickness"].includes(page.calculatorType)) rows.push([t("kitCount"), "data-stat-kits"]);
+  rows.push([uiText(page, "standard", "Standard"), "data-compare-standard"], [uiText(page, "productFit", "Product fit"), "data-compare-product"]);
+  return rows;
+}
+
 function renderCalculator(page) {
   const formMarkup = configuredForm(page);
   const t = (key) => plannerText(page.locale, key);
@@ -800,64 +815,28 @@ function renderCalculator(page) {
             <div class="result-big" data-result-primary>--</div>
             <p class="result-caption" data-result-secondary>${escapeHtml(uiText(page, "resultFallback", "Start with the inputs to generate an order-ready estimate."))}</p>
           </div>
-          <div class="stat-grid">
-            <article class="stat-card">
-              <p>${escapeHtml(page.statLabels?.raw || uiText(page, "rawVolume", "Raw volume"))}</p>
-              <strong data-stat-raw>--</strong>
-            </article>
-            <article class="stat-card">
-              <p>${escapeHtml(page.statLabels?.split || uiText(page, "split", "Part A / Part B"))}</p>
-              <strong data-stat-split>--</strong>
-            </article>
-            <article class="stat-card">
-              <p>${escapeHtml(page.statLabels?.cost || uiText(page, "cost", "Projected cost"))}</p>
-              <strong data-stat-cost>--</strong>
-            </article>
-            <article class="stat-card">
-              <p>${escapeHtml(page.statLabels?.layers || uiText(page, "layers", "Layer guidance"))}</p>
-              <strong data-stat-layers>--</strong>
-            </article>
-            ${!["pricing", "floor-cost", "converter", "flake", "film-thickness"].includes(page.calculatorType) ? `<article class="stat-card stat-card--kits"><p>${escapeHtml(t("kitCount"))}</p><strong data-stat-kits>--</strong></article>` : ""}
+          <dl class="result-list" aria-label="${escapeHtml(page.compareLabel || uiText(page, "compareEyebrow", "Compare Scenarios"))}">
+            ${resultRows(page).map(([label, attr]) => `<div class="result-row"><dt>${escapeHtml(label)}</dt><dd ${attr}>--</dd></div>`).join("")}
+          </dl>
+        </div>
+        <div class="result-why">
+          <div class="section-heading section-heading--compact">
+            <p class="eyebrow">${escapeHtml(uiText(page, "whyChangedEyebrow", "Why This Estimate Changed"))}</p>
+            <h3>${escapeHtml(uiText(page, "whyChangedHeading", "What moved the number"))}</h3>
           </div>
-          <div class="result-panel__why">
-            <div class="section-heading section-heading--compact">
-              <p class="eyebrow">${escapeHtml(uiText(page, "whyChangedEyebrow", "Why This Estimate Changed"))}</p>
-              <h3>${escapeHtml(uiText(page, "whyChangedHeading", "What moved the number"))}</h3>
-            </div>
-            <ul class="stack-list" data-breakdown-list>
-              <li>${escapeHtml(uiText(page, "breakdownFallback", "Enter the form values to see raw volume, buffer, and recommendation."))}</li>
-            </ul>
-          </div>
-          <div class="result-panel__compare">
-            <div class="section-heading section-heading--compact">
-              <p class="eyebrow">${escapeHtml(uiText(page, "compareEyebrow", "Compare Scenarios"))}</p>
-              <h3>${escapeHtml(page.compareLabel || "Baseline vs conservative")}</h3>
-            </div>
-            <div class="compare-grid">
-              <article class="compare-card">
-                <p>${escapeHtml(uiText(page, "standard", "Standard"))}</p>
-                <strong data-compare-standard>--</strong>
-              </article>
-              <article class="compare-card">
-                <p>${escapeHtml(uiText(page, "conservative", "Conservative"))}</p>
-                <strong data-compare-conservative>--</strong>
-              </article>
-              <article class="compare-card">
-                <p>${escapeHtml(uiText(page, "productFit", "Product fit"))}</p>
-                <strong data-compare-product>--</strong>
-              </article>
-            </div>
-          </div>
-          <div class="buy-box" id="next-step">
-            <div class="section-heading section-heading--compact">
-              <p class="eyebrow">${escapeHtml(uiText(page, "nextStepEyebrow", "Next Step"))}</p>
-              <h3 data-product-heading>${escapeHtml(uiText(page, "nextStepHeading", "Match the result to the right resin class"))}</h3>
-            </div>
-            <p data-product-copy>${escapeHtml(uiText(page, "nextStepCopy", "Use the estimate to narrow the resin class first. Then confirm product limits, cure behavior, and measurement assumptions before you make a buying decision."))}</p>
-            <div class="button-row">
-              ${(page.nextStepLinks || defaultNextSteps(page)).map((link, index) => `<a class="button${index ? " button--ghost" : ""}" href="${hrefFor(link.slug)}">${escapeHtml(link.label)}</a>`).join("")}
-            </div>
-          </div>
+          <ul class="stack-list" data-breakdown-list>
+            <li>${escapeHtml(uiText(page, "breakdownFallback", "Enter the form values to see raw volume, buffer, and recommendation."))}</li>
+          </ul>
+        </div>
+      </div>
+      <div class="buy-box" id="next-step">
+        <div class="section-heading section-heading--compact">
+          <p class="eyebrow">${escapeHtml(uiText(page, "nextStepEyebrow", "Next Step"))}</p>
+          <h3 data-product-heading>${escapeHtml(uiText(page, "nextStepHeading", "Match the result to the right resin class"))}</h3>
+        </div>
+        <p data-product-copy>${escapeHtml(uiText(page, "nextStepCopy", "Use the estimate to narrow the resin class first. Then confirm product limits, cure behavior, and measurement assumptions before you make a buying decision."))}</p>
+        <div class="button-row">
+          ${(page.nextStepLinks || defaultNextSteps(page)).map((link, index) => `<a class="button${index ? " button--ghost" : ""}" href="${hrefFor(link.slug)}">${escapeHtml(link.label)}</a>`).join("")}
         </div>
       </div>
       <div class="sticky-summary" data-sticky-summary>

@@ -2372,11 +2372,17 @@ const PANEL_FALLBACK_SELECTORS = [
 // 页面渲染时的占位文案已经按语言输出，首次计算前记下来，出错重置时原样恢复
 const panelFallbacks = new WeakMap();
 
+// 下一步区块在两栏网格外面，结果相关的节点统一从所在 section 里找（嵌入页没有 section，退回 shell）
+function panelRoot(shell) {
+  return shell.closest(".section") || shell;
+}
+
 function capturePanelFallbacks(shell) {
   if (!shell || panelFallbacks.has(shell)) return;
   const snapshot = {};
+  const root = panelRoot(shell);
   PANEL_FALLBACK_SELECTORS.forEach((selector) => {
-    const node = shell.querySelector(selector);
+    const node = root.querySelector(selector);
     if (node) snapshot[selector] = node.innerHTML;
   });
   panelFallbacks.set(shell, snapshot);
@@ -2384,10 +2390,12 @@ function capturePanelFallbacks(shell) {
 
 function resetPanel(shell) {
   const snapshot = panelFallbacks.get(shell) || {};
+  const root = panelRoot(shell);
   Object.entries(snapshot).forEach(([selector, html]) => {
-    const node = shell.querySelector(selector);
+    const node = root.querySelector(selector);
     if (node) node.innerHTML = html;
   });
+  shell.querySelectorAll(".result-row").forEach((row) => { row.hidden = false; });
 
   // Sticky bar is outside calculator-shell, search from parent section
   const section = shell.closest(".section") || shell.parentElement;
@@ -2405,8 +2413,9 @@ function updatePanel(form, result) {
   const shell = form.closest(".calculator-shell");
   if (!shell) return;
 
+  const root = panelRoot(shell);
   const setText = (selector, value) => {
-    const node = shell.querySelector(selector);
+    const node = root.querySelector(selector);
     if (node) node.textContent = value;
   };
 
@@ -2423,6 +2432,12 @@ function updatePanel(form, result) {
   setText("[data-product-heading]", result.product.heading);
   setText("[data-product-copy]", result.product.copy);
 
+  // 结果清单里没有值、或和主结果完全一样的行不显示，避免同一个数字出现两遍
+  shell.querySelectorAll(".result-row").forEach((row) => {
+    const value = row.querySelector("dd")?.textContent.trim() || "";
+    row.hidden = !value || value === result.primary;
+  });
+
   // Sticky bar is outside calculator-shell, search from parent section
   const section = shell.closest(".section") || shell.parentElement;
   if (section) {
@@ -2436,7 +2451,7 @@ function updatePanel(form, result) {
     if (stickyCostEl2) stickyCostEl2.style.display = stickyCost ? "flex" : "none";
   }
 
-  const breakdown = shell.querySelector("[data-breakdown-list]");
+  const breakdown = root.querySelector("[data-breakdown-list]");
   if (breakdown) {
     breakdown.innerHTML = result.breakdown.map((item) => `<li>${item}</li>`).join("");
   }

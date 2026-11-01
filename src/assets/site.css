@@ -1936,6 +1936,98 @@ body[data-page-type="calculator"] .hero h1 {
     font-size: 2.6rem;
     letter-spacing: -0.025em;
   }
+
+  /* 桌面：左栏表单 + 计算过程，右栏结果固定跟随；下一步横跨在两栏下方 */
+  .section > .calculator-shell {
+    grid-template-areas:
+      "form result"
+      "why result";
+    grid-template-rows: auto 1fr;
+  }
+
+  .section > .calculator-shell > .calculator-panel { grid-area: form; }
+  .section > .calculator-shell > .result-panel { grid-area: result; }
+  .section > .calculator-shell > .result-why { grid-area: why; }
+
+  .section > .buy-box {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "heading buttons"
+      "copy buttons";
+    column-gap: 1.5rem;
+    align-items: center;
+  }
+
+  .section > .buy-box > .section-heading { grid-area: heading; }
+  .section > .buy-box > p { grid-area: copy; margin-bottom: 0; }
+  .section > .buy-box > .button-row { grid-area: buttons; margin-top: 0; }
+
+  /* 底部浮动栏在桌面上和固定的结果栏重复，只留给手机 */
+  .section > .sticky-summary {
+    display: none;
+  }
+}
+
+@media (min-width: 1000px) and (min-height: 700px) {
+  .section > .calculator-shell > .result-panel {
+    position: sticky;
+    top: 1rem;
+  }
+}
+
+/* 结果清单：一行一个标签和数值 */
+.result-list {
+  margin: 0.85rem 0 0;
+  padding: 0.25rem 1rem;
+  border-radius: 20px;
+  background: var(--surface-strong);
+  border: 1px solid var(--line);
+}
+
+.result-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.6rem 0;
+}
+
+.result-row + .result-row {
+  border-top: 1px solid var(--line);
+}
+
+.result-row[hidden] {
+  display: none;
+}
+
+.result-row dt {
+  flex: 0 0 auto;
+  max-width: 50%;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.result-row dd {
+  flex: 1 1 0;
+  min-width: 0;
+  margin: 0;
+  text-align: right;
+  font-weight: 600;
+  color: var(--text);
+  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
+}
+
+.result-why {
+  padding: 1rem;
+  border-radius: 20px;
+  background: var(--surface-strong);
+  border: 1px solid var(--line);
+}
+
+.result-why .eyebrow {
+  color: var(--accent);
 }
 
 .product-options {

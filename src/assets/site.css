@@ -755,6 +755,24 @@ button {
   grid-template-columns: 1fr;
 }
 
+/* 列数按表单框自身的宽度定，不看屏幕宽度：桌面两栏布局里表单只有约 540px，
+   硬排四列会把单位切换、下拉框挤到显示不全 */
+.calculator-panel {
+  container-type: inline-size;
+}
+
+@container (max-width: 680px) {
+  .field-grid--four {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@container (max-width: 500px) {
+  .field-grid--three {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 .field {
   display: grid;
   gap: 0.45rem;

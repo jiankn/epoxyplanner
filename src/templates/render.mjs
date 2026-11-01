@@ -159,6 +159,52 @@ const FORM_TEMPLATES = {
       ${checkboxField("DIY only: old coating or sealer, needs a grinder rental", "needsGrinding")}
     </div>
   `,
+  // 彩砂撒布量：费率表在 src/assets/calculator.js 的 FLAKE_RATES
+  flake: () => `
+    <div class="field-grid field-grid--two">
+      ${numberField("Floor area", "surfaceArea", "400", "0.1")}
+      ${shapeSelect("Area unit", "areaUnit", [["sqft", "ft²"], ["sqm", "m²"]])}
+    </div>
+    <div class="field-grid field-grid--two">
+      <label class="field">
+        <span>Broadcast density</span>
+        <select class="custom-select" name="broadcast">
+          <option value="full" selected>Full broadcast</option>
+          <option value="heavy">Heavy partial</option>
+          <option value="medium">Medium partial</option>
+          <option value="light">Light partial</option>
+          <option value="custom">Custom rate</option>
+        </select>
+      </label>
+      <div data-visible-if="broadcast" data-visible-value="full">
+        ${shapeSelect("Flake size", "flakeSize", [["1/4", "1/4 in"], ["1/8", "1/8 in"], ["1/16", "1/16 in"]])}
+      </div>
+      <div class="is-hidden" data-visible-if="broadcast" data-visible-value="custom">
+        ${numberField("Rate (lb per 100 sq ft)", "flakeRate", "10", "0.01")}
+      </div>
+    </div>
+    <div class="field-grid field-grid--three">
+      ${numberField("Waste buffer (%)", "wastePct", "10", "0.1")}
+      ${numberField("Box or bag size (lb)", "packageLb", "40", "0.1")}
+      ${numberField("Price per box (optional)", "packagePrice", "", "0.01")}
+    </div>
+  `,
+  // 湿膜 / 干膜厚度换算，嵌在地坪厚度指南里
+  "film-thickness": () => `
+    <div class="field-grid field-grid--two">
+      ${numberField("Floor area", "surfaceArea", "400", "0.1")}
+      ${shapeSelect("Area unit", "areaUnit", [["sqft", "ft²"], ["sqm", "m²"]])}
+    </div>
+    <div class="field-grid field-grid--two">
+      ${numberField("Wet film per coat (mils)", "wetFilm", "10", "0.1")}
+      ${numberField("Volume solids (%)", "solidsPct", "100", "0.1")}
+    </div>
+    <div class="field-grid field-grid--two">
+      ${numberField("Coats", "coats", "2", "1")}
+      ${numberField("Waste buffer (%)", "wastePct", "10", "0.1")}
+    </div>
+    <p class="field-note">Volume solids is on the product data sheet. 100% solids epoxy keeps its full wet thickness; water-based kits are often near 50%.</p>
+  `,
   "void-fill": ({ page }) => `
     <div class="field-grid field-grid--four">
       ${unitToggle(page)}
@@ -469,7 +515,7 @@ function pricingForm(page) {
 
 function productFields(page) {
   const type = page.calculatorType;
-  if (["floor-cost", "converter", "pricing"].includes(type)) return "";
+  if (["floor-cost", "converter", "pricing", "flake", "film-thickness"].includes(type)) return "";
   const t = (key) => plannerText(page.locale, key);
   const mixing = type !== "cost";
   return `<details class="product-options"${type === "deep-pour" ? " open" : ""}>
@@ -739,7 +785,7 @@ function renderCalculator(page) {
               <p>${escapeHtml(page.statLabels?.layers || uiText(page, "layers", "Layer guidance"))}</p>
               <strong data-stat-layers>--</strong>
             </article>
-            ${!["pricing", "floor-cost", "converter"].includes(page.calculatorType) ? `<article class="stat-card stat-card--kits"><p>${escapeHtml(t("kitCount"))}</p><strong data-stat-kits>--</strong></article>` : ""}
+            ${!["pricing", "floor-cost", "converter", "flake", "film-thickness"].includes(page.calculatorType) ? `<article class="stat-card stat-card--kits"><p>${escapeHtml(t("kitCount"))}</p><strong data-stat-kits>--</strong></article>` : ""}
           </div>
           <div class="result-panel__why">
             <div class="section-heading section-heading--compact">

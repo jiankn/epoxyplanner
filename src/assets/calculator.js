@@ -1236,7 +1236,7 @@ const NUMERIC_FIELDS = new Set([
   "wastePct", "edgePct", "seepagePct", "sealPct", "conservativePct", "pricePerGallon", "quantity",
   "coats", "count", "coverageRate", "surfaceArea", "thickness", "capacityMl", "kitSize", "ratioA", "ratioB",
   "resinMl", "resinPrice", "supplies", "packaging", "laborHours", "hourlyRate", "overhead", "failurePct",
-  "feePct", "fixedFee", "marginPct", "otherCost"
+  "feePct", "fixedFee", "marginPct", "otherCost", "flakeRate", "packageLb", "packagePrice", "wetFilm", "solidsPct"
 ]);
 
 function validatePlanningInputs(data) {
@@ -2122,6 +2122,134 @@ function computeFloorCost(data) {
   };
 }
 
+// ---- 彩砂（片材）撒布量，单位 lb / ft²：[低, 典型, 高]，出处列在 /epoxy-flake-calculator/ 页面 ----
+// 满撒按片材尺寸：Miracote 施工说明 1/4" 0.12、1/8" 0.15；Torginol 经销商用量表 1/4" 12.5、1/8" 15、1/16" 25 lb / 100 ft²
+// 半撒按 ArmorPoxy：轻 1 lb、中 2 lb、重 3–4 lb / 250 ft²
+export const FLAKE_RATES = {
+  full: { "1/4": [0.1, 0.125, 0.15], "1/8": [0.12, 0.15, 0.18], "1/16": [0.2, 0.25, 0.3] },
+  heavy: [0.012, 0.014, 0.016],
+  medium: [0.006, 0.008, 0.01],
+  light: [0.003, 0.004, 0.005]
+};
+const FLAKE_LABELS = { full: "full broadcast", heavy: "heavy partial broadcast", medium: "medium partial broadcast", light: "light partial broadcast", custom: "your custom rate" };
+const KG_PER_LB = 0.45359237;
+const SQFT_PER_SQM = SQUARE_FEET_PER_SQUARE_METER;
+
+function flakeRate(data) {
+  if (data.broadcast === "custom") {
+    const rate = positiveInput(data, "flakeRate") / 100;
+    return [rate, rate, rate];
+  }
+  if (data.broadcast === "full") return FLAKE_RATES.full[data.flakeSize] || FLAKE_RATES.full["1/4"];
+  return FLAKE_RATES[data.broadcast] || FLAKE_RATES.medium;
+}
+
+function lbKg(lb) {
+  return `${formatNumber(lb, lb < 10 ? 1 : 0)} lb (${formatNumber(lb * KG_PER_LB, lb < 10 ? 1 : 0)} kg)`;
+}
+
+function computeFlake(data) {
+  const area = positiveInput(data, "surfaceArea");
+  const areaSqFt = data.areaUnit === "sqm" ? area * SQFT_PER_SQM : area;
+  const wastePct = toNumber(data.wastePct);
+  const packageLb = positiveInput(data, "packageLb");
+  const packagePrice = data.packagePrice === "" || data.packagePrice === undefined ? NaN : toNumber(data.packagePrice);
+  const [low, typical, high] = flakeRate(data);
+  const factor = 1 + wastePct / 100;
+
+  const rawLb = areaSqFt * typical;
+  const recommendedLb = rawLb * factor;
+  const highLb = areaSqFt * high * factor;
+  const packages = Math.ceil(recommendedLb / packageLb - 1e-9);
+  const leftoverLb = packages * packageLb - recommendedLb;
+  const cost = packages * packagePrice;
+  const areaText = data.areaUnit === "sqm" ? `${formatNumber(area)} m² (${formatNumber(areaSqFt, 0)} sq ft)` : `${formatNumber(areaSqFt, 0)} sq ft (${formatNumber(areaSqFt / SQFT_PER_SQM, 1)} m²)`;
+  const label = FLAKE_LABELS[data.broadcast] || FLAKE_LABELS.medium;
+  const sizeText = data.broadcast === "full" ? ` with ${data.flakeSize || "1/4"} in flake` : "";
+  const packageText = `${packages} × ${formatNumber(packageLb)} lb`;
+  const perPackageSqFt = packageLb / (typical * factor);
+  const isFull = data.broadcast === "full";
+
+  return {
+    primary: lbKg(recommendedLb),
+    secondary: `${areaText}, ${label}${sizeText} at ${formatNumber(typical * 100, 2)} lb per 100 sq ft, plus ${formatNumber(wastePct)}% waste.`,
+    rawText: lbKg(rawLb),
+    splitText: low === high ? lbKg(recommendedLb) : `${formatNumber(areaSqFt * low * factor, 1)} – ${formatNumber(highLb, 1)} lb`,
+    costText: Number.isFinite(cost) ? formatMoney(cost) : "Add box price",
+    stickyCost: packageText,
+    layersText: packageText,
+    breakdown: buildBreakdown([
+      `Floor area: ${areaText}.`,
+      `Broadcast rate: ${formatNumber(typical * 100, 2)} lb per 100 sq ft for ${label}${sizeText}${low === high ? "" : ` (range ${formatNumber(low * 100, 2)} – ${formatNumber(high * 100, 2)})`}.`,
+      `Flake at that rate: ${lbKg(rawLb)}.`,
+      `Waste and spill allowance: ${formatNumber(wastePct)}%, giving ${lbKg(recommendedLb)}.`,
+      `Packages: ${packageText} leaves about ${formatNumber(leftoverLb, 1)} lb spare.`,
+      isFull
+        ? "Full broadcast means throwing flake until the wet base coat cannot hold any more. Most of the excess breaks when it is scraped up, so do not count on reusing it."
+        : leftoverLb > packageLb / 2 ? "Partial broadcast uses little flake. If a full box leaves most of it unused, check whether the blend is sold in 1 lb or 5 lb bags." : ""
+    ]),
+    standardText: lbKg(recommendedLb),
+    conservativeText: lbKg(highLb),
+    productText: `≈ ${formatNumber(perPackageSqFt, 0)} sq ft`,
+    product: isFull
+      ? {
+          heading: "Plan the base coat and topcoat with the flake",
+          copy: "Full broadcast needs a base coat wet enough to grab the chips across the whole floor, so broadcast section by section while it is still tacky. After cure, scrape and vacuum the loose chips, then seal with a clear topcoat. Use your system's data sheet for base coat and topcoat coverage."
+        }
+      : {
+          heading: "Keep partial broadcast even",
+          copy: "Throw flake up and out so it falls straight down, working one wet section at a time. Keep some flake back to fill thin spots. A sample board shows the density before you commit to the whole floor."
+        }
+  };
+}
+
+// ---- 湿膜 / 干膜厚度：干膜 = 湿膜 × 体积固含量；1 US gal 在 1 mil 湿膜下覆盖 231 / 0.144 ≈ 1,604 ft² ----
+const SQFT_PER_GALLON_AT_ONE_MIL = CUBIC_INCHES_PER_GALLON / (0.001 * 144);
+const MM_PER_MIL = 0.0254;
+
+function mils(value) {
+  return `${formatNumber(value, value < 10 ? 1 : 0)} mils (${formatNumber(value * MM_PER_MIL, 2)} mm)`;
+}
+
+function computeFilmThickness(data) {
+  const area = positiveInput(data, "surfaceArea");
+  const areaSqFt = data.areaUnit === "sqm" ? area * SQFT_PER_SQM : area;
+  const coats = positiveInput(data, "coats");
+  const wetMils = positiveInput(data, "wetFilm");
+  const solidsPct = positiveInput(data, "solidsPct");
+  const wastePct = toNumber(data.wastePct);
+
+  const dryMils = wetMils * solidsPct / 100;
+  const sqFtPerGallon = SQFT_PER_GALLON_AT_ONE_MIL / wetMils;
+  const gallons = areaSqFt * coats / sqFtPerGallon * (1 + wastePct / 100);
+  const liters = gallons * 3.785411784;
+  const wetForTen = 10 / (solidsPct / 100);
+
+  return {
+    primary: `${formatNumber(dryMils, dryMils < 10 ? 1 : 0)} mils dry`,
+    secondary: `${formatNumber(dryMils * MM_PER_MIL, 2)} mm per coat; ${mils(dryMils * coats)} total dry build over ${coats} ${pluralize(coats, "coat")}, from ${formatNumber(wetMils)} wet mils at ${formatNumber(solidsPct)}% volume solids.`,
+    rawText: mils(dryMils * coats),
+    splitText: `${formatNumber(sqFtPerGallon, 0)} sq ft / gal (${formatNumber(1 / (wetMils * MM_PER_MIL), 1)} m² / L)`,
+    costText: `${formatNumber(gallons, 2)} gal (${formatNumber(liters, 1)} L)`,
+    layersText: mils(wetMils),
+    breakdown: buildBreakdown([
+      `Wet film per coat: ${mils(wetMils)}.`,
+      `Dry film per coat = wet film × volume solids = ${formatNumber(wetMils)} × ${formatNumber(solidsPct)}% = ${mils(dryMils)}.`,
+      `Coverage at that wet film: 1,604 ÷ ${formatNumber(wetMils)} = ${formatNumber(sqFtPerGallon, 0)} sq ft per gallon.`,
+      `Material: ${formatNumber(areaSqFt, 0)} sq ft × ${coats} ${pluralize(coats, "coat")} ÷ ${formatNumber(sqFtPerGallon, 0)} + ${formatNumber(wastePct)}% = ${formatNumber(gallons, 2)} gal.`,
+      solidsPct < 100 ? `To reach 10 dry mils per coat with this product you would need about ${formatNumber(wetForTen, 0)} wet mils.` : "At 100% solids the wet and dry film are the same thickness."
+    ]),
+    standardText: mils(wetMils),
+    conservativeText: mils(dryMils),
+    productText: `${formatNumber(wetForTen, 0)} wet mils`,
+    stickyCost: `${formatNumber(gallons, 2)} gal`,
+    product: {
+      heading: "Check the film while you apply it",
+      copy: "Press a wet film gauge into the fresh coat right after you spread it and read the last tooth that is wet. If it reads low, you are spreading the material too far. Cover less area with each batch, or use a squeegee with deeper notches."
+    }
+  };
+}
+
 function applySizePreset(form, value) {
   const match = /^(\d+)x(\d+)$/.exec(value || "");
   if (!match) return;
@@ -2140,6 +2268,8 @@ const COMPUTERS = {
   dice: computeDice,
   pricing: computePricing,
   "floor-cost": computeFloorCost,
+  flake: computeFlake,
+  "film-thickness": computeFilmThickness,
   general: computeGeneral,
   coverage: computeCoverage,
   volume: computeVolume,

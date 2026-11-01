@@ -142,8 +142,9 @@ function improvePage(original) {
   const locale = page.locale || "en";
   const type = page.calculatorType;
   if (page.pageType === "calculator") {
-    page.lastmod = "2026-10-30";
-    page.reviewedOn = "2026-10-30";
+    // 整改后新增的页面保留自己更晚的日期
+    if (!(page.lastmod > "2026-10-30")) page.lastmod = "2026-10-30";
+    page.reviewedOn = page.lastmod;
     if (["coverage", "surface"].includes(type)) page.calculatorType = "coating";
     if (["void-fill", "sphere", "cylinder", "cube"].includes(type)) page.supportsCount = true;
     if (locale !== "en") {

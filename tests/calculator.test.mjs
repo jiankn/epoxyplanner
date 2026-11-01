@@ -140,3 +140,34 @@ test("river segment mode cannot silently accept no measured widths", () => {
   const r = calculate("river", { length: 72, depth: 1.5, riverMode: "segment", segmentWidth1: 4.5, segmentWidth2: 6, segmentWidth3: 7.5, wastePct: 12, includeSeepage: true, seepagePct: 8, includeSeal: true, sealPct: 5 });
   near(r.recommendedLiters, 648 * 0.016387064 * 1.25);
 });
+
+test("flake calculator uses the size-specific full broadcast rate, waste and whole boxes", () => {
+  const base = { surfaceArea: 400, areaUnit: "sqft", broadcast: "full", flakeSize: "1/4", wastePct: 10, packageLb: 40, packagePrice: "" };
+  const r = calculate("flake", base);
+  assert.match(r.primary, /^55 lb/);
+  assert.equal(r.layersText, "2 × 40 lb");
+  assert.match(r.costText, /Add box price/);
+  assert.match(calculate("flake", { ...base, flakeSize: "1/8" }).primary, /^66 lb/);
+  assert.match(calculate("flake", { ...base, packagePrice: 250 }).costText, /\$500/);
+  // 37.16 m² = 400 ft²，结果应一致
+  assert.match(calculate("flake", { ...base, surfaceArea: 37.161216, areaUnit: "sqm" }).primary, /^55 lb/);
+});
+
+test("partial and custom flake rates ignore flake size and reject bad inputs", () => {
+  const base = { surfaceArea: 400, areaUnit: "sqft", flakeSize: "1/16", wastePct: 0, packageLb: 1 };
+  assert.match(calculate("flake", { ...base, broadcast: "medium" }).primary, /^3\.2 lb/);
+  assert.match(calculate("flake", { ...base, broadcast: "custom", flakeRate: 10 }).primary, /^40 lb/);
+  assert.throws(() => calculate("flake", { ...base, broadcast: "custom", flakeRate: 0 }));
+  assert.throws(() => calculate("flake", { ...base, broadcast: "full", packageLb: 0 }));
+  assert.throws(() => calculate("flake", { ...base, broadcast: "full", surfaceArea: -5 }));
+});
+
+test("film thickness converts wet to dry by volume solids and coverage by wet mils", () => {
+  const r = calculate("film-thickness", { surfaceArea: 400, areaUnit: "sqft", wetFilm: 6.5, solidsPct: 52.7, coats: 2, wastePct: 0 });
+  assert.match(r.primary, /^3\.4 mils/);
+  assert.match(r.splitText, /^247 sq ft/);
+  assert.match(r.costText, /^3\.24 gal/);
+  assert.match(calculate("film-thickness", { surfaceArea: 400, areaUnit: "sqft", wetFilm: 10, solidsPct: 100, coats: 1, wastePct: 0 }).splitText, /^160 sq ft/);
+  assert.throws(() => calculate("film-thickness", { surfaceArea: 400, wetFilm: 10, solidsPct: 120, coats: 1, wastePct: 0 }));
+  assert.throws(() => calculate("film-thickness", { surfaceArea: 400, wetFilm: 10, solidsPct: 0, coats: 1, wastePct: 0 }));
+});

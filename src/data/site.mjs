@@ -2,6 +2,7 @@ import { createFirstBatchPages } from "./seo-batch-2026-05.mjs";
 import { guideAdditions } from "./guide-content.mjs";
 import { improvePages, remediationRedirects, redirectPresets } from "./remediation-2026-10.mjs";
 import { FLOOR_COST_RATES, floorCostRange } from "../assets/floor-cost-rates.js";
+import { flakeCalculatorContent, floorThicknessCalculator, floorThicknessContent, floorSystemsLastmod } from "./floor-systems-2026-11.mjs";
 import {
   applyMultilingualAlternates,
   createLanguageMarketCards,
@@ -488,6 +489,12 @@ const basePages = [
             primary: true
           },
           {
+            title: "Epoxy Flake Calculator",
+            text: "Pounds of vinyl flake and boxes for a full or partial broadcast floor.",
+            slug: "epoxy-flake-calculator",
+            primary: true
+          },
+          {
             title: "Resin Mold Calculator",
             text: "Plan silicone molds, craft cavities, cube, cylinder, and sphere casts.",
             slug: "resin-mold-calculator",
@@ -538,6 +545,7 @@ const basePages = [
           { title: "Deep Pour vs Table Top Epoxy", text: "Know when the resin class is the real bottleneck.", slug: "deep-pour-vs-table-top-epoxy" },
           { title: "Waste Factor Guide", text: "Decide how much extra resin to buy and why.", slug: "epoxy-waste-factor-guide" },
           { title: "Epoxy Thickness & Coverage Chart", text: "Typical thickness by job and square feet per gallon at each thickness.", slug: "epoxy-coverage-chart" },
+          { title: "How Thick Is Epoxy Flooring?", text: "Mils and mm for each floor system, from DIY kits to troweled mortar.", slug: "epoxy-floor-thickness" },
           { title: "Mixing Ratio Guide", text: "Plan Part A / Part B and batch size after the quantity is known.", slug: "epoxy-mixing-ratio-guide" },
           { title: "How Much Epoxy Per Square Foot?", text: "Answer coverage by thickness before choosing a kit.", slug: "how-much-epoxy-per-square-foot" },
           { title: "One Gallon Coverage", text: "Understand why a gallon covers different areas at different thicknesses.", slug: "how-much-does-a-gallon-of-epoxy-cover" },
@@ -986,7 +994,9 @@ const basePages = [
     generalFaq: [],
     related: [
       "epoxy-floor-coverage-calculator",
+      "epoxy-flake-calculator",
       "two-car-garage-epoxy-calculator",
+      "epoxy-floor-thickness",
       "epoxy-coverage-chart",
       "how-much-does-a-gallon-of-epoxy-cover",
       "epoxy-waste-factor-guide"
@@ -1023,6 +1033,61 @@ const basePages = [
       nextStepCopy: "Use the range to check quotes. Ask how the concrete will be prepared, how many coats go down, and what the warranty covers."
     },
     lastmod: "2026-10-03"
+  }),
+  calculatorPage({
+    slug: "epoxy-flake-calculator",
+    title: "Epoxy Flake Calculator: Pounds of Flake per Sq Ft & Boxes",
+    h1: "Epoxy Flake Calculator",
+    description:
+      "How many pounds of flake for an epoxy floor: about 12.5 lb per 100 sq ft for a full broadcast of 1/4 in chips. Full or partial broadcast, flake size, and boxes to buy.",
+    eyebrow: "Flake Floor Planner",
+    intro:
+      "Enter the floor area and how heavily you plan to broadcast. You get the pounds of vinyl flake to buy, the likely range, and the number of boxes or bags.",
+    primaryKeyword: "epoxy flake calculator",
+    supportingKeywords: ["how many pounds of flakes for epoxy floor", "flake broadcast calculator", "flake flooring calculator", "epoxy chip coverage per square foot"],
+    calculatorType: "flake",
+    ...flakeCalculatorContent,
+    bullets: [],
+    generalFaq: [],
+    related: [
+      "epoxy-floor-coverage-calculator",
+      "garage-floor-epoxy-calculator",
+      "two-car-garage-epoxy-calculator",
+      "epoxy-floor-thickness",
+      "epoxy-coverage-chart"
+    ],
+    note: "Rates are planning figures from published installation and supplier guides. Your flake supplier's rate for the exact blend wins.",
+    compareLabel: "Planning rate vs high end",
+    resultEyebrow: "Flake to buy",
+    statLabels: {
+      raw: "Flake before waste",
+      split: "Range with waste",
+      cost: "Flake cost",
+      layers: "Boxes or bags"
+    },
+    nextStepLinks: [
+      { label: "Base coat & topcoat gallons", slug: "epoxy-floor-coverage-calculator" },
+      { label: "Epoxy floor thickness", slug: "epoxy-floor-thickness" }
+    ],
+    ui: {
+      calculatorHeading: "Enter your floor",
+      currentRecommendation: "Flake to buy",
+      estimatedCost: "Packages",
+      standard: "Planning rate",
+      conservative: "High end of range",
+      productFit: "One box covers",
+      whyChangedEyebrow: "Breakdown",
+      whyChangedHeading: "How the amount was worked out",
+      compareEyebrow: "Range",
+      howToTitle: "How to set the inputs",
+      mistakesTitle: "Mistakes that waste flake",
+      checklistTitle: "Before you order flake",
+      faqHeading: "Epoxy flake questions",
+      resultFallback: "Enter the floor area to see how much flake to buy.",
+      breakdownFallback: "Enter the floor area to see the rate, waste, and boxes.",
+      nextStepHeading: "Plan the base coat and topcoat with the flake"
+    },
+    lastmod: floorSystemsLastmod
   }),
   calculatorPage({
     slug: "void-fill-epoxy-calculator",
@@ -1364,7 +1429,7 @@ const basePages = [
     intro:
       "Thickness is the number that decides how far a gallon of epoxy goes. Find the typical thickness for your job first, then read across to see how many square feet one gallon covers at that thickness.",
     primaryKeyword: "epoxy thickness",
-    supportingKeywords: ["epoxy coating thickness", "how thick is epoxy flooring", "epoxy coverage chart", "epoxy coverage per gallon"],
+    supportingKeywords: ["epoxy thickness chart", "epoxy coverage chart", "epoxy coverage per gallon", "epoxy thickness in mils"],
     answer:
       "Epoxy thickness depends on the job: garage floor coatings go on at about 10 to 20 mils per coat (0.25 to 0.5 mm), a tabletop flood coat self-levels at about 1/8 inch (3 mm) per pour, and deep-pour casting resin goes in at 1/2 inch to 2 inches per layer, depending on the product. Coverage drops as thickness rises: one gallon covers about 160 sq ft at 10 mils but only about 12.8 sq ft at 1/8 inch.",
     takeaways: [
@@ -1387,7 +1452,10 @@ const basePages = [
             ["Countertop coating", "1/16-1/8 in per coat", "1.5-3 mm", "Budget extra for edges, drips, and a second coat."],
             ["Deep pour or river table", "1/2-2 in per pour", "13-50 mm", "Maximum depth per layer is product-specific."]
           ]
-        }
+        },
+        cards: [
+          { title: "Epoxy floor thickness by system", text: "Water-based kits, flake base coats, self-leveling slurry and mortar in mils and mm, with wet vs dry film.", slug: "epoxy-floor-thickness" }
+        ]
       },
       {
         title: "Epoxy coverage chart: square feet per gallon by thickness",
@@ -1437,6 +1505,30 @@ const basePages = [
       "epoxy-cost-calculator"
     ],
     lastmod: "2026-10-03"
+  }),
+  guidePage({
+    slug: "epoxy-floor-thickness",
+    title: "Epoxy Floor Thickness: Mils & mm by Coating System",
+    h1: "How Thick Is Epoxy Flooring?",
+    description:
+      "Epoxy floors run from about 3 dry mils per coat for water-based kits to 1/4 inch for mortar. Thickness by system in mils and mm, wet vs dry film, and what each floor needs.",
+    eyebrow: "Floor Coating Guide",
+    intro:
+      "How thick an epoxy floor should be depends on the system and the traffic. Enter the wet film you plan to spread to see the dry film that stays on the floor, then compare it with the ranges for each system below.",
+    primaryKeyword: "epoxy floor thickness",
+    supportingKeywords: ["how thick is epoxy flooring", "epoxy coating thickness", "epoxy flooring thickness in mm", "commercial epoxy floor thickness", "epoxy dry film thickness"],
+    ...floorThicknessContent,
+    embeddedCalculator: floorThicknessCalculator,
+    generalFaq: [],
+    related: [
+      "epoxy-floor-coverage-calculator",
+      "epoxy-flake-calculator",
+      "garage-floor-epoxy-calculator",
+      "epoxy-coverage-chart",
+      "how-much-does-a-gallon-of-epoxy-cover"
+    ],
+    lastmod: floorSystemsLastmod,
+    reviewedOn: floorSystemsLastmod
   }),
   guidePage({
     slug: "epoxy-mixing-ratio-guide",

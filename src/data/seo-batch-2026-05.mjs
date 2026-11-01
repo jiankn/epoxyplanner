@@ -274,7 +274,7 @@ const calculatorSpecs = [
       },
       {
         q: "Can this calculate a garage floor?",
-        a: "Yes. Use the dedicated garage and two-car garage pages if you want garage-specific cost context."
+        a: "Yes. For garage-specific numbers, use the [epoxy garage floor cost calculator](garage-floor-epoxy-calculator) or the [two-car garage epoxy calculator](two-car-garage-epoxy-calculator)."
       }
     ],
     related: [

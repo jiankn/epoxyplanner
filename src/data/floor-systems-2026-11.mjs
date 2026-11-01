@@ -63,7 +63,7 @@ export const flakeCalculatorContent = {
         "Full broadcast covers the base coat completely and gives the most texture underfoot. It also uses ten to thirty times more flake than a partial broadcast and needs a clear topcoat over the chips.",
         "Partial broadcast keeps the base color as the main look. It uses so little flake that one box can cover several garages.",
         "In a full broadcast you throw flake until the wet base coat cannot hold any more. Miracote notes that very little of the scraped-up excess can be reused because the chips break, so buy for the full amount.",
-        "You still need the base coat and topcoat. Work out their gallons separately in the floor coverage calculator."
+        "You still need the base coat and topcoat. Work out their gallons separately in the [epoxy floor coverage calculator](epoxy-floor-coverage-calculator)."
       ]
     },
     {
@@ -97,7 +97,7 @@ export const flakeCalculatorContent = {
   faq: [
     {
       q: "How much flake do I need for a 2-car garage?",
-      a: `For a 400 sq ft garage, about ${flakeLb(400, fullQuarter)} of 1/4 in flake for a full broadcast, or ${flakeLb(576, fullQuarter)} for a 576 sq ft (24 × 24 ft) garage. A medium partial broadcast needs only about ${flakeLb(400, medium)} for 400 sq ft.`
+      a: `For a 400 sq ft garage, about ${flakeLb(400, fullQuarter)} of 1/4 in flake for a full broadcast, or ${flakeLb(576, fullQuarter)} for a 576 sq ft (24 × 24 ft) garage. A medium partial broadcast needs only about ${flakeLb(400, medium)} for 400 sq ft. For the base coat, the [two-car garage epoxy calculator](two-car-garage-epoxy-calculator) works out the gallons.`
     },
     {
       q: "Does flake size change how much I need?",
@@ -170,7 +170,7 @@ export const floorThicknessContent = {
           filmRow("Water-based kit (EpoxyShield)", 6.5, 52.7),
           filmRow("50% solids coating", 20, 50)
         ],
-        note: "One US gallon spread 1 mil thick covers about 1,604 sq ft. Coverage = 1,604 ÷ wet mils, before waste."
+        note: "One US gallon spread 1 mil thick covers about 1,604 sq ft. Coverage = 1,604 ÷ wet mils, before waste. Tabletop and deep-pour thicknesses are in the epoxy coverage chart."
       }
     },
     {
@@ -194,7 +194,7 @@ export const floorThicknessContent = {
       title: "How to check the thickness on the job",
       points: [
         "Press a wet film gauge into the fresh coat right after spreading it and read the last wet tooth. This is the quickest check that you are not spreading too thin.",
-        "Check your spread rate: divide the area coated by the gallons used and compare it with the coverage in the table above.",
+        "Check your spread rate: divide the area coated by the gallons used and compare it with the coverage in the table above. The [epoxy floor coverage calculator](epoxy-floor-coverage-calculator) does the reverse, from area to gallons.",
         "Mark out the floor in sections sized for one mixed batch so each batch covers its share and no more."
       ]
     },

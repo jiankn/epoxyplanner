@@ -358,6 +358,18 @@ function escapeHtml(value = "") {
     .replace(/'/g, "&#39;");
 }
 
+// 文案里的正文链接写成 [锚文本](slug)，先整体转义再还原成站内链接；slug 只允许站内路径字符
+const INLINE_LINK = /\[([^\]]+)\]\(([a-z0-9-]+(?:\/[a-z0-9-]+)*|\/)\)/g;
+
+function richText(value = "") {
+  return escapeHtml(value).replace(INLINE_LINK, (_, text, slug) => `<a href="${hrefFor(slug === "/" ? "" : slug)}">${text}</a>`);
+}
+
+// 结构化数据等纯文本场合只保留锚文本
+function plainText(value = "") {
+  return String(value).replace(INLINE_LINK, "$1");
+}
+
 function hrefFor(slug) {
   return slug ? `/${slug}/` : "/";
 }
@@ -579,7 +591,7 @@ function renderFaqs(faqs = [], page = {}) {
             (item) => `
             <details class="faq">
               <summary>${escapeHtml(item.q)}</summary>
-              <p>${escapeHtml(item.a)}</p>
+              <p>${richText(item.a)}</p>
             </details>
           `
           )
@@ -605,7 +617,7 @@ function renderCards(cards = [], page = {}) {
               </div>
               <div class="mini-card__body">
                 <p>${escapeHtml(card.text)}</p>
-                ${card.slug ? `<a class="text-link" href="${href}">${escapeHtml(uiText(page, "openPage", "Open page"))}</a>` : ""}
+                ${card.slug ? `<span class="text-link" aria-hidden="true">${escapeHtml(uiText(page, "openPage", "Open page"))}</span>` : ""}
               </div>
             </article>
           `;
@@ -638,7 +650,7 @@ function renderRelated(page, pageMap) {
               </div>
               <div class="mini-card__body">
                 <p>${escapeHtml(relatedPage.description)}</p>
-                <a class="text-link" href="${hrefFor(relatedPage.slug)}">${escapeHtml(uiText(page, "openPage", "Open page"))}</a>
+                <span class="text-link" aria-hidden="true">${escapeHtml(uiText(page, "openPage", "Open page"))}</span>
               </div>
             </article>
           `
@@ -657,7 +669,7 @@ function renderBullets(title, bullets = [], className = "") {
         <h2>${escapeHtml(title)}</h2>
       </div>
       <ul class="bullet-list">
-        ${bullets.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
+        ${bullets.map((item) => `<li>${richText(item)}</li>`).join("")}
       </ul>
     </section>
   `;
@@ -686,7 +698,7 @@ function renderAnswerBlock(page) {
       <div class="section-heading">
         <h2>${escapeHtml(page.answerHeading)}</h2>
       </div>
-      <p class="lead">${escapeHtml(page.answer)}</p>
+      <p class="lead">${richText(page.answer)}</p>
       ${renderTable(page.answerTable)}
     </section>
   `;
@@ -699,8 +711,8 @@ function renderGuideSections(sections = [], page = {}) {
         <div class="section-heading">
           <h2>${escapeHtml(section.title)}</h2>
         </div>
-        ${section.body ? `<p class="lead">${escapeHtml(section.body)}</p>` : ""}
-        ${section.points ? `<ul class="bullet-list">${section.points.map((point) => `<li>${escapeHtml(point)}</li>`).join("")}</ul>` : ""}
+        ${section.body ? `<p class="lead">${richText(section.body)}</p>` : ""}
+        ${section.points ? `<ul class="bullet-list">${section.points.map((point) => `<li>${richText(point)}</li>`).join("")}</ul>` : ""}
         ${renderTable(section.table)}
         ${renderSourceLinks(section.links)}
         ${section.faqs ? renderFaqs(section.faqs, page) : ""}
@@ -739,6 +751,26 @@ function renderHero(page) {
       </div>
     </section>
   `;
+}
+
+// 没有单独指定“下一步”按钮时按计算器类型给：地坪去彩砂和厚度，小件模具去配比，费用和换算回到用量
+const NEXT_STEPS_BY_TYPE = {
+  "garage-floor": [{ label: "Epoxy Flake Calculator", slug: "epoxy-flake-calculator" }, { label: "Epoxy Floor Thickness", slug: "epoxy-floor-thickness" }],
+  mold: [{ label: "Resin to Hardener Ratio", slug: "epoxy-mixing-ratio-guide" }, { label: "Price Your Resin Pieces", slug: "resin-art-pricing-calculator" }],
+  cost: [{ label: "Epoxy Kit Size Guide", slug: "epoxy-kit-size-guide" }, { label: "See Methodology", slug: "methodology" }],
+  "area-cost": [{ label: "Epoxy Kit Size Guide", slug: "epoxy-kit-size-guide" }, { label: "See Methodology", slug: "methodology" }],
+  converter: [{ label: "Epoxy Resin Calculator", slug: "epoxy-calculator" }, { label: "Epoxy Kit Size Guide", slug: "epoxy-kit-size-guide" }]
+};
+["coaster", "dice", "sphere", "cylinder", "cube"].forEach((type) => { NEXT_STEPS_BY_TYPE[type] = NEXT_STEPS_BY_TYPE.mold; });
+
+function defaultNextSteps(page) {
+  if ((page.locale || "en") === "en" && NEXT_STEPS_BY_TYPE[page.calculatorType]) {
+    return NEXT_STEPS_BY_TYPE[page.calculatorType].filter((link) => link.slug !== page.slug);
+  }
+  return [
+    { label: uiText(page, "compareResinTypes", "Compare Resin Types"), slug: "deep-pour-vs-table-top-epoxy" },
+    { label: uiText(page, "seeMethodology", "See Methodology"), slug: "methodology" }
+  ];
 }
 
 function renderCalculator(page) {
@@ -823,10 +855,7 @@ function renderCalculator(page) {
             </div>
             <p data-product-copy>${escapeHtml(uiText(page, "nextStepCopy", "Use the estimate to narrow the resin class first. Then confirm product limits, cure behavior, and measurement assumptions before you make a buying decision."))}</p>
             <div class="button-row">
-              ${(page.nextStepLinks || [
-                { label: uiText(page, "compareResinTypes", "Compare Resin Types"), slug: "deep-pour-vs-table-top-epoxy" },
-                { label: uiText(page, "seeMethodology", "See Methodology"), slug: "methodology" }
-              ]).map((link, index) => `<a class="button${index ? " button--ghost" : ""}" href="${hrefFor(link.slug)}">${escapeHtml(link.label)}</a>`).join("")}
+              ${(page.nextStepLinks || defaultNextSteps(page)).map((link, index) => `<a class="button${index ? " button--ghost" : ""}" href="${hrefFor(link.slug)}">${escapeHtml(link.label)}</a>`).join("")}
             </div>
           </div>
         </div>
@@ -849,10 +878,10 @@ function renderInfoSections(page) {
       <div class="section-heading">
         <h2>${escapeHtml(section.title)}</h2>
       </div>
-      ${section.body ? `<p class="lead">${escapeHtml(section.body)}</p>` : ""}
+      ${section.body ? `<p class="lead">${richText(section.body)}</p>` : ""}
       ${section.points ? `
         <ul class="bullet-list">
-          ${section.points.map((point) => `<li>${escapeHtml(point)}</li>`).join("")}
+          ${section.points.map((point) => `<li>${richText(point)}</li>`).join("")}
         </ul>
       ` : ""}
       ${renderTable(section.table)}
@@ -966,7 +995,7 @@ function jsonLd(page, { site, urlForPath }) {
         name: item.q,
         acceptedAnswer: {
           "@type": "Answer",
-          text: item.a
+          text: plainText(item.a)
         }
       }))
     });
@@ -1119,12 +1148,12 @@ function renderPageBody(page, context) {
           <article class="answer-card answer-card--lead">
             <p class="eyebrow">${escapeHtml(uiText(page, "directAnswerEyebrow", "Direct Answer"))}</p>
             <h2>${escapeHtml(uiText(page, "directAnswerHeading", "The short answer"))}</h2>
-            <p class="lead">${escapeHtml(page.answer)}</p>
+            <p class="lead">${richText(page.answer)}</p>
           </article>
           <article class="answer-card">
             <p class="eyebrow">${escapeHtml(uiText(page, "takeaways", "Takeaways"))}</p>
             <ul class="bullet-list">
-              ${(page.takeaways || []).map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
+              ${(page.takeaways || []).map((item) => `<li>${richText(item)}</li>`).join("")}
             </ul>
           </article>
         </div>

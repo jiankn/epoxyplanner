@@ -46,6 +46,7 @@ export const site = {
     { label: "Calculators", slug: "epoxy-calculator" },
     { label: "Guides", slug: "how-much-epoxy-do-i-need" },
     { label: "Methodology", slug: "methodology" },
+    { label: "About", slug: "about" },
     { label: "Authors", slug: "authors" },
     { label: "FAQ", slug: "faq" },
     { label: "Contact", slug: "contact" }
@@ -229,7 +230,7 @@ const garageSizes = [
 
 const floorCostContent = {
   answerHeading: "How much does it cost to epoxy a garage floor?",
-  answer: `Professional epoxy costs about ${rateRange("pro-epoxy")} per square foot installed, so a 400 sq ft two-car garage runs roughly ${floorRange(400, "pro-epoxy")}. Metallic and polyaspartic systems cost ${rateRange("pro-poly")} per square foot. DIY kits cost ${usd2(FLOOR_COST_RATES["diy-basic"].low)} to ${usd2(FLOOR_COST_RATES["diy-solids"].high)} per square foot in materials, plus tools and prep.`,
+  answer: `Professional epoxy costs about ${rateRange("pro-epoxy")} per square foot installed, so a 400 sq ft [two-car garage](two-car-garage-epoxy-calculator) runs roughly ${floorRange(400, "pro-epoxy")}. Metallic and polyaspartic systems cost ${rateRange("pro-poly")} per square foot. DIY kits cost ${usd2(FLOOR_COST_RATES["diy-basic"].low)} to ${usd2(FLOOR_COST_RATES["diy-solids"].high)} per square foot in materials, plus tools and prep.`,
   answerTable: {
     headers: ["Garage", "Area", "DIY kit (materials)", "Pro epoxy", "Pro metallic", "Pro polyaspartic"],
     rows: garageSizes.map(([label, area]) => [
@@ -489,6 +490,12 @@ const basePages = [
             primary: true
           },
           {
+            title: "Two-Car Garage Epoxy Calculator",
+            text: "Gallons and kits for two coats on a 20 × 20 to 24 × 24 ft garage floor.",
+            slug: "two-car-garage-epoxy-calculator",
+            primary: true
+          },
+          {
             title: "Epoxy Flake Calculator",
             text: "Pounds of vinyl flake and boxes for a full or partial broadcast floor.",
             slug: "epoxy-flake-calculator",
@@ -515,6 +522,19 @@ const basePages = [
           { title: "Cylinder Resin Calculator", text: "Columns, tumblers, and round molds by diameter and fill height.", slug: "cylinder-resin-calculator" },
           { title: "Cube Resin Calculator", text: "Block and cube molds: doubling the side needs eight times the resin.", slug: "cube-resin-calculator" },
           { title: "Resin Art Pricing Calculator", text: "Turn material, time, and overhead into a minimum selling price.", slug: "resin-art-pricing-calculator" }
+        ]
+      },
+      {
+        title: "Calculators for molds and small pieces",
+        body:
+          "Coasters, dice, and shaped molds need milliliters, not gallons. Start from the shape you are filling and the number of pieces.",
+        cards: [
+          { title: "Resin Coaster Calculator", text: "Round or square coasters with set totals in mL.", slug: "resin-coaster-calculator" },
+          { title: "Resin Dice Calculator", text: "Cubic blanks or a known mold capacity, per die and per set.", slug: "resin-dice-calculator" },
+          { title: "Cylinder Resin Calculator", text: "Columns, tumbler inserts, and round molds by diameter and height.", slug: "cylinder-resin-calculator" },
+          { title: "Sphere Resin Calculator", text: "Ball and dome molds by inside diameter.", slug: "sphere-resin-calculator" },
+          { title: "Cube Resin Calculator", text: "Block and cube molds; doubling the side needs eight times the resin.", slug: "cube-resin-calculator" },
+          { title: "Resin Jewelry Calculator", text: "Small batches for pendants and earrings from a known cavity size.", slug: "resin-jewelry-calculator" }
         ]
       },
       {
@@ -601,7 +621,7 @@ const basePages = [
     faq: [
       {
         q: "How many ounces of epoxy do I need per square foot?",
-        a: "At the common 1/8 in flood-coat thickness, about 10 fl oz per square foot (one gallon covers about 12.8 sq ft). At 1/16 in it is about 5 fl oz per square foot. Add the edges and 5–10% for waste."
+        a: "At the common 1/8 in flood-coat thickness, [about 10 fl oz per square foot](how-much-epoxy-per-square-foot) (one gallon covers about 12.8 sq ft). At 1/16 in it is about 5 fl oz per square foot. Add the edges and 5–10% for waste."
       },
       {
         q: "How do I split resin and hardener?",
@@ -660,7 +680,7 @@ const basePages = [
     howTo: [
       "Measure every face that will actually receive epoxy, including exposed edges if you plan to coat them.",
       "Use the intended finished coat thickness, not the height of the whole project or substrate.",
-      "For a fast per-square-foot check, start with the coverage chart and then return here to add waste, edges, and cost.",
+      "For a fast per-square-foot check, start with the [epoxy thickness and coverage chart](epoxy-coverage-chart) and then return here to add waste, edges, and cost.",
       "Raise the waste setting if the piece has complex perimeter detail, porous material, or heavy runoff."
     ],
     mistakes: [
@@ -744,7 +764,7 @@ const basePages = [
       },
       {
         q: "Does this page replace the resin data sheet?",
-        a: "No. Use this page to plan quantity and workflow, then confirm max pour depth, cure conditions, and mix ratio against the product you intend to buy."
+        a: "No. Use this page to plan quantity and workflow, then confirm max pour depth, cure conditions, and the [epoxy mix ratio](epoxy-mixing-ratio-guide) against the product you intend to buy."
       }
     ],
     related: [
@@ -1225,7 +1245,7 @@ const basePages = [
         points: [
           "Use the general calculator for rectangles, circles, and quick metric or imperial checks.",
           "Use the cost calculator when the quantity is known and the real question is how many kits you can afford.",
-          "Use the coverage chart when you know the square footage and coat thickness rather than a cavity volume."
+          "Use the [epoxy coverage chart](epoxy-coverage-chart) when you know the square footage and coat thickness rather than a cavity volume."
         ]
       }
     ],

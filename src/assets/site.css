@@ -1762,6 +1762,47 @@ body[data-cookie-modal="open"] {
   text-decoration: underline;
 }
 
+/* 卡片只保留标题一个链接，用伪元素把点击区域铺满整张卡片。
+   标题和标题区不能再做定位容器，所以斜角装饰从标题区底部挪到正文区顶部 */
+.mini-card {
+  position: relative;
+}
+
+.mini-card__header,
+.mini-card__header h3 {
+  position: static;
+}
+
+.mini-card__header {
+  padding-bottom: 1.6rem;
+}
+
+.mini-card__header::after {
+  content: none;
+}
+
+.mini-card__header + .mini-card__body::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -24px;
+  height: 24px;
+  background: var(--surface-strong);
+  clip-path: polygon(0 100%, 100% 0, 100% 100%);
+}
+
+.mini-card h3 a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.mini-card:hover h3 a {
+  text-decoration: underline;
+}
+
 /* ============================================
    EMBED — 可嵌入版计算器与嵌入代码区
    ============================================ */
@@ -2029,4 +2070,19 @@ body[data-page-type="calculator"] .hero h1 {
   .input-settings {
     grid-template-columns: minmax(0, 1fr);
   }
+}
+
+/* 正文里的站内链接（文案中写成 [锚文本](slug)） */
+.lead a,
+.bullet-list a,
+.faq p a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.lead a:hover,
+.bullet-list a:hover,
+.faq p a:hover {
+  text-decoration-thickness: 2px;
 }

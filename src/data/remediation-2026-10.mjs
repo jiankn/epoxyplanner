@@ -243,7 +243,7 @@ function improvePage(original) {
     }
     if (page.slug === "two-car-garage-epoxy-calculator") page.formDefaults = { length: 20, width: 20 };
     if (page.calculatorType === "coating" && type === "surface") page.formDefaults = { length: 72, width: 24, surfaceArea: 12, wastePct: 8 };
-    if (page.slug === "epoxy-calculator") page.intro = "Estimate mixed resin from inside dimensions, add allowances and plan whole kits. Enter your product's ratio and limits when known.";
+    if (page.slug === "epoxy-calculator") page.intro = "Estimate the mixed resin volume from inside dimensions, add allowances and plan whole kits. Enter your product's ratio and limits when known.";
     if (page.slug === "deep-pour-epoxy-calculator") page.intro = "Calculate mixed resin from your cavity dimensions. Enter confirmed product depth and batch limits to see separate lift and batch counts.";
     if (page.calculatorType === "cost") {
       page.resultEyebrow = "Resin material estimate";
@@ -272,10 +272,10 @@ function improvePage(original) {
     if (page.slug === "how-to-calculate-epoxy-pour") page.measurement = { kind: "rectangle", caption: guideNotes[page.slug] };
   }
   if (page.slug === "") {
-    page.intro = "Measure your project, estimate mixed resin, and plan allowances, complete kits and cost. Product ratios and pour limits come from your chosen resin.";
+    page.intro = "Enter your measurements to see how much epoxy or resin to mix, with allowances, complete kits and cost. Product ratios and pour limits come from your chosen resin.";
     page.quickCalculator = { calculatorType: "general", note: "For regular rectangular or round cavities. Use a project-specific calculator for floors, coatings or irregular river channels." };
     page.sections = page.sections.filter(section => !["Calculators for specific projects", "What every estimate gives you"].includes(section.title));
-    page.lastmod = "2026-10-30";
+    page.lastmod = "2026-11-07";
   }
   if (page.slug === "authors") {
     page.title = "Who Maintains Epoxy Planner & How Calculations Are Checked";

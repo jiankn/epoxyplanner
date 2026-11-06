@@ -20,13 +20,14 @@ export const site = {
   description:
     "A high-trust epoxy calculator and resin planning site for river tables, deep pours, coatings, void fills, conversions, and project cost planning.",
   nav: [
-    { label: "Epoxy Calculator", slug: "epoxy-calculator" },
+    { label: "Epoxy Calculator", slug: "" },
     { label: "River Table", slug: "river-table-epoxy-calculator" },
     { label: "Floor Cost", slug: "garage-floor-epoxy-calculator" },
     { label: "Coverage", slug: "epoxy-coverage-calculator" },
     {
       label: "More",
       children: [
+        { label: "Volume Calculator", slug: "epoxy-calculator" },
         { label: "Deep Pour", slug: "deep-pour-epoxy-calculator" },
         { label: "Cost", slug: "epoxy-cost-calculator" },
         { label: "Converter", slug: "epoxy-unit-converter" },
@@ -418,11 +419,11 @@ const languageMarketCards = createLanguageMarketCards();
 const basePages = [
   infoPage({
     slug: "",
-    title: "Resin Project Planner for River Tables, Deep Pours & Floors",
-    h1: "Plan Your Epoxy Resin Project",
+    title: "Epoxy Calculator: Free Resin Calculator for Any Project",
+    h1: "Epoxy Calculator",
     description:
-      "Pick the calculator that matches your epoxy job (river table, deep pour, tabletop coat, garage floor, mold, or void fill) and get volume, waste, kit size, and cost.",
-    eyebrow: "Precision Resin Planning",
+      "Free epoxy and resin calculator: enter your measurements to see how much to mix, with waste, kit size, and cost. Plus calculators for river tables and floors.",
+    eyebrow: "Free Epoxy & Resin Calculator",
     intro:
       "Calculate exactly how much epoxy resin you need — with waste, seepage, layer count, Part A / Part B split, cost, and product-fit guidance built in.",
     heroActions: [
@@ -430,7 +431,7 @@ const basePages = [
       { label: "River Table", slug: "river-table-epoxy-calculator", icon: "🪵" },
       { label: "Deep Pour", slug: "deep-pour-epoxy-calculator", icon: "🧊" },
       { label: "Coverage & Coatings", slug: "epoxy-coverage-calculator", icon: "🖌️" },
-      { label: "Epoxy Resin Calculator", slug: "epoxy-calculator", icon: "📐" },
+      { label: "Epoxy Volume Calculator", slug: "epoxy-calculator", icon: "📐" },
       { label: "Cost Planner", slug: "epoxy-cost-calculator", icon: "💵" },
       { label: "Void Fill", slug: "void-fill-epoxy-calculator", icon: "🧩" },
       { label: "Mold Calculator", slug: "resin-mold-calculator", icon: "▣" }
@@ -448,8 +449,8 @@ const basePages = [
             primary: true
           },
           {
-            title: "Epoxy Resin Calculator",
-            text: "Best first stop for regular shapes, quick planning, and broad resin estimates in gallons or liters.",
+            title: "Epoxy Volume Calculator",
+            text: "Pour volume for regular shapes, with worked examples, depth limits, and estimates in gallons or liters.",
             slug: "epoxy-calculator",
             primary: true
           },
@@ -589,15 +590,15 @@ const basePages = [
   }),
   calculatorPage({
     slug: "epoxy-calculator",
-    title: "Epoxy Resin Calculator: How Much Epoxy You Need (oz, gal, L)",
-    h1: "Epoxy Resin Calculator",
+    title: "Epoxy Volume Calculator: How Much Resin to Pour (oz, gal, L)",
+    h1: "Epoxy Volume Calculator",
     description:
-      "Free epoxy resin calculator: enter length, width, and depth in inches or cm to see how much epoxy you need in ounces, gallons, or liters, with waste and cost.",
-    eyebrow: "Epoxy & Resin Calculator",
+      "Free epoxy volume calculator: enter length, width, and depth in inches or cm to see how much resin to pour in ounces, gallons, or liters, with waste and cost.",
+    eyebrow: "Pour Volume Calculator",
     intro:
       "Enter the length, width, and depth of the area you are filling or coating. The calculator turns it into mixed resin in ounces, gallons, or liters, adds a waste buffer, splits Part A and Part B, and estimates the cost.",
-    primaryKeyword: "epoxy calculator",
-    supportingKeywords: ["epoxy resin calculator", "resin calculator", "epoxy volume calculator", "how much epoxy do i need"],
+    primaryKeyword: "epoxy volume calculator",
+    supportingKeywords: ["epoxy pour calculator", "resin volume calculator", "epoxy resin volume calculator"],
     calculatorType: "general",
     ...epoxyCalculatorContent,
     bullets: [
@@ -646,7 +647,7 @@ const basePages = [
     ],
     note: "Use this calculator for regular shapes. For a river table, deep cast, or floor coating, switch to the matching calculator before buying.",
     compareLabel: "Raw math vs order-ready planning",
-    lastmod: "2026-10-03"
+    lastmod: "2026-11-07"
   }),
   calculatorPage({
     slug: "epoxy-coverage-calculator",
@@ -1237,7 +1238,7 @@ const basePages = [
         title: "Fast route by project type",
         cards: [
           {
-            title: "Epoxy Resin Calculator",
+            title: "Epoxy Volume Calculator",
             text: "Enter length, width, and depth to get mixed resin in ounces, gallons, or liters, with waste and the Part A / Part B split.",
             slug: "epoxy-calculator"
           }

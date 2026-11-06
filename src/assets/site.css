@@ -1821,6 +1821,137 @@ body[data-cookie-modal="open"] {
   text-decoration: underline;
 }
 
+/* Homepage cards: the blueprint direction, including guides and language hubs. */
+body[data-page-slug=""] .card-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  margin-top: 1rem;
+}
+
+.mini-card--blueprint {
+  min-width: 0;
+  min-height: 340px;
+  padding: 1.5rem;
+  border: 1px solid #3c667b;
+  border-radius: 18px;
+  background-color: #214c60;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  background-size: 22px 22px;
+  color: #f7fafc;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.mini-card--blueprint .mini-card__header {
+  padding: 0;
+  background: none;
+}
+
+.mini-card--blueprint .mini-card__topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1.4rem;
+  color: #d0e0e8;
+}
+
+.mini-card--blueprint .mini-card__eyebrow {
+  padding: 0.3rem 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 4px;
+  background: #214c60;
+  font-size: 0.625rem;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.1em;
+}
+
+.mini-card--blueprint .mini-card__topline svg {
+  width: 28px;
+  height: 28px;
+  flex: 0 0 auto;
+}
+
+.mini-card--blueprint .mini-card__header h3 {
+  padding: 0;
+  color: inherit;
+  font-size: clamp(1.25rem, 1.8vw, 1.625rem);
+  font-weight: 600;
+  line-height: 1.18;
+  letter-spacing: -0.025em;
+  overflow-wrap: anywhere;
+}
+
+.mini-card--blueprint .mini-card__body {
+  position: static;
+  padding: 0;
+}
+
+.mini-card--blueprint .mini-card__header + .mini-card__body::before {
+  content: none;
+}
+
+.mini-card--blueprint .mini-card__body p {
+  margin-top: 0.9rem;
+  margin-bottom: 1.5rem;
+  color: #c2d4dd;
+  font-size: 0.875rem;
+  line-height: 1.65;
+}
+
+.mini-card--blueprint .text-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-height: 46px;
+  padding: 0.7rem 0.85rem;
+  border-radius: 7px;
+  background: #eff5f7;
+  color: #214c60;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.mini-card--blueprint .text-link svg {
+  width: 19px;
+  height: 19px;
+  flex: 0 0 auto;
+}
+
+.mini-card--blueprint h3 a::after {
+  cursor: pointer;
+}
+
+.mini-card--blueprint:hover,
+.mini-card--blueprint:focus-within {
+  transform: none;
+  border-color: #8bb5c9;
+  box-shadow: 0 12px 28px rgba(23, 58, 81, 0.17);
+}
+
+.mini-card--blueprint:focus-within {
+  outline: 3px solid var(--accent);
+  outline-offset: 4px;
+}
+
+.mini-card--blueprint:hover h3 a {
+  text-decoration: none;
+}
+
+.mini-card--blueprint:hover .text-link,
+.mini-card--blueprint:focus-within .text-link {
+  background: #ffffff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mini-card--blueprint,
+  .mini-card--blueprint .text-link {
+    transition: none;
+  }
+}
+
 /* ============================================
    EMBED — 可嵌入版计算器与嵌入代码区
    ============================================ */

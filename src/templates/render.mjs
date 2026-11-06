@@ -601,14 +601,44 @@ function renderFaqs(faqs = [], page = {}) {
   `;
 }
 
-function renderCards(cards = [], page = {}) {
+function renderCards(cards = [], page = {}, pageMap) {
   if (!cards?.length) return "";
+  const blueprint = page.slug === "";
+  const blueprintLabels = {
+    calculator: ["CALCULATOR", "Open calculator"],
+    guide: ["GUIDE", "Read guide"],
+    language: ["METRIC TOOLS", "Explore tools"],
+    reference: ["REFERENCE", "Learn more"]
+  };
   return `
     <div class="card-grid">
       ${cards
         .map((card) => {
           const href = card.slug ? hrefFor(card.slug) : "#";
           const primaryClass = card.primary ? " mini-card--primary" : "";
+          if (blueprint) {
+            const target = pageMap?.get(card.slug);
+            const isLanguageHub = target?.locale && target.locale !== "en" && target.slug === target.localeRootSlug;
+            const kind = isLanguageHub ? "language"
+              : ["calculator", "guide"].includes(target?.pageType) ? target.pageType : "reference";
+            const [category, action] = blueprintLabels[kind];
+            const isStartingPoint = card.slug === "epoxy-calculator";
+            return `
+            <article class="mini-card mini-card--blueprint${primaryClass}">
+              <div class="mini-card__header">
+                <div class="mini-card__topline" aria-hidden="true">
+                  <span class="mini-card__eyebrow">${isStartingPoint ? "START HERE" : category}</span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5M12 22V12M7.5 4.3l9 5.2"/></svg>
+                </div>
+                <h3>${card.slug ? `<a href="${href}">${escapeHtml(card.title)}</a>` : escapeHtml(card.title)}</h3>
+              </div>
+              <div class="mini-card__body">
+                <p>${escapeHtml(card.text)}</p>
+                ${card.slug ? `<span class="text-link" aria-hidden="true"><span>${isStartingPoint ? "Calculate resin" : action}</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M7 7h10v10"/></svg></span>` : ""}
+              </div>
+            </article>
+            `;
+          }
           const icon = card.icon ? `<span class="hero-action__icon">${card.icon}</span>` : "";
           return `
             <article class="mini-card${primaryClass}">
@@ -759,7 +789,7 @@ const NEXT_STEPS_BY_TYPE = {
   mold: [{ label: "Resin to Hardener Ratio", slug: "epoxy-mixing-ratio-guide" }, { label: "Price Your Resin Pieces", slug: "resin-art-pricing-calculator" }],
   cost: [{ label: "Epoxy Kit Size Guide", slug: "epoxy-kit-size-guide" }, { label: "See Methodology", slug: "methodology" }],
   "area-cost": [{ label: "Epoxy Kit Size Guide", slug: "epoxy-kit-size-guide" }, { label: "See Methodology", slug: "methodology" }],
-  converter: [{ label: "Epoxy Resin Calculator", slug: "epoxy-calculator" }, { label: "Epoxy Kit Size Guide", slug: "epoxy-kit-size-guide" }]
+  converter: [{ label: "Epoxy Volume Calculator", slug: "epoxy-calculator" }, { label: "Epoxy Kit Size Guide", slug: "epoxy-kit-size-guide" }]
 };
 ["coaster", "dice", "sphere", "cylinder", "cube"].forEach((type) => { NEXT_STEPS_BY_TYPE[type] = NEXT_STEPS_BY_TYPE.mold; });
 
@@ -851,7 +881,7 @@ function renderCalculator(page) {
   `;
 }
 
-function renderInfoSections(page) {
+function renderInfoSections(page, pageMap) {
   return page.sections.map((section) => `
     <section class="section">
       <div class="section-heading">
@@ -865,7 +895,7 @@ function renderInfoSections(page) {
       ` : ""}
       ${renderTable(section.table)}
       ${renderSourceLinks(section.links)}
-      ${section.cards ? renderCards(section.cards, page) : ""}
+      ${section.cards ? renderCards(section.cards, page, pageMap) : ""}
       ${section.faqs ? renderFaqs(section.faqs, page) : ""}
       ${section.contactEmail ? `<p><a class="text-link" href="mailto:${escapeHtml(section.contactEmail)}">${escapeHtml(section.contactEmail)}</a></p>` : ""}
     </section>
@@ -1146,7 +1176,7 @@ function renderPageBody(page, context) {
   return `
     ${renderHero(page)}
     ${page.quickCalculator ? renderCalculator({ ...page, ...page.quickCalculator }) : ""}
-    ${renderInfoSections(page)}
+    ${renderInfoSections(page, pageMap)}
     ${renderRelated(page, pageMap)}
   `;
 }
@@ -1390,7 +1420,7 @@ export function renderNotFound(site) {
           <h1>Page Not Found</h1>
           <p class="hero__intro">The page you requested is not part of the Epoxy Planner calculator and guide library.</p>
           <div class="hero-actions">
-            <a class="hero-action" href="/epoxy-calculator/"><span class="hero-action__text">Epoxy Calculator</span><span class="hero-action__arrow" aria-hidden="true">→</span></a>
+            <a class="hero-action" href="/"><span class="hero-action__text">Epoxy Calculator</span><span class="hero-action__arrow" aria-hidden="true">→</span></a>
             <a class="hero-action" href="/epoxy-coverage-calculator/"><span class="hero-action__text">Coverage Calculator</span><span class="hero-action__arrow" aria-hidden="true">→</span></a>
             <a class="hero-action" href="/epoxy-cost-calculator/"><span class="hero-action__text">Cost Calculator</span><span class="hero-action__arrow" aria-hidden="true">→</span></a>
           </div>

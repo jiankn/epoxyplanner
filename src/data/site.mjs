@@ -2,6 +2,7 @@ import { createFirstBatchPages } from "./seo-batch-2026-05.mjs";
 import { guideAdditions } from "./guide-content.mjs";
 import { improvePages, remediationRedirects, redirectPresets } from "./remediation-2026-10.mjs";
 import { FLOOR_COST_RATES, floorCostRange } from "../assets/floor-cost-rates.js";
+import { basementEpoxyFloorCost, epoxyFloorProsAndCons, howToEpoxyGarageFloor, polyasparticVsEpoxy } from "./floor-guides-2026-11.mjs";
 import { flakeCalculatorContent, floorThicknessCalculator, floorThicknessContent, floorSystemsLastmod } from "./floor-systems-2026-11.mjs";
 import {
   applyMultilingualAlternates,
@@ -31,7 +32,7 @@ export const site = {
         { label: "Deep Pour", slug: "deep-pour-epoxy-calculator" },
         { label: "Cost", slug: "epoxy-cost-calculator" },
         { label: "Converter", slug: "epoxy-unit-converter" },
-        { label: "Guides", slug: "how-much-epoxy-do-i-need" }
+        { label: "Guides", slug: "guides" }
       ]
     }
   ],
@@ -45,7 +46,7 @@ export const site = {
   ],
   footerNav: [
     { label: "Calculators", slug: "epoxy-calculator" },
-    { label: "Guides", slug: "how-much-epoxy-do-i-need" },
+    { label: "Guides", slug: "guides" },
     { label: "Methodology", slug: "methodology" },
     { label: "About", slug: "about" },
     { label: "Authors", slug: "authors" },
@@ -247,7 +248,7 @@ const floorCostContent = {
   sections: [
     {
       title: "Epoxy floor cost per square foot by coating system",
-      body: "Professional prices include materials and labor. DIY prices are kit materials only.",
+      body: "Professional prices include materials and labor. DIY prices are kit materials only. Choosing between coatings? Our [polyaspartic vs epoxy comparison](polyaspartic-vs-epoxy) covers cure time, yellowing, and working time.",
       table: {
         headers: ["Coating system", "DIY materials", "Professional installed", "Typical lifespan"],
         rows: [
@@ -277,10 +278,10 @@ const floorCostContent = {
       title: "DIY kit or professional install?",
       body: `For a 400 sq ft two-car garage, DIY kits run about ${diyRange(400)} in materials, while a professional epoxy floor runs ${floorRange(400, "pro-epoxy")}. Labor is roughly 33% to 60% of a professional job (Angi, 2026), and most of that time goes into grinding and repairing the slab.`,
       points: [
-        "DIY makes sense on a dry, sound slab with no old coating, when you can keep the garage empty for two to three days.",
+        "DIY makes sense on a dry, sound slab with no old coating, when you can keep the garage empty for two to three days. [How to epoxy a garage floor](how-to-epoxy-a-garage-floor) walks through the full job.",
         "Hire a pro when the slab is damp, has an old coating or sealer, needs real crack repair, or when you want metallic or polyaspartic finishes.",
         "Diamond grinding bonds better than acid etching. Pros grind as standard; DIYers rent a grinder for old or sealed floors.",
-        "Before buying a kit, tape a plastic sheet to the slab for 24 hours. Condensation under it means you need a vapor barrier."
+        "Before buying a kit, tape a plastic sheet to the slab for 24 hours. Condensation under it means you need a vapor barrier. Basements need extra care, as our [basement epoxy floor cost guide](basement-epoxy-floor-cost) explains."
       ]
     },
     {
@@ -566,6 +567,7 @@ const basePages = [
           { title: "Deep Pour vs Table Top Epoxy", text: "Know when the resin class is the real bottleneck.", slug: "deep-pour-vs-table-top-epoxy" },
           { title: "Waste Factor Guide", text: "Decide how much extra resin to buy and why.", slug: "epoxy-waste-factor-guide" },
           { title: "Epoxy Thickness & Coverage Chart", text: "Typical thickness by job and square feet per gallon at each thickness.", slug: "epoxy-coverage-chart" },
+          { title: "Polyaspartic vs Epoxy", text: "Compare price, cure time, and yellowing before you take a floor quote.", slug: "polyaspartic-vs-epoxy" },
           { title: "How Thick Is Epoxy Flooring?", text: "Mils and mm for each floor system, from DIY kits to troweled mortar.", slug: "epoxy-floor-thickness" },
           { title: "Mixing Ratio Guide", text: "Plan Part A / Part B and batch size after the quantity is known.", slug: "epoxy-mixing-ratio-guide" },
           { title: "How Much Epoxy Per Square Foot?", text: "Answer coverage by thickness before choosing a kit.", slug: "how-much-epoxy-per-square-foot" },
@@ -1017,10 +1019,11 @@ const basePages = [
       "epoxy-floor-coverage-calculator",
       "epoxy-flake-calculator",
       "two-car-garage-epoxy-calculator",
+      "polyaspartic-vs-epoxy",
+      "epoxy-floor-pros-and-cons",
+      "basement-epoxy-floor-cost",
       "epoxy-floor-thickness",
-      "epoxy-coverage-chart",
-      "how-much-does-a-gallon-of-epoxy-cover",
-      "epoxy-waste-factor-guide"
+      "epoxy-coverage-chart"
     ],
     note: "Ranges are U.S. national averages for materials and labor. Get itemized quotes before you commit.",
     compareLabel: "Low vs high estimate",
@@ -1074,6 +1077,7 @@ const basePages = [
       "epoxy-floor-coverage-calculator",
       "garage-floor-epoxy-calculator",
       "two-car-garage-epoxy-calculator",
+      "how-to-epoxy-a-garage-floor",
       "epoxy-floor-thickness",
       "epoxy-coverage-chart"
     ],
@@ -1551,6 +1555,10 @@ const basePages = [
     lastmod: floorSystemsLastmod,
     reviewedOn: floorSystemsLastmod
   }),
+  guidePage(polyasparticVsEpoxy),
+  guidePage(basementEpoxyFloorCost),
+  guidePage(epoxyFloorProsAndCons),
+  guidePage(howToEpoxyGarageFloor),
   guidePage({
     slug: "epoxy-mixing-ratio-guide",
     title: "Epoxy Mix Ratio Guide: Resin to Hardener Chart (1:1, 2:1, 3:1)",
@@ -2153,6 +2161,19 @@ const basePages = [
     ],
     indexable: false
   }),
+  infoPage({
+    slug: "guides",
+    title: "Epoxy Guides: Floors, Coverage, Mix Ratios & Pour Depth",
+    h1: "Epoxy Guides",
+    description:
+      "Epoxy guides for floors, coverage, mix ratios, pour depth, river tables, and project costs, each linked to the calculator that fits the job.",
+    eyebrow: "Guides",
+    intro:
+      "Find the guide for the decision in front of you, then use the matching calculator to run your own numbers.",
+    sections: [],
+    includeInSitemap: true,
+    lastmod: "2026-11-07"
+  }),
   ...multilingualWave1Pages
 ];
 
@@ -2205,6 +2226,75 @@ function rewriteLinks(page) {
   };
 }
 
+// /guides/ 总览页的分组。新增英文指南必须放进这里，否则构建失败，避免文章变成没有入链的孤页。
+const guideHubGroups = [
+  {
+    title: "Floors and coatings",
+    body: "Choosing a coating, pricing it, and getting it down on garage and basement floors.",
+    slugs: [
+      "polyaspartic-vs-epoxy",
+      "epoxy-floor-pros-and-cons",
+      "how-to-epoxy-a-garage-floor",
+      "basement-epoxy-floor-cost",
+      "epoxy-floor-thickness",
+      "seal-coat-vs-flood-coat"
+    ]
+  },
+  {
+    title: "How much epoxy you need",
+    body: "Coverage rules, formulas, and allowances to check before you buy.",
+    slugs: [
+      "how-much-epoxy-do-i-need",
+      "how-much-epoxy-per-square-foot",
+      "how-much-does-a-gallon-of-epoxy-cover",
+      "epoxy-coverage-chart",
+      "how-to-calculate-epoxy-pour",
+      "epoxy-waste-factor-guide",
+      "epoxy-kit-size-guide"
+    ]
+  },
+  {
+    title: "River tables and deep pours",
+    body: "Measuring, choosing a resin, layer depth, and stopping leaks.",
+    slugs: [
+      "how-much-epoxy-do-i-need-for-a-river-table",
+      "how-to-measure-a-river-table-for-epoxy",
+      "deep-pour-vs-table-top-epoxy",
+      "epoxy-pour-depth-guide",
+      "maximum-epoxy-pour-depth",
+      "how-to-prevent-epoxy-leaks"
+    ]
+  },
+  {
+    title: "Mix ratios",
+    body: "Splitting Part A and Part B correctly, by volume or by weight.",
+    slugs: ["epoxy-mixing-ratio-guide", "epoxy-mix-ratio-by-volume-vs-weight"]
+  },
+  {
+    title: "Project costs",
+    body: "Material budgets for tables, countertops, and bar tops.",
+    slugs: ["river-table-epoxy-cost", "epoxy-countertop-cost", "epoxy-bar-top-cost", "epoxy-cost-per-square-foot"]
+  }
+];
+
+function fillGuideHub(allPages) {
+  const guides = new Map(allPages.filter((page) => page.category === "guide" && page.indexable !== false).map((page) => [page.slug, page]));
+  const listed = guideHubGroups.flatMap((group) => group.slugs);
+  const unknown = listed.filter((slug) => !guides.has(slug));
+  const missing = [...guides.keys()].filter((slug) => !listed.includes(slug));
+  if (unknown.length || missing.length) {
+    throw new Error(`Guide hub out of sync. Not a live guide: ${unknown.join(", ") || "none"}. Not listed: ${missing.join(", ") || "none"}.`);
+  }
+  return allPages.map((page) => page.slug !== "guides" ? page : {
+    ...page,
+    sections: guideHubGroups.map(({ title, body, slugs }) => ({
+      title,
+      body,
+      cards: slugs.map((slug) => ({ title: guides.get(slug).h1, text: guides.get(slug).description, slug }))
+    }))
+  });
+}
+
 const preparedPages = basePages.filter((page) => !Object.hasOwn(redirects, page.slug)).map((page) => {
   const addition = guideAdditions[page.slug];
   return rewriteLinks(addition ? {
@@ -2215,7 +2305,7 @@ const preparedPages = basePages.filter((page) => !Object.hasOwn(redirects, page.
     lastmod: "2026-10-03"
   } : page);
 });
-const livePages = improvePages(preparedPages).map(rewriteLinks);
+const livePages = fillGuideHub(improvePages(preparedPages).map(rewriteLinks));
 const liveSlugs = new Set(livePages.map((page) => page.slug));
 for (const [from, to] of Object.entries(redirects)) {
   if (!liveSlugs.has(to)) throw new Error(`Redirect target missing: /${from}/ -> /${to}/`);

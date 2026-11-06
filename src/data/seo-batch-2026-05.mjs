@@ -280,6 +280,8 @@ const calculatorSpecs = [
     related: [
       "garage-floor-epoxy-calculator",
       "two-car-garage-epoxy-calculator",
+      "how-to-epoxy-a-garage-floor",
+      "basement-epoxy-floor-cost",
       "epoxy-flake-calculator",
       "epoxy-floor-thickness",
       "epoxy-cost-per-square-foot",

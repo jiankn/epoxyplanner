@@ -564,6 +564,9 @@ function configuredForm(page) {
   markup = localizeFormMarkup(markup, page);
   for (const [name, value] of Object.entries(page.formDefaults || {})) {
     markup = markup.replace(new RegExp(`(name="${name}"[^>]*?value=")[^"]*(")`, "g"), (_, before, after) => `${before}${escapeHtml(value)}${after}`);
+    // 下拉框的默认项：把 selected 移到指定选项上
+    markup = markup.replace(new RegExp(`<select[^>]*name="${name}"[\\s\\S]*?</select>`, "g"), (select) =>
+      select.replace(/ selected(?=>)/g, "").replace(`<option value="${escapeHtml(value)}">`, `<option value="${escapeHtml(value)}" selected>`));
   }
   return markup;
 }
@@ -716,7 +719,7 @@ function renderTable(table) {
         </tbody>
       </table>
     </div>
-    ${table.note ? `<p class="table-note">${escapeHtml(table.note)}</p>` : ""}
+    ${table.note ? `<p class="table-note">${richText(table.note)}</p>` : ""}
   `;
 }
 
@@ -918,8 +921,10 @@ function breadcrumb(page) {
     <nav class="breadcrumb" aria-label="Breadcrumb">
       <a href="${hrefFor(page.localeRootSlug || "")}">${escapeHtml(uiText(page, "home", "Home"))}</a>
       <span>/</span>
-      <span>${escapeHtml(current)}</span>
-      ${page.slug ? `<span>/</span><span aria-current="page">${escapeHtml(page.h1)}</span>` : ""}
+      ${page.slug === "guides"
+        ? `<span aria-current="page">${escapeHtml(page.h1)}</span>`
+        : `${page.pageType === "guide" ? `<a href="/guides/">${escapeHtml(current)}</a>` : `<span>${escapeHtml(current)}</span>`}
+      ${page.slug ? `<span>/</span><span aria-current="page">${escapeHtml(page.h1)}</span>` : ""}`}
     </nav>
   `;
 }
@@ -955,12 +960,12 @@ function jsonLd(page, { site, urlForPath }) {
     "@type": "BreadcrumbList",
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "Home", item: site.origin + "/" },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: categoryLabel(page),
-        item: currentUrl
-      }
+      ...(page.pageType === "guide"
+        ? [
+            { "@type": "ListItem", position: 2, name: categoryLabel(page), item: site.origin + "/guides/" },
+            { "@type": "ListItem", position: 3, name: page.h1, item: currentUrl }
+          ]
+        : [{ "@type": "ListItem", position: 2, name: page.slug === "guides" ? page.h1 : categoryLabel(page), item: currentUrl }])
     ]
   });
 

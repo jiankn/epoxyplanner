@@ -1349,6 +1349,7 @@ export function renderPage(page, context) {
   const canonical = urlForPath(page.slug);
   const pageTitle = `${page.title} | ${site.shortName}`;
   const pageBody = renderPageBody(page, context);
+  const showBreadcrumb = page.slug !== "epoxy-cost-calculator";
   const calculatorScript = page.pageType === "calculator" || page.quickCalculator || page.embeddedCalculator ? `<script type="module" src="/assets/calculator.js"></script>` : "";
   const robots = page.indexable === false ? "noindex, follow" : "index, follow";
 
@@ -1389,8 +1390,8 @@ export function renderPage(page, context) {
   <body data-page-type="${escapeHtml(page.pageType)}" data-page-slug="${escapeHtml(page.slug)}" data-locale="${escapeHtml(page.locale || "en")}" data-has-calculator="${Boolean(page.pageType === "calculator" || page.quickCalculator || page.embeddedCalculator)}">
     <a class="skip-link" href="#main-content">${escapeHtml(plannerText(page.locale, "skip"))}</a>
     ${renderHeader(site, page)}
-    <main class="page-shell" id="main-content">
-      ${breadcrumb(page)}
+    <main class="page-shell${showBreadcrumb ? "" : " page-shell--compact"}" id="main-content">
+      ${showBreadcrumb ? breadcrumb(page) : ""}
       ${pageBody}
       ${page.reviewedOn ? `<p class="review-note">${escapeHtml(plannerText(page.locale, "updated"))} <time datetime="${escapeHtml(page.reviewedOn)}">${escapeHtml(new Intl.DateTimeFormat(page.numberLocale || "en-US", { dateStyle: "medium", timeZone: "UTC" }).format(new Date(`${page.reviewedOn}T00:00:00Z`)))}</time> · <a href="/methodology/">${escapeHtml(plannerText(page.locale, "revision"))}</a></p>` : ""}
     </main>

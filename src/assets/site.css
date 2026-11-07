@@ -380,6 +380,10 @@ button {
   padding: 1.25rem 1rem 5rem;
 }
 
+.page-shell--compact {
+  padding-top: clamp(0.75rem, 1.5vw, 1rem);
+}
+
 .breadcrumb {
   display: flex;
   gap: 0.55rem;

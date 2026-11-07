@@ -384,16 +384,6 @@ button {
   padding-top: clamp(0.75rem, 1.5vw, 1rem);
 }
 
-.breadcrumb {
-  display: flex;
-  gap: 0.55rem;
-  align-items: center;
-  color: var(--muted);
-  font-size: 0.92rem;
-  padding: 1rem 0 1.25rem;
-  overflow-wrap: anywhere;
-}
-
 /* ============================================
    HERO — compact for calculator pages
    ============================================ */
@@ -2067,16 +2057,6 @@ body[data-page-type="calculator"] .hero h1 {
   min-height: 36px;
   padding-block: 0.35rem;
   cursor: pointer;
-}
-
-.breadcrumb {
-  flex-wrap: wrap;
-  gap: 0.35rem 0.6rem;
-}
-
-.breadcrumb > :not(:last-child) {
-  flex-shrink: 0;
-  white-space: nowrap;
 }
 
 @media (min-width: 1000px) {

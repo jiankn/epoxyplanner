@@ -24,6 +24,7 @@ for (const page of pages) {
   const doc = html.get(page.slug);
   const name = page.slug || "/";
   check((doc.match(/<h1\b/g) || []).length === 1, `${name}: H1 count`);
+  check(!doc.includes('aria-label="Breadcrumb"'), `${name}: visible breadcrumb`);
   check(doc.includes(`<link rel="canonical" href="${url(page.slug)}"`), `${name}: canonical`);
   check(doc.includes(`<meta name="robots" content="${page.indexable === false ? "noindex, follow" : "index, follow"}"`), `${name}: robots`);
   check(!doc.includes('"@type":"SearchAction"'), `${name}: non-existent search markup`);

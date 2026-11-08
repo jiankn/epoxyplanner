@@ -231,8 +231,8 @@ const garageSizes = [
 ];
 
 const floorCostContent = {
-  answerHeading: "How much does it cost to epoxy a garage floor?",
-  answer: `Professional epoxy costs about ${rateRange("pro-epoxy")} per square foot installed, so a 400 sq ft [two-car garage](two-car-garage-epoxy-calculator) runs roughly ${floorRange(400, "pro-epoxy")}. Metallic and polyaspartic systems cost ${rateRange("pro-poly")} per square foot. DIY kits cost ${usd2(FLOOR_COST_RATES["diy-basic"].low)} to ${usd2(FLOOR_COST_RATES["diy-solids"].high)} per square foot in materials, plus tools and prep.`,
+  answerHeading: "Epoxy garage floor cost by garage size",
+  answer: `Professional prices in the table include materials and labor. DIY kits cost ${usd2(FLOOR_COST_RATES["diy-basic"].low)} to ${usd2(FLOOR_COST_RATES["diy-solids"].high)} per square foot in materials, plus tools and prep. Use the [two-car garage coverage calculator](two-car-garage-epoxy-calculator) to estimate how many kits to buy.`,
   answerTable: {
     headers: ["Garage", "Area", "DIY kit (materials)", "Pro epoxy", "Pro metallic", "Pro polyaspartic"],
     rows: garageSizes.map(([label, area]) => [
@@ -995,8 +995,7 @@ const basePages = [
     description:
       "Epoxy garage floor cost: $4–$10 per sq ft installed, about $1,600–$4,000 for a 400 sq ft 2-car garage. Compare DIY kits, flake, metallic, and polyaspartic.",
     eyebrow: "Floor Cost Estimator",
-    intro:
-      "Enter the floor size, coating system, and slab condition to get an installed price range, the cost per square foot, and what prep and repairs add. Ranges are U.S. national averages from current cost guides, with sources listed below.",
+    intro: `In the U.S., professional garage floor epoxy typically costs ${rateRange("pro-epoxy")} per sq ft installed, or ${floorRange(400, "pro-epoxy")} for a 400 sq ft two-car garage with concrete in good condition. Enter your floor size, coating system, and slab condition to estimate your total.`,
     primaryKeyword: "epoxy garage floor cost calculator",
     supportingKeywords: ["epoxy garage floor cost", "epoxy floor cost", "epoxy flooring cost calculator", "epoxy floor cost per square foot", "garage floor coating cost calculator"],
     calculatorType: "floor-cost",
@@ -1056,7 +1055,7 @@ const basePages = [
       nextStepHeading: "Compare two or three itemized quotes",
       nextStepCopy: "Use the range to check quotes. Ask how the concrete will be prepared, how many coats go down, and what the warranty covers."
     },
-    lastmod: "2026-10-03"
+    lastmod: "2026-11-08"
   }),
   calculatorPage({
     slug: "epoxy-flake-calculator",

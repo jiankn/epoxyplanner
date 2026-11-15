@@ -25,6 +25,7 @@ export const HTML_ROUTES = new Set([
   "/epoxy-floor-coverage-calculator/",
   "/epoxy-floor-pros-and-cons/",
   "/epoxy-floor-thickness/",
+  "/epoxy-flooring-cost-calculator/",
   "/epoxy-kit-size-guide/",
   "/epoxy-mix-ratio-by-volume-vs-weight/",
   "/epoxy-mixing-ratio-guide/",
@@ -76,6 +77,7 @@ export const HTML_ROUTES = new Set([
   "/sphere-resin-calculator/",
   "/table-top-epoxy-calculator/",
   "/terms/",
+  "/totalboat-epoxy-kit-calculator/",
   "/two-car-garage-epoxy-calculator/",
   "/void-fill-epoxy-calculator/"
 ]);

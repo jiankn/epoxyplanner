@@ -2,6 +2,7 @@ import { createFirstBatchPages } from "./seo-batch-2026-05.mjs";
 import { guideAdditions } from "./guide-content.mjs";
 import { improvePages, remediationRedirects, redirectPresets } from "./remediation-2026-10.mjs";
 import { epoxyMeasurementLinks, epoxyResinCalculatorsByBrand } from "./epoxy-resin-intents-2026-11.mjs";
+import { epoxyFlooringCostCalculator, totalBoatEpoxyKitCalculator } from "./project-calculators-2026-11.mjs";
 import { FLOOR_COST_RATES, floorCostRange } from "../assets/floor-cost-rates.js";
 import { basementEpoxyFloorCost, epoxyFloorProsAndCons, howToEpoxyGarageFloor, polyasparticVsEpoxy } from "./floor-guides-2026-11.mjs";
 import { flakeCalculatorContent, floorThicknessCalculator, floorThicknessContent, floorSystemsLastmod } from "./floor-systems-2026-11.mjs";
@@ -24,7 +25,7 @@ export const site = {
   nav: [
     { label: "Epoxy Calculator", slug: "" },
     { label: "River Table", slug: "river-table-epoxy-calculator" },
-    { label: "Floor Cost", slug: "garage-floor-epoxy-calculator" },
+    { label: "Floor Cost", slug: "epoxy-flooring-cost-calculator" },
     { label: "Coverage", slug: "epoxy-coverage-calculator" },
     {
       label: "More",
@@ -438,12 +439,12 @@ const basePages = [
     title: "Epoxy Calculator: Free Resin Calculator for Any Project",
     h1: "Epoxy Calculator",
     description:
-      "Free epoxy and resin calculator: enter your measurements to see how much to mix, with waste, kit size, and cost. Plus calculators for river tables and floors.",
+      "Free epoxy resin calculator for pours, molds and coatings. Estimate how much resin to mix, how many kits to buy, and what the project may cost.",
     eyebrow: "Free Epoxy & Resin Calculator",
     intro:
       "Calculate exactly how much epoxy resin you need — with waste, seepage, layer count, Part A / Part B split, cost, and product-fit guidance built in.",
     heroActions: [
-      { label: "Epoxy Floor Cost", slug: "garage-floor-epoxy-calculator", icon: "🏠" },
+      { label: "Epoxy Floor Cost", slug: "epoxy-flooring-cost-calculator", icon: "🏠" },
       { label: "River Table", slug: "river-table-epoxy-calculator", icon: "🪵" },
       { label: "Deep Pour", slug: "deep-pour-epoxy-calculator", icon: "🧊" },
       { label: "Coverage & Coatings", slug: "epoxy-coverage-calculator", icon: "🖌️" },
@@ -467,13 +468,19 @@ const basePages = [
         ]
       },
       {
-        title: "Choose the calculator that matches the real job",
+        title: "Choose a Resin Calculator for Your Project",
         body:
-          "The fastest way to get a trustworthy estimate is to start from the actual project type. River tables, deep pours, coatings, floor jobs, and void fills do not share the same measurement logic or product constraints.",
+          "Use the calculator above for a rectangular or round pour. Enter an actual mold capacity in the [resin mold calculator](resin-mold-calculator), measure a tabletop finish with the [coverage calculator](epoxy-coverage-calculator), or plan the lifts for a thick cast in the [deep pour calculator](deep-pour-epoxy-calculator).",
         cards: [
           {
-            title: "Epoxy Floor Cost Calculator",
-            text: "Installed price for garage and basement floors: $4–$10 per sq ft for professional epoxy, with DIY kits, flake, metallic, and polyaspartic compared.",
+            title: "Epoxy Flooring Cost Calculator",
+            text: "Estimate several floor areas together, with coating and slab preparation costs for each area.",
+            slug: "epoxy-flooring-cost-calculator",
+            primary: true
+          },
+          {
+            title: "Epoxy Garage Floor Cost Calculator",
+            text: "Price a garage by its size, flooring system and slab condition. Compare DIY materials and professional installation.",
             slug: "garage-floor-epoxy-calculator",
             primary: true
           },
@@ -684,10 +691,10 @@ const basePages = [
     title: "Epoxy Coverage Calculator: Square Feet, Thickness & Gallons",
     h1: "Epoxy Coverage Calculator",
     description:
-      "Enter square feet (or m²) and coat thickness to see how many gallons of epoxy you need, with edge runoff, waste, and cost for tabletops, bar tops, and countertops.",
+      "Calculate how much epoxy a surface needs or how much area your kits can cover. Use coat thickness or label coverage and account for multiple coats, waste and edges.",
     eyebrow: "Coverage Calculator",
     intro:
-      "Enter the surface area and coat thickness to see how much epoxy a tabletop, bar top, countertop, or other thin coat needs, with edges, runoff, and waste included.",
+      "Start with the surface area to estimate resin needed, or start with the kits you have to find how much area they cover. Use the rate and coat count for your product.",
     primaryKeyword: "epoxy coverage calculator",
     supportingKeywords: ["epoxy resin coverage calculator", "epoxy square foot calculator", "epoxy coverage estimator", "epoxy resin coverage"],
     calculatorType: "coverage",
@@ -702,6 +709,13 @@ const basePages = [
       ]),
       note: "Mixed resin, top surface only, before waste. The epoxy thickness and coverage chart lists seal coats and floor coatings in mils."
     },
+    sections: [
+      {
+        title: "How much area will your epoxy kits cover?",
+        body: "Multiply the number of kits by the mixed yield per kit. Multiply by the label's coverage rate, then divide by the coat count and the allowance factor. Two 1-gal kits rated at 160 ft² per gallon cover 160 ft² with two coats before waste, or 145.45 ft² with a 10% waste allowance and no edge allowance.",
+        actions: [{ label: "Calculate area from kits", href: "/epoxy-coverage-calculator/?coverageGoal=kits#calculator" }]
+      }
+    ],
     bullets: [
       "Best for tabletops, countertops, bar tops, and other surface-finish jobs.",
       "Turns area and thickness into an order-ready resin estimate with realistic buffer.",
@@ -751,7 +765,8 @@ const basePages = [
     note: "Use this page for finish coats and surface pours. If the resin is filling a cavity or thick section, move to the volume, river-table, or deep-pour page instead.",
     compareLabel: "Coverage baseline vs buffered order",
     resultEyebrow: "Coverage recommendation",
-    lastmod: "2026-10-03"
+    statLabels: { raw: "Mixed resin volume" },
+    lastmod: "2026-11-16"
   }),
   calculatorPage({
     slug: "river-table-epoxy-calculator",
@@ -815,7 +830,7 @@ const basePages = [
     title: "Deep Pour Epoxy Calculator: Layers, Volume & Cost",
     h1: "Deep Pour Epoxy Calculator",
     description:
-      "Calculate deep pour epoxy volume, staged lift count, waste, and cost for thick casting projects and resin pours that cannot be treated like a surface coat.",
+      "Calculate how much deep pour epoxy to buy, then see each lift's thickness, resin volume and mixing batches using the limits for your product.",
     eyebrow: "Thick Cast Planning",
     intro:
       "Deep pours fail when the math stops at total gallons. This page turns cavity size into a real execution plan by showing staged lifts, safety margin, approximate budget, and whether the project points toward a deep-pour casting resin instead of a top-coat product.",
@@ -857,9 +872,10 @@ const basePages = [
       "epoxy-cost-calculator",
       "epoxy-mixing-ratio-guide"
     ],
-    note: "Enter the product's maximum layer depth and mixed batch volume for your pour conditions. The batch count is a minimum for the whole cavity. Plan batches within each lift separately.",
+    note: "Enter the product's maximum layer depth and mixed batch volume for your conditions. The lift table shows the batches needed within each layer.",
     compareLabel: "Order quantity and pour plan",
-    statLabels: { layers: "Lift and batch estimates" },
+    statLabels: { layers: "Lifts and whole-cavity minimum" },
+    calculationTable: { title: "Deep pour layer plan", headers: ["Lift", "Thickness", "Mixed resin", "Mixing batches"] },
     lastmod: "2026-11-16"
   }),
   calculatorPage({
@@ -913,8 +929,13 @@ const basePages = [
     note: "Use this page for flood coats and finish pours. If the job includes a thick recess, river channel, or casting depth limit, solve that part on a different calculator first.",
     compareLabel: "Flood-coat baseline vs buffered order",
     resultEyebrow: "Coverage recommendation",
+    nextStepLinks: [
+      { label: "Compare TotalBoat TableTop kits", slug: "totalboat-epoxy-kit-calculator" },
+      { label: "Compare resin types", slug: "deep-pour-vs-table-top-epoxy" }
+    ],
     lastmod: "2026-11-16"
   }),
+  calculatorPage(totalBoatEpoxyKitCalculator),
   calculatorPage({
     slug: "bar-top-epoxy-calculator",
     title: "Bar Top Epoxy Calculator: Coverage, Edges & Resin",
@@ -1028,7 +1049,7 @@ const basePages = [
     eyebrow: "Floor Cost Estimator",
     intro: `In the U.S., professional garage floor epoxy typically costs ${rateRange("pro-epoxy")} per sq ft installed, or ${floorRange(400, "pro-epoxy")} for a 400 sq ft two-car garage with concrete in good condition. Enter your floor size, coating system, and slab condition to estimate your total.`,
     primaryKeyword: "epoxy garage floor cost calculator",
-    supportingKeywords: ["epoxy garage floor cost", "epoxy floor cost", "epoxy flooring cost calculator", "epoxy floor cost per square foot", "garage floor coating cost calculator"],
+    supportingKeywords: ["epoxy garage floor cost", "epoxy garage floor cost per square foot", "garage floor coating cost calculator"],
     calculatorType: "floor-cost",
     ...floorCostContent,
     bullets: [],
@@ -1066,7 +1087,7 @@ const basePages = [
     },
     nextStepLinks: [
       { label: "Gallons & Kits Calculator", slug: "epoxy-floor-coverage-calculator" },
-      { label: "See Methodology", slug: "methodology" }
+      { label: "Budget several floor areas", slug: "epoxy-flooring-cost-calculator" }
     ],
     ui: {
       calculatorHeading: "Estimate your floor cost",
@@ -1086,8 +1107,9 @@ const basePages = [
       nextStepHeading: "Compare two or three itemized quotes",
       nextStepCopy: "Use the range to check quotes. Ask how the concrete will be prepared, how many coats go down, and what the warranty covers."
     },
-    lastmod: "2026-11-08"
+    lastmod: "2026-11-16"
   }),
+  calculatorPage(epoxyFlooringCostCalculator),
   calculatorPage({
     slug: "epoxy-flake-calculator",
     title: "Epoxy Flake Calculator: Pounds of Flake per Sq Ft & Boxes",

@@ -728,6 +728,38 @@ button {
   gap: 1rem;
 }
 
+.budget-zones,
+.budget-zone,
+.coverage-measurements {
+  display: grid;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.budget-zone {
+  margin: 0;
+  padding: 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+
+.budget-zone legend {
+  padding-inline: 0.35rem;
+  font-weight: 700;
+}
+
+.budget-zone [data-remove-budget-zone] {
+  justify-self: start;
+}
+
+.budget-zone [data-remove-budget-zone][hidden] {
+  display: none;
+}
+
+.calculation-table {
+  margin-top: 1.2rem;
+}
+
 .field-grid {
   display: grid;
   gap: 0.9rem;
@@ -2040,7 +2072,8 @@ body[data-page-type="calculator"] .hero h1 {
   text-underline-offset: 0.22em;
 }
 
-#calculator {
+#calculator,
+#anchor-adhesive-tools {
   scroll-margin-top: 6rem;
 }
 

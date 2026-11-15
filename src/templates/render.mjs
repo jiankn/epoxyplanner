@@ -1,4 +1,5 @@
 import { plannerText } from "../assets/planner-text.js";
+import { TOTALBOAT_TABLETOP_KITS } from "../assets/totalboat-tabletop-kits.js";
 import { renderMeasurement } from "./measurement.mjs";
 
 const FORM_TEMPLATES = {
@@ -88,6 +89,27 @@ const FORM_TEMPLATES = {
       ${numberField("Width", "width", "14", "0.1")}
       ${numberField("Total depth", "depth", "2.5", "0.01")}
     </div>
+  `,
+  "floor-budget": () => `
+    <div class="budget-zones" data-budget-zones>${budgetZone(true)}</div>
+    <template data-budget-template>${budgetZone(false)}</template>
+    <button class="button button--ghost" type="button" data-add-budget-zone>Add a floor area</button>
+    ${numberField("Contractor minimum for this job ($, optional)", "jobMinimum", "", "0.01")}
+  `,
+  "totalboat-kits": ({ page }) => `
+    ${coatingAreaFields(page)}
+    <div class="field-grid field-grid--two">${coatingThicknessFields(page)}</div>
+    <div class="field-grid field-grid--two">
+      ${numberField("Waste buffer (%)", "wastePct", "8", "0.1")}
+      ${numberField("Edges and runoff (%)", "edgePct", "0", "0.1")}
+    </div>
+    <details class="product-options">
+      <summary>Compare kit prices (optional)</summary>
+      <div class="field-grid field-grid--three">
+        ${TOTALBOAT_TABLETOP_KITS.map(({ label, priceField }) => numberField(`${label} kit price ($)`, priceField, "", "0.01")).join("")}
+      </div>
+      <p class="field-note">The price comparison uses the sizes with a price entered.</p>
+    </details>
   `,
   surface: ({ page }) => `
     <div class="field-grid field-grid--four">
@@ -434,7 +456,7 @@ function shapeSelect(label, name, options, defaultValue = options[0]?.[0]) {
 }
 
 function numberField(label, name, value, step) {
-  const minimum = ["count", "coats"].includes(name) ? "1" : "0";
+  const minimum = ["count", "coats", "kitsOnHand"].includes(name) ? "1" : "0";
   const maximum = name.endsWith("Pct") ? ' max="100"' : "";
   return `
     <label class="field">
@@ -469,13 +491,51 @@ function priceField(page = {}) {
   `;
 }
 
-function coatingForm(page, areaCost = false, sealCoat = false) {
+function budgetZone(first) {
+  return `<fieldset class="budget-zone" data-budget-zone>
+    <legend data-budget-zone-title>Area 1</legend>
+    <label class="field"><span>Area name</span><input type="text" name="zoneName" maxlength="60" value="${first ? "Garage" : ""}" /></label>
+    ${shapeSelect("Measure by", "budgetAreaMode", [["area", "Area"], ["dimensions", "Length and width"]])}
+    <div data-visible-if="budgetAreaMode" data-visible-value="area">
+      ${numberField("Floor area (ft²)", "surfaceArea", first ? "400" : "", "0.1")}
+    </div>
+    <div class="field-grid field-grid--two is-hidden" data-visible-if="budgetAreaMode" data-visible-value="dimensions">
+      ${numberField("Length (ft)", "length", first ? "20" : "", "0.1")}
+      ${numberField("Width (ft)", "width", first ? "20" : "", "0.1")}
+    </div>
+    <div class="field-grid field-grid--two">
+      ${shapeSelect("Coating system", "system", [
+        ["pro-epoxy", "Professional solid-color epoxy"],
+        ["pro-flake", "Professional flake epoxy"],
+        ["pro-metallic", "Professional metallic epoxy"],
+        ["pro-poly", "Professional polyaspartic / polyurea"],
+        ["diy-basic", "DIY water-based epoxy kit"],
+        ["diy-solids", "DIY 100% solids kit with flake"]
+      ], first ? "pro-flake" : "pro-epoxy")}
+      ${shapeSelect("Slab preparation", "condition", [
+        ["good", "Basic prep included"], ["cracks", "Crack and chip patching"],
+        ["moisture", "Add a specified moisture barrier"], ["resurface", "Concrete resurfacing"]
+      ])}
+    </div>
+    <details class="product-options">
+      <summary>Enter quote amounts (optional)</summary>
+      <div class="field-grid field-grid--two">
+        ${numberField("Coating quote for this area ($)", "coatingQuote", "", "0.01")}
+        ${numberField("Prep quote for this area ($)", "prepQuote", "", "0.01")}
+      </div>
+      <p class="field-note">If a quote already includes prep, enter its total under coating and set prep to 0.</p>
+    </details>
+    <button class="button button--ghost button--small" type="button" data-remove-budget-zone${first ? " hidden" : ""}>Remove area</button>
+  </fieldset>`;
+}
+
+function coatingAreaFields(page, directArea = false) {
   const t = (key) => plannerText(page.locale, key);
   const metric = page.defaultUnit === "metric";
   return `
     <div class="field-grid field-grid--two">
       ${unitToggle(page)}
-      ${areaCost || sealCoat ? '<input type="hidden" name="dimensionMode" value="area" />' : shapeSelect(t("inputMode"), "dimensionMode", [["area", t("directArea")], ["dimensions", t("dimensions")]])}
+      ${directArea ? '<input type="hidden" name="dimensionMode" value="area" />' : shapeSelect(t("inputMode"), "dimensionMode", [["area", t("directArea")], ["dimensions", t("dimensions")]])}
     </div>
     <div class="field-grid field-grid--two" data-visible-if="dimensionMode" data-visible-value="area">
       ${numberField(t("area"), "surfaceArea", metric ? "10" : "20", "0.1")}
@@ -488,21 +548,52 @@ function coatingForm(page, areaCost = false, sealCoat = false) {
       </div>
       <div data-group="round" class="is-hidden">${numberField("Diameter", "diameter", "24", "0.1")}</div>
     </div>
+  `;
+}
+
+function coatingThicknessFields(page) {
+  const t = (key) => plannerText(page.locale, key);
+  const metric = page.defaultUnit === "metric";
+  return `${numberField(t("thickness"), "thickness", metric ? "1" : "0.125", "0.001")}
+    ${shapeSelect(t("thicknessUnit"), "thicknessUnit", [["mm", "mm"], ["in", "in"], ["mil", "mil (0.001 in)"]], metric ? "mm" : "in")}`;
+}
+
+function coatingForm(page, areaCost = false, sealCoat = false) {
+  const t = (key) => plannerText(page.locale, key);
+  const metric = page.defaultUnit === "metric";
+  const reverse = page.slug === "epoxy-coverage-calculator";
+  const forward = `
+    ${coatingAreaFields(page, areaCost || sealCoat)}
     ${sealCoat ? '<input type="hidden" name="coverageMethod" value="label" />' : shapeSelect(t("coverageMethod"), "coverageMethod", [["thickness", t("thicknessMethod")], ["label", t("labelMethod")]])}
     <div class="field-grid field-grid--two${sealCoat ? " is-hidden" : ""}" data-visible-if="coverageMethod" data-visible-value="thickness">
-      ${numberField(t("thickness"), "thickness", metric ? "1" : "0.125", "0.001")}
-      ${shapeSelect(t("thicknessUnit"), "thicknessUnit", [["mm", "mm"], ["in", "in"], ["mil", "mil (0.001 in)"]], metric ? "mm" : "in")}
+      ${coatingThicknessFields(page)}
     </div>
     <div class="field-grid field-grid--two${sealCoat ? "" : " is-hidden"}" data-visible-if="coverageMethod" data-visible-value="label">
       ${numberField(t("coverage"), "coverageRate", metric ? "8" : sealCoat ? "42.7" : "160", "0.1")}
       ${shapeSelect(t("coverageUnit"), "coverageUnit", [["sqft-gallon", "ft² / US gal"], ["sqm-liter", "m² / L"]], metric ? "sqm-liter" : "sqft-gallon")}
     </div>
+  `;
+  return `
+    ${reverse ? `
+      ${shapeSelect("Calculate", "coverageGoal", [["area", "Resin needed"], ["kits", "Area my kits cover"]])}
+      <div class="coverage-measurements" data-visible-if="coverageGoal" data-visible-value="area">${forward}</div>
+      <div class="coverage-measurements is-hidden" data-visible-if="coverageGoal" data-visible-value="kits">
+        <div class="field-grid field-grid--three">
+          ${numberField("Kits on hand", "kitsOnHand", "2", "1")}
+          ${numberField("Mixed yield per kit", "availableKitSize", "1", "0.01")}
+          ${shapeSelect("Kit volume unit", "availableKitUnit", [["gallons", "US gal"], ["liters", "L"]])}
+        </div>
+        <div class="field-grid field-grid--two">
+          ${numberField("Label coverage per coat", "kitCoverageRate", "160", "0.1")}
+          ${shapeSelect("Coverage rate unit", "kitCoverageUnit", [["sqft-gallon", "ft² / US gal"], ["sqm-liter", "m² / L"]])}
+        </div>
+      </div>` : forward}
     <div class="field-grid field-grid--three">
       ${numberField(t("coats"), "coats", "1", "1")}
       ${numberField("Waste buffer (%)", "wastePct", "10", "0.1")}
       ${numberField(t("edgePct"), "edgePct", sealCoat || areaCost ? "0" : "4", "0.1")}
     </div>
-    <div class="field-grid field-grid--two">
+    <div class="field-grid field-grid--two"${reverse ? ' data-visible-if="coverageGoal" data-visible-value="area"' : ""}>
       ${priceField(page)}
       ${areaCost ? numberField(t("otherCost"), "otherCost", "0", "0.01") : ""}
     </div>
@@ -527,10 +618,11 @@ function pricingForm(page) {
 
 function productFields(page) {
   const type = page.calculatorType;
-  if (["floor-cost", "converter", "pricing", "flake", "film-thickness"].includes(type)) return "";
+  if (["floor-cost", "floor-budget", "totalboat-kits", "converter", "pricing", "flake", "film-thickness"].includes(type)) return "";
   const t = (key) => plannerText(page.locale, key);
   const mixing = type !== "cost";
-  return `<details class="product-options"${type === "deep-pour" ? " open" : ""}>
+  const reverse = page.slug === "epoxy-coverage-calculator";
+  return `<details class="product-options"${type === "deep-pour" ? " open" : ""}${reverse ? ' data-visible-if="coverageGoal" data-visible-value="area"' : ""}>
     <summary>${escapeHtml(t("productDetails"))}</summary>
     ${mixing ? `<div class="field-grid field-grid--two">
       ${shapeSelect(t("ratio"), "mixRatio", [["unknown", t("unknown")], ["1:1", "1:1"], ["2:1", "2:1"], ["3:1", "3:1"], ["custom", t("custom")]])}
@@ -710,12 +802,15 @@ function renderBullets(title, bullets = [], className = "") {
 
 function renderTable(table) {
   if (!table?.rows?.length) return "";
+  const renderCell = (cell) => cell?.url
+    ? `<a href="${escapeHtml(cell.url)}">${escapeHtml(cell.label)}</a>`
+    : escapeHtml(cell);
   return `
     <div class="data-table-wrap">
       <table class="data-table">
         <thead><tr>${table.headers.map((header) => `<th scope="col">${escapeHtml(header)}</th>`).join("")}</tr></thead>
         <tbody>
-          ${table.rows.map((row) => `<tr>${row.map((cell, index) => (index === 0 ? `<th scope="row">${escapeHtml(cell)}</th>` : `<td>${escapeHtml(cell)}</td>`)).join("")}</tr>`).join("")}
+          ${table.rows.map((row) => `<tr>${row.map((cell, index) => (index === 0 ? `<th scope="row">${renderCell(cell)}</th>` : `<td>${renderCell(cell)}</td>`)).join("")}</tr>`).join("")}
         </tbody>
       </table>
     </div>
@@ -759,7 +854,7 @@ function renderGuideSections(sections = [], page = {}) {
 function renderHeroActions(page) {
   if (!page.heroActions?.length) return "";
   if (page.slug === "") {
-    return `<nav class="task-links" aria-label="Project calculators">${page.heroActions.filter(action => ["garage-floor-epoxy-calculator", "river-table-epoxy-calculator", "epoxy-coverage-calculator"].includes(action.slug)).map((action) => `<a href="${hrefFor(action.slug)}">${escapeHtml(action.label || action.title)}</a>`).join("")}</nav>`;
+    return `<nav class="task-links" aria-label="Project calculators">${page.heroActions.filter(action => ["epoxy-flooring-cost-calculator", "river-table-epoxy-calculator", "epoxy-coverage-calculator"].includes(action.slug)).map((action) => `<a href="${hrefFor(action.slug)}">${escapeHtml(action.label || action.title)}</a>`).join("")}</nav>`;
   }
   return `
     <div class="hero-actions">
@@ -816,7 +911,7 @@ function resultRows(page) {
     [page.statLabels?.split || uiText(page, "split", "Part A / Part B"), "data-stat-split"],
     [page.statLabels?.layers || uiText(page, "layers", "Layer guidance"), "data-stat-layers"]
   ];
-  if (!["pricing", "floor-cost", "converter", "flake", "film-thickness"].includes(page.calculatorType)) rows.push([t("kitCount"), "data-stat-kits"]);
+  if (!["pricing", "floor-cost", "floor-budget", "totalboat-kits", "converter", "flake", "film-thickness"].includes(page.calculatorType)) rows.push([t("kitCount"), "data-stat-kits"]);
   rows.push([uiText(page, "standard", "Standard"), "data-compare-standard"], [uiText(page, "productFit", "Product fit"), "data-compare-product"]);
   return rows;
 }
@@ -829,6 +924,9 @@ function renderTaskLinks(links) {
 function renderCalculator(page) {
   const formMarkup = configuredForm(page);
   const t = (key) => plannerText(page.locale, key);
+  const resultLabel = page.resultEyebrow || uiText(page, "resultEyebrow", "Recommended order");
+  const stickyLabel = uiText(page, "currentRecommendation", "Current recommendation");
+  const detailTable = page.calculationTable;
   return `
     <section class="section">
       <div class="calculator-shell">
@@ -850,7 +948,7 @@ function renderCalculator(page) {
         </div>
         <div class="result-panel" id="result-panel" data-result-panel>
           <div class="result-panel__hero" aria-live="polite" aria-atomic="true">
-            <p class="eyebrow">${escapeHtml(page.resultEyebrow || uiText(page, "resultEyebrow", "Recommended order"))}</p>
+            <p class="eyebrow" data-primary-label="${escapeHtml(resultLabel)}">${escapeHtml(resultLabel)}</p>
             <div class="result-big" data-result-primary>--</div>
             <p class="result-caption" data-result-secondary>${escapeHtml(uiText(page, "resultFallback", "Start with the inputs to generate an order-ready estimate."))}</p>
           </div>
@@ -868,6 +966,16 @@ function renderCalculator(page) {
           </ul>
         </div>
       </div>
+      ${detailTable ? `<div class="calculation-table" data-calculation-table hidden>
+        <h3 id="calculation-table-title">${escapeHtml(detailTable.title)}</h3>
+        <div class="data-table-wrap" tabindex="0" role="region" aria-labelledby="calculation-table-title">
+          <table class="data-table" aria-labelledby="calculation-table-title">
+            <thead><tr>${detailTable.headers.map((header) => `<th scope="col">${escapeHtml(header)}</th>`).join("")}</tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p class="table-note" data-calculation-note></p>
+      </div>` : ""}
       <div class="buy-box" id="next-step">
         <div class="section-heading section-heading--compact">
           <p class="eyebrow">${escapeHtml(uiText(page, "nextStepEyebrow", "Next Step"))}</p>
@@ -880,7 +988,7 @@ function renderCalculator(page) {
       </div>
       <div class="sticky-summary" data-sticky-summary>
         <div>
-          <p class="sticky-summary__label">${escapeHtml(uiText(page, "currentRecommendation", "Current recommendation"))}</p>
+          <p class="sticky-summary__label" data-primary-label="${escapeHtml(stickyLabel)}">${escapeHtml(stickyLabel)}</p>
           <strong data-sticky-primary>--</strong>
         </div>
         <p class="sticky-summary__cost" data-sticky-cost><span class="sticky-summary__cost-label">${escapeHtml(uiText(page, "estimatedCost", "Est. cost"))}</span><strong data-sticky-cost-value></strong></p>
@@ -892,7 +1000,7 @@ function renderCalculator(page) {
 
 function renderInfoSections(page, pageMap) {
   return page.sections.map((section) => `
-    <section class="section">
+    <section class="section"${section.id ? ` id="${escapeHtml(section.id)}"` : ""}>
       <div class="section-heading">
         <h2>${escapeHtml(section.title)}</h2>
       </div>

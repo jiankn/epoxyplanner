@@ -61,11 +61,12 @@ for (const page of pages) {
   if (form) {
     forms++;
     const data = { locale: page.locale || "en", numberLocale: page.numberLocale || "en-US", currency: page.currency || "USD", priceUnit: page.priceUnit || "gallon" };
-    for (const [tag] of form[1].matchAll(/<input\b[^>]*>/g)) {
+    const defaultFields = form[1].replace(/<template\b[^>]*>[\s\S]*?<\/template>/g, "");
+    for (const [tag] of defaultFields.matchAll(/<input\b[^>]*>/g)) {
       const name = attr(tag, "name");
       if (name) data[name] = attr(tag, "type") === "checkbox" ? /\bchecked\b/.test(tag) : attr(tag, "value");
     }
-    for (const [, name, options] of form[1].matchAll(/<select[^>]*name="([^"]+)"[^>]*>([\s\S]*?)<\/select>/g)) {
+    for (const [, name, options] of defaultFields.matchAll(/<select[^>]*name="([^"]+)"[^>]*>([\s\S]*?)<\/select>/g)) {
       const tags = [...options.matchAll(/<option\b[^>]*>/g)].map(m => m[0]);
       data[name] = attr(tags.find(tag => /\bselected\b/.test(tag)) || tags[0], "value");
     }

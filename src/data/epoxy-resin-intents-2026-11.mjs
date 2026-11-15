@@ -4,13 +4,17 @@ export const epoxyMeasurementLinks = {
 };
 
 export const anchorAdhesiveSection = {
+  id: "anchor-adhesive-tools",
   title: "Looking for an epoxy calculator for concrete anchors?",
-  body: "Use the adhesive manufacturer's tool to estimate how many cartridges you need for threaded rods or rebar. Start with your specified adhesive and installation details, such as hole diameter, embedment depth and number of holes.",
-  links: [
-    { label: "Hilti Adhesive Anchor Volume Calculator", url: "https://www.hilti.com/content/hilti/W1/US/en/business/business/engineering/anchors/volume-calculator.html", note: "iPhone and Android app" },
-    { label: "Simpson Strong-Tie Adhesive Cartridge Estimator", url: "https://app.strongtie.com/ace/" },
-    { label: "DEWALT Adhesive Anchor Volume Estimator", url: "https://anchors.dewalt.com/anchors/support-software/adhesive_anchor_volume_estimator2.php" }
-  ]
+  body: "Find the tool for your specified adhesive to estimate the number of cartridges. Get the product and installation dimensions from the project specification.",
+  table: {
+    headers: ["Manufacturer", "Platform", "Information to have ready", "Official calculator"],
+    rows: [
+      ["Hilti", "iPhone and Android app", "Adhesive, anchor or rebar size, hole diameter, embedment and hole count", { label: "Hilti Adhesive Anchor Volume Calculator", url: "https://www.hilti.com/content/hilti/W1/US/en/business/business/engineering/anchors/volume-calculator.html" }],
+      ["Simpson Strong-Tie", "Web calculator", "Adhesive, insert type and size, drill diameter, embedment and hole count", { label: "Simpson Strong-Tie Adhesive Cartridge Estimator", url: "https://app.strongtie.com/ace/" }],
+      ["DEWALT", "Web calculator", "Adhesive, base material, drilling method, steel element and hole dimensions", { label: "DEWALT Adhesive Anchor Volume Estimator", url: "https://anchors.dewalt.com/anchors/support-software/adhesive_anchor_volume_estimator2.php" }]
+    ]
+  }
 };
 
 export const epoxyResinCalculatorsByBrand = {
@@ -29,7 +33,7 @@ export const epoxyResinCalculatorsByBrand = {
   sections: [
     {
       title: "TotalBoat Epoxy Calculator",
-      body: "Use TotalBoat's tool for a rectangular or circular pour. For a round surface, enter the diameter and the thickness of the coat. The linked TableTop instructions show coverage for the kit sizes and give the mixing and application limits for that product.",
+      body: "Use TotalBoat's tool for a rectangular or circular pour. For a round surface, enter the diameter and the thickness of the coat. For TableTop, use the [TotalBoat epoxy kit calculator](totalboat-epoxy-kit-calculator) to compare package combinations by leftover, kit count and your own prices.",
       links: [
         { label: "TotalBoat Epoxy Calculator", url: "https://www.totalboat.com/pages/epoxy-calculator" },
         { label: "TotalBoat TableTop Epoxy instructions and technical data", url: "https://support.totalboat.com/hc/en-us/articles/42950167264923-TotalBoat-TableTop-Epoxy-Instruction-Sheet-and-TDS" }

@@ -214,7 +214,7 @@ export const basementEpoxyFloorCost = {
   sections: [
     {
       title: "Basement epoxy floor cost by size",
-      body: "Cost guides rarely price basements separately, so these figures use the same national epoxy floor rates as our garage calculator. Expect to land higher in the range if the crew has to carry equipment down a narrow stair or work around posts and mechanical equipment.",
+      body: "Cost guides rarely price basements separately, so these figures use the same national epoxy floor rates as our garage calculator. Expect to land higher in the range if the crew has to carry equipment down a narrow stair or work around posts and mechanical equipment. If the quote covers other rooms too, add their costs in the [epoxy flooring cost calculator](epoxy-flooring-cost-calculator).",
       table: {
         headers: ["Basement size", "DIY kit (materials)", "Pro epoxy, dry slab", "With vapor barrier", "With resurfacing"],
         rows: basementSizes.map((area) => [
@@ -303,7 +303,7 @@ export const basementEpoxyFloorCost = {
   ],
   generalFaq: [],
   related: ["garage-floor-epoxy-calculator", "epoxy-floor-coverage-calculator", "epoxy-floor-pros-and-cons", "polyaspartic-vs-epoxy", "how-to-epoxy-a-garage-floor"],
-  lastmod: pageDate,
+  lastmod: "2026-11-16",
   reviewedOn: pageDate
 };
 

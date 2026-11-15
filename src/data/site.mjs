@@ -1,6 +1,7 @@
 import { createFirstBatchPages } from "./seo-batch-2026-05.mjs";
 import { guideAdditions } from "./guide-content.mjs";
 import { improvePages, remediationRedirects, redirectPresets } from "./remediation-2026-10.mjs";
+import { epoxyMeasurementLinks, epoxyResinCalculatorsByBrand } from "./epoxy-resin-intents-2026-11.mjs";
 import { FLOOR_COST_RATES, floorCostRange } from "../assets/floor-cost-rates.js";
 import { basementEpoxyFloorCost, epoxyFloorProsAndCons, howToEpoxyGarageFloor, polyasparticVsEpoxy } from "./floor-guides-2026-11.mjs";
 import { flakeCalculatorContent, floorThicknessCalculator, floorThicknessContent, floorSystemsLastmod } from "./floor-systems-2026-11.mjs";
@@ -360,13 +361,27 @@ const exampleCuIn = 48 * 18 * 1.25;
 
 const epoxyCalculatorContent = {
   answerHeading: "How much epoxy do I need?",
-  answer: `Multiply length × width × depth in inches, then divide by 231 for gallons or by 1.805 for fluid ounces. A 2 × 4 ft tabletop at 1/8 in needs about ${resinAmount(144)}; a 6 ft river channel 6 in wide and 1.5 in deep needs about ${resinAmount(648)}. The calculator adds 8% for waste by default.`,
+  answer: `For a rectangle, multiply length × width × depth in inches, then divide by 231 for gallons or by 1.805 for fluid ounces. A 2 × 4 ft tabletop at 1/8 in needs about ${resinAmount(144)}. A 6 ft river channel 6 in wide and 1.5 in deep needs about ${resinAmount(648)}. The calculator adds 8% for waste by default.`,
   answerTable: {
     headers: ["Project", "Size", "Resin needed", "With 8% waste"],
     rows: commonProjects.map(([project, size, cuIn]) => [project, size, resinAmount(cuIn), resinAmount(cuIn * generalWaste)]),
     note: "Mixed resin (Part A + Part B together). Flood coats are the top surface only; add the edges if they get coated."
   },
   sections: [
+    {
+      title: "Calculate Epoxy in cm",
+      body: "Choose Metric and enter your inside dimensions in centimeters. A 60 × 30 × 1.2 cm mold holds 2,160 cm³, or 2.16 L of mixed epoxy. With 8% waste, the order estimate is 2.33 L. If your depth is in millimeters, divide by 10 first. For example, 12 mm becomes 1.2 cm.",
+      actions: [epoxyMeasurementLinks.metric]
+    },
+    {
+      title: "How Much Epoxy for a Circle?",
+      body: "In Round mode, enter the inside diameter and the depth you want to fill. Multiply π × (diameter ÷ 2)² × fill depth to get the volume. A 30 cm circle filled to 0.5 cm needs 353.43 mL before waste, or about 381.7 mL with 8% extra.",
+      points: [
+        "For a round tabletop finish with edge runoff, use the [table top epoxy calculator](table-top-epoxy-calculator). Choose dimensions and select Round.",
+        "For a set of identical coasters, use the [resin coaster calculator](resin-coaster-calculator) to get the total for all pieces in mL."
+      ],
+      actions: [epoxyMeasurementLinks.round]
+    },
     {
       title: "Worked example: a 48 × 18 in slab poured 1.25 in deep",
       points: [
@@ -439,6 +454,19 @@ const basePages = [
     ],
     sections: [
       {
+        title: "Epoxy Calculator on Your Phone",
+        body: "Use the calculator in your phone's browser. Add it to your home screen to reopen it when you have your measurements.",
+        actions: [{ label: "Start calculating", href: "#calculator" }],
+        points: [
+          "On iPhone, open this page in Safari, tap Share and choose Add to Home Screen.",
+          "On Android, open this page in Chrome, open the browser menu and choose the option to add it to your home screen. Create a shortcut when prompted."
+        ],
+        links: [
+          { label: "Apple's Safari home screen instructions", url: "https://support.apple.com/guide/iphone/open-as-web-app-iphea86e5236/27/ios/27" },
+          { label: "Chrome's Android shortcut instructions", url: "https://support.google.com/chrome/answer/15085120?co=GENIE.Platform%3DAndroid&hl=en-GB" }
+        ]
+      },
+      {
         title: "Choose the calculator that matches the real job",
         body:
           "The fastest way to get a trustworthy estimate is to start from the actual project type. River tables, deep pours, coatings, floor jobs, and void fills do not share the same measurement logic or product constraints.",
@@ -463,7 +491,7 @@ const basePages = [
           },
           {
             title: "Deep Pour Calculator",
-            text: "Plan thick casts with layer guidance, staged lifts, and deep-pour product fit.",
+            text: "Calculate volume and pour layers from your cavity dimensions and the product's maximum layer depth.",
             slug: "deep-pour-epoxy-calculator",
             primary: true
           },
@@ -649,7 +677,7 @@ const basePages = [
     ],
     note: "Use this calculator for regular shapes. For a river table, deep cast, or floor coating, switch to the matching calculator before buying.",
     compareLabel: "Raw math vs order-ready planning",
-    lastmod: "2026-11-07"
+    lastmod: "2026-11-16"
   }),
   calculatorPage({
     slug: "epoxy-coverage-calculator",
@@ -829,8 +857,10 @@ const basePages = [
       "epoxy-cost-calculator",
       "epoxy-mixing-ratio-guide"
     ],
-    note: "Deep-pour work is both a quantity problem and an execution problem. Use the layer guidance to pressure-test the plan before you compare products.",
-    compareLabel: "Current depth vs safe layering"
+    note: "Enter the product's maximum layer depth and mixed batch volume for your pour conditions. The batch count is a minimum for the whole cavity. Plan batches within each lift separately.",
+    compareLabel: "Order quantity and pour plan",
+    statLabels: { layers: "Lift and batch estimates" },
+    lastmod: "2026-11-16"
   }),
   calculatorPage({
     slug: "table-top-epoxy-calculator",
@@ -882,7 +912,8 @@ const basePages = [
     ],
     note: "Use this page for flood coats and finish pours. If the job includes a thick recess, river channel, or casting depth limit, solve that part on a different calculator first.",
     compareLabel: "Flood-coat baseline vs buffered order",
-    resultEyebrow: "Coverage recommendation"
+    resultEyebrow: "Coverage recommendation",
+    lastmod: "2026-11-16"
   }),
   calculatorPage({
     slug: "bar-top-epoxy-calculator",
@@ -1558,6 +1589,7 @@ const basePages = [
   guidePage(basementEpoxyFloorCost),
   guidePage(epoxyFloorProsAndCons),
   guidePage(howToEpoxyGarageFloor),
+  guidePage(epoxyResinCalculatorsByBrand),
   guidePage({
     slug: "epoxy-mixing-ratio-guide",
     title: "Epoxy Mix Ratio Guide: Resin to Hardener Chart (1:1, 2:1, 3:1)",
@@ -2171,7 +2203,7 @@ const basePages = [
       "Find the guide for the decision in front of you, then use the matching calculator to run your own numbers.",
     sections: [],
     includeInSitemap: true,
-    lastmod: "2026-11-07"
+    lastmod: "2026-11-16"
   }),
   ...multilingualWave1Pages
 ];
@@ -2249,7 +2281,8 @@ const guideHubGroups = [
       "epoxy-coverage-chart",
       "how-to-calculate-epoxy-pour",
       "epoxy-waste-factor-guide",
-      "epoxy-kit-size-guide"
+      "epoxy-kit-size-guide",
+      epoxyResinCalculatorsByBrand.slug
     ]
   },
   {

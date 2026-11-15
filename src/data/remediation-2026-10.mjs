@@ -1,4 +1,5 @@
 import { plannerText } from "../assets/planner-text.js";
+import { anchorAdhesiveSection, epoxyMeasurementLinks } from "./epoxy-resin-intents-2026-11.mjs";
 
 export const remediationRedirects = {
   "epoxy-calculator-metric": "epoxy-calculator",
@@ -26,7 +27,7 @@ const coatingSource = { label: "PrimaLoc: product-specific layer and recoat inst
 const examples = {
   "epoxy-calculator": ["Rectangle measurements and a checkable order", "Measure the finished inside length L, width W and filled depth d. A 48 × 18 × 1.25 in cavity is 1,080 in³, or 4.6753 US gal. An 8% allowance gives 5.0494 gal. Switching to metric converts the same geometry to 121.92 × 45.72 × 3.175 cm; it does not change the physical quantity. Part A/B and lift limits stay unconfirmed until you enter the exact product information."],
   "river-table-epoxy-calculator": ["What equal-length segments mean", "The segment mode divides the full channel length into equal sections and uses one representative width for each section. For a 72 in channel, widths of 4.5, 6 and 7.5 in have a 6 in mean. At 1.5 in depth the raw amount is 648 in³ = 2.8052 gal. The example 12% waste, 8% seepage and 5% seal-coat allowances add 25 percentage points, giving 3.5065 gal. These are editable budgeting assumptions, not measured loss rates. For unequal sections, first calculate a length-weighted mean width or calculate each section separately."],
-  "deep-pour-epoxy-calculator": ["Total order, lift count and batch count are different", "A 48 × 14 × 2.5 in cavity holds 7.2727 gal before waste, or 8 gal with the example 10% allowance. If your product actually permits a 1 in layer under your conditions, the depth calculation gives three lifts. If it also specifies a maximum mixed batch, enter that separately: a lift can require more than one batch. Neither the order quantity nor a computed lift count establishes a safe mixing volume or recoat schedule."],
+  "deep-pour-epoxy-calculator": ["How many layers for a 2.5 in pour?", "A 48 × 14 × 2.5 in cavity holds 7.27 US gal (27.53 L) and calls for an 8.00 US gal order with a 10% allowance. If your product allows a 1 in lift under your conditions, the calculator gives three lifts. A hypothetical 10 L batch limit gives a minimum of three batches for the entire cavity. A 1 in lift in this cavity takes about 11 L, so that lift needs more than one batch at the example limit. Use the product instructions to set your actual batch size and recoat timing."],
   "table-top-epoxy-calculator": ["Separate the surface from the edges", "For a rectangular 72 × 24 in top, area is 12 ft². A theoretical 1/8 in wet layer is 216 in³ = 0.9351 gal before edges and losses. The example 8% waste plus 4% edge/runoff allowance gives 1.0473 gal. A round 24 in top has 3.1416 ft² instead: choose the round dimensions mode. If you know a product's published coverage, switch to label coverage rather than assuming a wet thickness. Raised edges, end grain and an earlier seal coat need their own measurements."],
   "countertop-epoxy-calculator": ["Plan countertop sections before summing them", "Measure each straight countertop run without counting an overlapping corner twice. Two 6 × 2 ft runs give 24 ft² only if the runs do not overlap. A 1/8 in theoretical finish over that area is 1.8701 gal before losses. Add separate quantities for a backsplash, exposed edges or substrate preparation according to the selected system. The allowance field is a percentage reserve, not a measured vertical-edge model."],
   "epoxy-coverage-calculator": ["Check the units before adding a reserve", "One square meter at 1 mm wet thickness is exactly 1 L geometrically. Therefore 10 m² at 1 mm and one coat needs 10 L before allowances; 10% waste and zero edge allowance gives 11 L. A 3 L mixed-yield kit would require four kits. A product coverage rate is a different input: it incorporates that product's stated application conditions and should not be added as a second volume calculation."],
@@ -258,10 +259,16 @@ function improvePage(original) {
     if (example) {
       appendSection(page, ...example);
       const links = ["river", "deep-pour"].includes(type) ? [layerSource, ratioSource] : ["surface", "coverage"].includes(type) || page.calculatorType === "seal-coat" ? [coatingSource, ratioSource] : ["floor-cost", "converter", "pricing", "cost"].includes(page.calculatorType) ? undefined : [ratioSource];
-      if (links) appendSection(page, "Product data before mixing", "Use the exact product documentation for mixing basis, maximum layer depth, mixed batch volume and cure or recoat conditions. A dimensional estimate and a purchase allowance do not supply those material limits.", links);
+      if (links) {
+        const brandGuide = ["epoxy-calculator", "table-top-epoxy-calculator", "deep-pour-epoxy-calculator"].includes(page.slug)
+          ? " To compare kit sizes or cross-check an estimate, see the [epoxy resin calculators by brand](epoxy-resin-calculators-by-brand)."
+          : "";
+        appendSection(page, "Product data before mixing", "Use the exact product documentation for mixing basis, maximum layer depth, mixed batch volume and cure or recoat conditions. A dimensional estimate and a purchase allowance do not supply those material limits." + brandGuide, links);
+      }
       const kind = type === "river" ? "river" : ["coating", "seal-coat", "garage-floor"].includes(page.calculatorType) ? "coating" : page.calculatorType === "coaster" ? "round" : ["cube", "dice"].includes(page.calculatorType) ? "cube" : ["sphere", "cylinder"].includes(type) ? type : "rectangle";
       if (!["pricing", "cost", "floor-cost"].includes(page.calculatorType)) page.measurement = { kind, caption: diagramCaptions[kind] };
     }
+    if (page.slug === "epoxy-calculator") page.sections.push(anchorAdhesiveSection);
   }
   if (page.pageType === "guide" && guideNotes[page.slug]) {
     appendSection(page, "Using this guide with the planning tools", guideNotes[page.slug]);
@@ -273,9 +280,13 @@ function improvePage(original) {
   }
   if (page.slug === "") {
     page.intro = "Enter your measurements to see how much epoxy or resin to mix, with allowances, complete kits and cost. Product ratios and pour limits come from your chosen resin.";
-    page.quickCalculator = { calculatorType: "general", note: "For regular rectangular or round cavities. Use a project-specific calculator for floors, coatings or irregular river channels." };
+    page.quickCalculator = {
+      calculatorType: "general",
+      note: "For regular rectangular or round cavities. Use a project-specific calculator for floors, coatings or irregular river channels.",
+      taskLinks: [epoxyMeasurementLinks.metric, epoxyMeasurementLinks.round]
+    };
     page.sections = page.sections.filter(section => !["Calculators for specific projects", "What every estimate gives you"].includes(section.title));
-    page.lastmod = "2026-11-07";
+    page.lastmod = "2026-11-16";
   }
   if (page.slug === "authors") {
     page.title = "Who Maintains Epoxy Planner & How Calculations Are Checked";

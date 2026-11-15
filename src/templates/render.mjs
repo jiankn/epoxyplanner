@@ -821,16 +821,22 @@ function resultRows(page) {
   return rows;
 }
 
+function renderTaskLinks(links) {
+  if (!links?.length) return "";
+  return `<div class="task-links">${links.map(({ label, href }) => `<a href="${escapeHtml(href)}">${escapeHtml(label)}</a>`).join("")}</div>`;
+}
+
 function renderCalculator(page) {
   const formMarkup = configuredForm(page);
   const t = (key) => plannerText(page.locale, key);
   return `
     <section class="section">
       <div class="calculator-shell">
-        <div class="calculator-panel">
+        <div class="calculator-panel" id="calculator">
           <div class="section-heading section-heading--compact">
             <h2>${escapeHtml(uiText(page, "calculatorHeading", "Enter your measurements"))}</h2>
           </div>
+          ${renderTaskLinks(page.taskLinks)}
           <details class="input-explanation"><summary>${escapeHtml(t("defaultNotice"))}</summary><p class="example-input-note">${escapeHtml(t("examples"))}</p></details>
           <form class="calculator-root" data-calculator-type="${escapeHtml(page.calculatorType)}" data-locale="${escapeHtml(page.locale || "en")}" data-number-locale="${escapeHtml(page.numberLocale || "en-US")}" data-currency="${escapeHtml(page.currency || "USD")}" data-price-unit="${escapeHtml(page.priceUnit || "gallon")}" novalidate>
             ${formMarkup}
@@ -891,6 +897,7 @@ function renderInfoSections(page, pageMap) {
         <h2>${escapeHtml(section.title)}</h2>
       </div>
       ${section.body ? `<p class="lead">${richText(section.body)}</p>` : ""}
+      ${renderTaskLinks(section.actions)}
       ${section.points ? `
         <ul class="bullet-list">
           ${section.points.map((point) => `<li>${richText(point)}</li>`).join("")}

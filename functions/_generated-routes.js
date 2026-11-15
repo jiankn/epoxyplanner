@@ -29,6 +29,7 @@ export const HTML_ROUTES = new Set([
   "/epoxy-mix-ratio-by-volume-vs-weight/",
   "/epoxy-mixing-ratio-guide/",
   "/epoxy-pour-depth-guide/",
+  "/epoxy-resin-calculators-by-brand/",
   "/epoxy-seal-coat-calculator/",
   "/epoxy-unit-converter/",
   "/epoxy-waste-factor-guide/",

@@ -2040,6 +2040,10 @@ body[data-page-type="calculator"] .hero h1 {
   text-underline-offset: 0.22em;
 }
 
+#calculator {
+  scroll-margin-top: 6rem;
+}
+
 .example-input-note {
   margin: 0 0 1rem;
   max-width: 68ch;

@@ -760,6 +760,19 @@ button {
   margin-top: 1.2rem;
 }
 
+[data-full-volume-link] {
+  margin-top: 0.75rem;
+}
+
+.pour-plan-download {
+  margin-top: 1rem;
+}
+
+[data-full-volume-link][hidden],
+.pour-plan-download[hidden] {
+  display: none;
+}
+
 .field-grid {
   display: grid;
   gap: 0.9rem;
@@ -1784,6 +1797,14 @@ body[data-cookie-modal="open"] {
 
 .data-table td {
   color: var(--muted);
+}
+
+@media (max-width: 540px) {
+  .calculation-table .data-table th,
+  .calculation-table .data-table td {
+    padding: 0.55rem 0.6rem;
+    white-space: normal;
+  }
 }
 
 .data-table tbody tr:last-child th,

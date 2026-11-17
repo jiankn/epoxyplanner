@@ -1,6 +1,7 @@
 import { createFirstBatchPages } from "./seo-batch-2026-05.mjs";
 import { guideAdditions } from "./guide-content.mjs";
-import { improvePages, remediationRedirects, redirectPresets } from "./remediation-2026-10.mjs";
+import { improvePages, remediationRedirects, redirectPresets as earlierRedirectPresets } from "./remediation-2026-10.mjs";
+import { applyReviewImprovements, reviewRedirects, reviewRedirectPresets } from "./remediation-2026-11.mjs";
 import { epoxyMeasurementLinks, epoxyResinCalculatorsByBrand } from "./epoxy-resin-intents-2026-11.mjs";
 import { epoxyFlooringCostCalculator, totalBoatEpoxyKitCalculator } from "./project-calculators-2026-11.mjs";
 import { FLOOR_COST_RATES, floorCostRange } from "../assets/floor-cost-rates.js";
@@ -234,7 +235,7 @@ const garageSizes = [
 
 const floorCostContent = {
   answerHeading: "Epoxy garage floor cost by garage size",
-  answer: `Professional prices in the table include materials and labor. DIY kits cost ${usd2(FLOOR_COST_RATES["diy-basic"].low)} to ${usd2(FLOOR_COST_RATES["diy-solids"].high)} per square foot in materials, plus tools and prep. Use the [two-car garage coverage calculator](two-car-garage-epoxy-calculator) to estimate how many kits to buy.`,
+  answer: `Professional prices in the table include materials and labor. DIY kits cost ${usd2(FLOOR_COST_RATES["diy-basic"].low)} to ${usd2(FLOOR_COST_RATES["diy-solids"].high)} per square foot in materials, plus tools and prep. The [floor coverage calculator](epoxy-floor-coverage-calculator) has two-car garage presets for estimating how many kits to buy.`,
   answerTable: {
     headers: ["Garage", "Area", "DIY kit (materials)", "Pro epoxy", "Pro metallic", "Pro polyaspartic"],
     rows: garageSizes.map(([label, area]) => [
@@ -2240,8 +2241,8 @@ const englishRedirects = {
   "epoxy-garage-floor-cost": "garage-floor-epoxy-calculator"
 };
 
-export const redirects = { ...englishRedirects, ...createMultilingualRedirects(), ...remediationRedirects };
-export { redirectPresets };
+export const redirects = { ...englishRedirects, ...createMultilingualRedirects(), ...remediationRedirects, ...reviewRedirects };
+export const redirectPresets = { ...earlierRedirectPresets, ...reviewRedirectPresets };
 
 function resolveSlug(slug) {
   return Object.hasOwn(redirects, slug) ? redirects[slug] : slug;
@@ -2359,7 +2360,7 @@ const preparedPages = basePages.filter((page) => !Object.hasOwn(redirects, page.
     lastmod: "2026-10-03"
   } : page);
 });
-const livePages = fillGuideHub(improvePages(preparedPages).map(rewriteLinks));
+const livePages = fillGuideHub(improvePages(preparedPages).map(applyReviewImprovements).map(rewriteLinks));
 const liveSlugs = new Set(livePages.map((page) => page.slug));
 for (const [from, to] of Object.entries(redirects)) {
   if (!liveSlugs.has(to)) throw new Error(`Redirect target missing: /${from}/ -> /${to}/`);

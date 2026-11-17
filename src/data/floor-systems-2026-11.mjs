@@ -97,7 +97,7 @@ export const flakeCalculatorContent = {
   faq: [
     {
       q: "How much flake do I need for a 2-car garage?",
-      a: `For a 400 sq ft garage, about ${flakeLb(400, fullQuarter)} of 1/4 in flake for a full broadcast, or ${flakeLb(576, fullQuarter)} for a 576 sq ft (24 × 24 ft) garage. A medium partial broadcast needs only about ${flakeLb(400, medium)} for 400 sq ft. For the base coat, the [two-car garage epoxy calculator](two-car-garage-epoxy-calculator) works out the gallons.`
+      a: `For a 400 sq ft garage, about ${flakeLb(400, fullQuarter)} of 1/4 in flake for a full broadcast, or ${flakeLb(576, fullQuarter)} for a 576 sq ft (24 × 24 ft) garage. A medium partial broadcast needs only about ${flakeLb(400, medium)} for 400 sq ft. Use a garage preset in the [floor coverage calculator](epoxy-floor-coverage-calculator) for the base-coat gallons.`
     },
     {
       q: "Does flake size change how much I need?",

@@ -594,7 +594,7 @@ export const howToEpoxyGarageFloor = {
       links: [sika, carboline, vilaEpoxy, concreteNetwork],
       cards: [
         { title: "Gallons and kits", text: "Enter your floor and label coverage to get the amount to buy.", slug: "epoxy-floor-coverage-calculator" },
-        { title: "Two-car garage", text: "Quick kit and gallon numbers for the most common garage size.", slug: "two-car-garage-epoxy-calculator" }
+        { title: "Two-car garage presets", text: "Run the kit estimate for measured garage sizes.", slug: "epoxy-floor-coverage-calculator" }
       ]
     }
   ],

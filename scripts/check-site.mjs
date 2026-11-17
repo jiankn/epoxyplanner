@@ -52,7 +52,7 @@ for (const page of pages) {
   }
   const hasAdCode = doc.includes("pagead2.googlesyndication.com");
   if (hasAdCode) adScripts++;
-  check(hasAdCode === (page.pageType !== "info" || page.slug === ""), `${name}: ad exclusion rule`);
+  check(hasAdCode === (page.allowAds !== false && (page.pageType !== "info" || page.slug === "")), `${name}: ad exclusion rule`);
   for (const [lang, target] of Object.entries(page.alternates || {})) {
     check(pageMap.has(target) && pageMap.get(target).indexable !== false, `${name}: invalid hreflang ${lang}`);
     if (lang !== "x-default") check(pageMap.get(target)?.alternates?.[page.locale || "en"] === page.slug, `${name}: hreflang return ${lang}`);
@@ -71,6 +71,12 @@ for (const page of pages) {
       data[name] = attr(tags.find(tag => /\bselected\b/.test(tag)) || tags[0], "value");
     }
     const type = attr(form[0], "data-calculator-type");
+    if (page.locale && page.locale !== "en") {
+      const usesLimits = !["garage-floor", "area-cost"].includes(type);
+      const limitFields = Object.keys(data).filter(key => key.startsWith("max"));
+      check(usesLimits ? limitFields.length === 2 && ["maxDepth", "maxBatchLiters"].every(key => limitFields.includes(key)) : !limitFields.length,
+        `${name}: wrong product limit field names`);
+    }
     try {
       const result = calculate(type, data);
       check(Boolean(result.primary) && !/NaN|Infinity|--/.test(result.primary), `${name}: invalid default result`);

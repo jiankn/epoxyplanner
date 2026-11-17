@@ -1,5 +1,6 @@
 import { plannerText } from "../assets/planner-text.js";
 import { TOTALBOAT_TABLETOP_KITS } from "../assets/totalboat-tabletop-kits.js";
+import { POUR_PRODUCTS } from "../assets/pour-products.js";
 import { renderMeasurement } from "./measurement.mjs";
 
 const FORM_TEMPLATES = {
@@ -20,10 +21,11 @@ const FORM_TEMPLATES = {
       ${numberField("Diameter", "diameter", "24", "0.1")}
       ${numberField("Depth", "depthRound", "0.5", "0.01")}
     </div>
-    <div class="field-grid field-grid--two">${numberField("Waste buffer (%)", "wastePct", "8", "0.1")}${priceField(page)}</div>
+    <div class="field-grid field-grid--two">${numberField("Waste buffer (%)", "wastePct", "8", "0.1")}${page.compactEstimate ? "" : priceField(page)}</div>
   `,
   coverage: ({ page }) => coatingForm(page),
   coating: ({ page }) => coatingForm(page),
+  countertop: ({ page }) => coatingForm(page),
   "area-cost": ({ page }) => coatingForm(page, true),
   "seal-coat": ({ page }) => coatingForm(page, false, true),
   volume: ({ page }) => `
@@ -75,6 +77,7 @@ const FORM_TEMPLATES = {
         ${segmentField(2, "6.0")}
         ${segmentField(3, "7.5")}
       </div>
+      <p class="field-note">Enter one representative width per equal-length section. Omit unused fields.</p>
     </div>
   `,
   "deep-pour": ({ page }) => `
@@ -130,11 +133,16 @@ const FORM_TEMPLATES = {
       ${numberField("Coverage / gallon (sq ft)", "coverageRate", "160", "1")}
       ${numberField("Waste buffer (%)", "wastePct", "7", "0.1")}
     </div>
-    <div class="field-grid field-grid--three">
+    ${page.slug === "epoxy-floor-coverage-calculator" ? shapeSelect("Measure floor by", "floorMeasure", [["dimensions", "Length and width"], ["area", "Known area"]]) : ""}
+    <div class="field-grid field-grid--two"${page.slug === "epoxy-floor-coverage-calculator" ? ' data-visible-if="floorMeasure" data-visible-value="dimensions"' : ""}>
+      ${page.slug === "epoxy-floor-coverage-calculator" ? shapeSelect("Garage size", "sizePreset", [["custom", "Custom size"], ["20x20", "20 × 20 ft"], ["22x22", "22 × 22 ft"], ["24x24", "24 × 24 ft"]]) : ""}
       ${numberField("Length", "length", "22", "0.1")}
       ${numberField("Width", "width", "20", "0.1")}
-      ${numberField("Price / gallon", "pricePerGallon", "62", "0.01")}
     </div>
+    ${page.slug === "epoxy-floor-coverage-calculator" ? `<div class="is-hidden" data-visible-if="floorMeasure" data-visible-value="area">
+      ${numberField("Floor area (ft²)", "floorArea", "440", "0.1")}
+    </div>` : ""}
+    ${numberField("Price / gallon", "pricePerGallon", "62", "0.01")}
   `,
   // 地坪包工包料成本：费率和出处在 src/assets/floor-cost-rates.js
   "floor-cost": () => `
@@ -311,8 +319,16 @@ const FORM_TEMPLATES = {
         ${numberField("Depth", "depthRound", "1", "0.01")}
       </div>
     </div>
-    <div class="field-grid field-grid--three is-hidden" data-visible-if="moldMethod" data-visible-value="capacity">
+    <div class="is-hidden" data-visible-if="moldMethod" data-visible-value="capacity">
       ${numberField(plannerText(page.locale, "capacityMl"), "capacityMl", "50", "0.1")}
+      <details class="product-options">
+        <summary>Add other mold sizes (optional)</summary>
+        <p class="field-note">Enter the mixed volume of one cavity or one complete set for each additional size, then the number to fill.</p>
+        <div class="field-grid field-grid--two">
+          ${numberField("Group 2 capacity (mL)", "moldCapacity2", "", "0.1")}${numberField("Group 2 count", "moldCount2", "", "1")}
+          ${numberField("Group 3 capacity (mL)", "moldCapacity3", "", "0.1")}${numberField("Group 3 count", "moldCount3", "", "1")}
+        </div>
+      </details>
     </div>
     ${numberField("Waste buffer (%)", "wastePct", "8", "0.1")}
     ${priceField(page)}
@@ -407,11 +423,15 @@ function categoryLabel(page) {
 }
 
 function localizeFormMarkup(markup, page) {
-  const replacements = page?.ui?.formReplacements || {};
-  let localized = Object.entries(replacements).reduce(
-    (current, [source, replacement]) => current.split(source).join(escapeHtml(replacement)),
-    markup
+  const replacements = Object.entries(page?.ui?.formReplacements || {}).sort(([a], [b]) => b.length - a.length);
+  const translate = (text) => replacements.reduce(
+    (current, [source, replacement]) => current.replaceAll(escapeHtml(source), escapeHtml(replacement)),
+    text
   );
+  // Localize display text and accessible names. Field names, option values and data attributes are JS contracts.
+  let localized = replacements.length ? markup.replace(/<[^>]+>|[^<]+/g, (part) => part.startsWith("<")
+    ? part.replace(/\baria-label="([^"]+)"/g, (_, label) => 'aria-label="' + translate(label) + '"')
+    : translate(part)) : markup;
 
   if (page?.priceUnit === "liter") {
     localized = localized
@@ -558,12 +578,27 @@ function coatingThicknessFields(page) {
     ${shapeSelect(t("thicknessUnit"), "thicknessUnit", [["mm", "mm"], ["in", "in"], ["mil", "mil (0.001 in)"]], metric ? "mm" : "in")}`;
 }
 
+function countertopDetails() {
+  return `<details class="product-options" open>
+    <summary>Additional countertop surfaces</summary>
+    <p class="field-note">Use non-overlapping runs. Enter both dimensions for each item you need to include.</p>
+    <div class="field-grid field-grid--two">
+      ${numberField("Second run length", "runLength", "", "0.1")}${numberField("Second run width", "runWidth", "", "0.1")}
+      ${numberField("Cutout length", "cutoutLength", "", "0.1")}${numberField("Cutout width", "cutoutWidth", "", "0.1")}
+      ${numberField("Exposed edge length", "edgeLength", "", "0.1")}${numberField("Edge height", "edgeHeight", "", "0.1")}
+      ${numberField("Backsplash length", "splashLength", "", "0.1")}${numberField("Backsplash height", "splashHeight", "", "0.1")}
+    </div>
+  </details>`;
+}
+
 function coatingForm(page, areaCost = false, sealCoat = false) {
   const t = (key) => plannerText(page.locale, key);
   const metric = page.defaultUnit === "metric";
   const reverse = page.slug === "epoxy-coverage-calculator";
+  const countertop = page.calculatorType === "countertop";
   const forward = `
     ${coatingAreaFields(page, areaCost || sealCoat)}
+    ${countertop ? countertopDetails() : ""}
     ${sealCoat ? '<input type="hidden" name="coverageMethod" value="label" />' : shapeSelect(t("coverageMethod"), "coverageMethod", [["thickness", t("thicknessMethod")], ["label", t("labelMethod")]])}
     <div class="field-grid field-grid--two${sealCoat ? " is-hidden" : ""}" data-visible-if="coverageMethod" data-visible-value="thickness">
       ${coatingThicknessFields(page)}
@@ -591,7 +626,7 @@ function coatingForm(page, areaCost = false, sealCoat = false) {
     <div class="field-grid field-grid--three">
       ${numberField(t("coats"), "coats", "1", "1")}
       ${numberField("Waste buffer (%)", "wastePct", "10", "0.1")}
-      ${numberField(t("edgePct"), "edgePct", sealCoat || areaCost ? "0" : "4", "0.1")}
+      ${numberField(countertop ? "Extra runoff (%)" : t("edgePct"), "edgePct", sealCoat || areaCost || countertop ? "0" : "4", "0.1")}
     </div>
     <div class="field-grid field-grid--two"${reverse ? ' data-visible-if="coverageGoal" data-visible-value="area"' : ""}>
       ${priceField(page)}
@@ -618,9 +653,11 @@ function pricingForm(page) {
 
 function productFields(page) {
   const type = page.calculatorType;
-  if (["floor-cost", "floor-budget", "totalboat-kits", "converter", "pricing", "flake", "film-thickness"].includes(type)) return "";
+  if (page.compactEstimate || ["floor-cost", "floor-budget", "totalboat-kits", "converter", "pricing", "flake", "film-thickness"].includes(type)) return "";
   const t = (key) => plannerText(page.locale, key);
   const mixing = type !== "cost";
+  const pouring = type === "river" || type === "deep-pour";
+  const showLimits = mixing && !["garage-floor", "area-cost"].includes(type);
   const reverse = page.slug === "epoxy-coverage-calculator";
   return `<details class="product-options"${type === "deep-pour" ? " open" : ""}${reverse ? ' data-visible-if="coverageGoal" data-visible-value="area"' : ""}>
     <summary>${escapeHtml(t("productDetails"))}</summary>
@@ -630,12 +667,23 @@ function productFields(page) {
     </div>
     <div class="field-grid field-grid--two is-hidden" data-visible-if="mixRatio" data-visible-value="custom">
       ${numberField(t("ratioA"), "ratioA", "2", "0.01")}${numberField(t("ratioB"), "ratioB", "1", "0.01")}
-    </div>
-    <div class="field-grid field-grid--two">
+    </div>` : ""}
+    ${showLimits ? `<div class="field-grid field-grid--two">
       ${type === "deep-pour" ? "" : numberField(t("maxDepth"), "maxDepth", "", "0.01")}
       ${numberField(t("maxBatch"), "maxBatchLiters", "", "0.01")}
+      ${pouring ? numberField("Maximum volume in one lift (L, optional)", "maxLayerLiters", "", "0.01") : ""}
     </div>` : ""}
-    <div class="field-grid field-grid--two">
+    ${pouring ? `
+      <p class="field-note">Enter limits for your exact product, casting size and temperature. Check the <a href="/epoxy-resin-calculators-by-brand/">manufacturer data and kit sizes</a>.</p>
+      <label class="field">
+        <span>Kit sizes to compare</span>
+        <select class="custom-select" name="pourProduct">
+          <option value="custom">Enter my own kit size</option>
+          ${Object.entries(POUR_PRODUCTS).map(([id, { label }]) => `<option value="${id}">${escapeHtml(label)}</option>`).join("")}
+        </select>
+      </label>
+    ` : ""}
+    <div class="field-grid field-grid--two"${pouring ? ' data-visible-if="pourProduct" data-visible-value="custom"' : ""}>
       ${numberField(t("kitSize"), "kitSize", "", "0.01")}
       ${shapeSelect(t("kitUnit"), "kitUnit", [["liters", "L"], ["gallons", "US gal"]])}
     </div>
@@ -904,6 +952,7 @@ function defaultNextSteps(page) {
 // 结果清单：原来的统计卡片和对比卡片合成一张紧凑的标签/数值表，顺序按下单时最常看的排
 function resultRows(page) {
   const t = (key) => plannerText(page.locale, key);
+  if (page.compactEstimate) return [["Raw volume", "data-stat-raw"]];
   const rows = [
     [page.statLabels?.raw || uiText(page, "rawVolume", "Raw volume"), "data-stat-raw"],
     [uiText(page, "conservative", "Conservative"), "data-compare-conservative"],
@@ -921,12 +970,27 @@ function renderTaskLinks(links) {
   return `<div class="task-links">${links.map(({ label, href }) => `<a href="${escapeHtml(href)}">${escapeHtml(label)}</a>`).join("")}</div>`;
 }
 
+function renderCalculationTable(table, id, dataAttr) {
+  return `<div class="calculation-table" ${dataAttr} hidden>
+    <h3 id="${id}">${escapeHtml(table.title)}</h3>
+    <div class="data-table-wrap" tabindex="0" role="region" aria-labelledby="${id}">
+      <table class="data-table" aria-labelledby="${id}">
+        <thead><tr>${table.headers.map((header) => `<th scope="col">${escapeHtml(header)}</th>`).join("")}</tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="table-note" data-calculation-note></p>
+    ${dataAttr === "data-kit-table" ? '<p class="table-note"><a data-kit-source hidden>Manufacturer kit sizes</a></p>' : ""}
+  </div>`;
+}
+
 function renderCalculator(page) {
   const formMarkup = configuredForm(page);
   const t = (key) => plannerText(page.locale, key);
   const resultLabel = page.resultEyebrow || uiText(page, "resultEyebrow", "Recommended order");
   const stickyLabel = uiText(page, "currentRecommendation", "Current recommendation");
   const detailTable = page.calculationTable;
+  const pouring = page.calculatorType === "river" || page.calculatorType === "deep-pour";
   return `
     <section class="section">
       <div class="calculator-shell">
@@ -955,8 +1019,9 @@ function renderCalculator(page) {
           <dl class="result-list" aria-label="${escapeHtml(page.compareLabel || uiText(page, "compareEyebrow", "Compare Scenarios"))}">
             ${resultRows(page).map(([label, attr]) => `<div class="result-row"><dt>${escapeHtml(label)}</dt><dd ${attr}>--</dd></div>`).join("")}
           </dl>
+          ${page.compactEstimate ? '<a class="button button--ghost" id="next-step" data-full-volume-link href="/epoxy-calculator/#calculator">Continue with this estimate</a>' : ""}
         </div>
-        <div class="result-why">
+        ${page.compactEstimate ? "" : `<div class="result-why">
           <div class="section-heading section-heading--compact">
             <p class="eyebrow">${escapeHtml(uiText(page, "whyChangedEyebrow", "Why This Estimate Changed"))}</p>
             <h3>${escapeHtml(uiText(page, "whyChangedHeading", "What moved the number"))}</h3>
@@ -964,26 +1029,19 @@ function renderCalculator(page) {
           <ul class="stack-list" data-breakdown-list>
             <li>${escapeHtml(uiText(page, "breakdownFallback", "Enter the form values to see raw volume, buffer, and recommendation."))}</li>
           </ul>
-        </div>
+        </div>`}
       </div>
-      ${detailTable ? `<div class="calculation-table" data-calculation-table hidden>
-        <h3 id="calculation-table-title">${escapeHtml(detailTable.title)}</h3>
-        <div class="data-table-wrap" tabindex="0" role="region" aria-labelledby="calculation-table-title">
-          <table class="data-table" aria-labelledby="calculation-table-title">
-            <thead><tr>${detailTable.headers.map((header) => `<th scope="col">${escapeHtml(header)}</th>`).join("")}</tr></thead>
-            <tbody></tbody>
-          </table>
-        </div>
-        <p class="table-note" data-calculation-note></p>
-      </div>` : ""}
-      <div class="buy-box" id="next-step">
+      ${detailTable ? renderCalculationTable(detailTable, "calculation-table-title", "data-calculation-table") : ""}
+      ${pouring ? `${renderCalculationTable({ title: "Whole-kit purchase options", headers: ["Mixed yield per kit", "Kits to buy", "Total mixed yield", "Spare after allowance"] }, "kit-table-title", "data-kit-table")}
+      <button class="button button--ghost pour-plan-download" type="button" data-download-pour-plan hidden>Download plan (CSV)</button>` : ""}
+      ${page.compactEstimate ? "" : `<div class="buy-box" id="next-step">
         <div class="section-heading section-heading--compact">
           <p class="eyebrow">${escapeHtml(uiText(page, "nextStepEyebrow", "Next Step"))}</p>
           <h3 data-product-heading>${escapeHtml(uiText(page, "nextStepHeading", "Match the result to the right resin class"))}</h3>
         </div>
         <p data-product-copy>${escapeHtml(uiText(page, "nextStepCopy", "Use the estimate to narrow the resin class first. Then confirm product limits, cure behavior, and measurement assumptions before you make a buying decision."))}</p>
         <div class="button-row">
-          ${(page.nextStepLinks || defaultNextSteps(page)).map((link, index) => `<a class="button${index ? " button--ghost" : ""}" href="${hrefFor(link.slug)}">${escapeHtml(link.label)}</a>`).join("")}
+          ${(page.nextStepLinks || defaultNextSteps(page)).map((link, index) => `<a class="button${index ? " button--ghost" : ""}" href="${hrefFor(link.slug)}"${link.carryArea ? ' data-carry-floor-area' : ''}>${escapeHtml(link.label)}</a>`).join("")}
         </div>
       </div>
       <div class="sticky-summary" data-sticky-summary>
@@ -993,7 +1051,7 @@ function renderCalculator(page) {
         </div>
         <p class="sticky-summary__cost" data-sticky-cost><span class="sticky-summary__cost-label">${escapeHtml(uiText(page, "estimatedCost", "Est. cost"))}</span><strong data-sticky-cost-value></strong></p>
         <a class="button button--small" href="#result-panel">${escapeHtml(uiText(page, "viewDetails", "View details"))}</a>
-      </div>
+      </div>`}
     </section>
   `;
 }
@@ -1484,7 +1542,7 @@ export function renderPage(page, context) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="/assets/site.css" />
-    ${page.pageType !== "info" || page.slug === "" ? '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3562784107542460" crossorigin="anonymous"></script>' : ""}
+    ${page.allowAds !== false && (page.pageType !== "info" || page.slug === "") ? '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3562784107542460" crossorigin="anonymous"></script>' : ""}
     ${jsonLd(page, context)}
   </head>
   <body data-page-type="${escapeHtml(page.pageType)}" data-page-slug="${escapeHtml(page.slug)}" data-locale="${escapeHtml(page.locale || "en")}" data-has-calculator="${Boolean(page.pageType === "calculator" || page.quickCalculator || page.embeddedCalculator)}">

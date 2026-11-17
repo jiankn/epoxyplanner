@@ -108,7 +108,7 @@ function buildEmbeds({ site, pages, embeds, renderEmbedPage, assets }) {
 }
 
 function buildAssets() {
-  const files = ["site.css", "site.js", "calculator.js", "planner-text.js", "floor-cost-rates.js", "totalboat-tabletop-kits.js"];
+  const files = ["site.css", "site.js", "calculator.js", "planner-text.js", "floor-cost-rates.js", "totalboat-tabletop-kits.js", "pour-products.js"];
   const sources = new Map(files.map(file => [file, fs.readFileSync(path.join(projectRoot, "src", "assets", file), "utf8").replace(/\r\n/g, "\n")]));
   const hash = createHash("sha256").update("epoxy-assets-v1");
   for (const [file, contents] of sources) hash.update(file).update(contents);

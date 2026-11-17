@@ -1,3 +1,5 @@
+import { POUR_PRODUCTS } from "../assets/pour-products.js";
+
 export const epoxyMeasurementLinks = {
   metric: { label: "Calculate in cm", href: "/epoxy-calculator/?unit=metric#calculator" },
   round: { label: "Calculate a circular pour", href: "/epoxy-calculator/?shape=round#calculator" }
@@ -19,57 +21,57 @@ export const anchorAdhesiveSection = {
 
 export const epoxyResinCalculatorsByBrand = {
   slug: "epoxy-resin-calculators-by-brand",
-  title: "Epoxy Resin Calculators for TotalBoat, MAS & Promise",
-  h1: "Epoxy Resin Calculators by Brand",
-  description: "Find the official TotalBoat, MAS Epoxies and Promise Epoxy calculators. Use a worked tabletop example to turn mixed resin volume into whole kits.",
-  intro: "Find your brand's calculator, then match the mixed resin estimate to the kit size on your exact product label.",
+  title: "Epoxy Kit Yields & Pour Limits by Product",
+  h1: "Epoxy Kit Sizes and Pour Limits by Product",
+  description: "Compare published mixed kit sizes and product-specific application data for TotalBoat TableTop, Fathom and EcoPoxy FlowCast. Run your own purchase estimate.",
+  intro: "Check the mixed yield of the exact kit you intend to buy. Compare casting limits before choosing a product, then run your measurements through the matching purchase calculator.",
   primaryKeyword: "epoxy resin calculators by brand",
-  answer: "Divide the mixed epoxy you plan to buy, including your waste allowance, by the mixed yield of one kit. Round up to whole kits. A tabletop that needs 1.51 US gal after waste takes two 1-gal kits or one 2-gal kit.",
+  answer: "Divide the mixed volume you need after allowances by the combined yield of one kit. Round up to whole kits. Use the product's separate technical instructions for the ratio, thickness, volume and temperature conditions.",
   takeaways: [
-    "Start with the dimensions of the surface or cavity that will actually take resin.",
-    "Use the combined Part A and Part B yield listed for the exact kit.",
-    "For a deep cast, check the product's layer and batch limits separately."
+    "Kit yield is the combined amount in Parts A and B.",
+    "Read depth and volume limits for the intended application, such as a river table or a mold.",
+    "The planner uses the product choice for kit sizes. Enter the confirmed casting conditions yourself."
   ],
+  allowAds: false,
   sections: [
     {
-      title: "TotalBoat Epoxy Calculator",
-      body: "Use TotalBoat's tool for a rectangular or circular pour. For a round surface, enter the diameter and the thickness of the coat. For TableTop, use the [TotalBoat epoxy kit calculator](totalboat-epoxy-kit-calculator) to compare package combinations by leftover, kit count and your own prices.",
-      links: [
-        { label: "TotalBoat Epoxy Calculator", url: "https://www.totalboat.com/pages/epoxy-calculator" },
-        { label: "TotalBoat TableTop Epoxy instructions and technical data", url: "https://support.totalboat.com/hc/en-us/articles/42950167264923-TotalBoat-TableTop-Epoxy-Instruction-Sheet-and-TDS" }
-      ]
-    },
-    {
-      title: "MAS Epoxies Resin Calculator",
-      body: "Select your exact MAS product before reading the mixing amounts. The official tool offers rectangular and round volume calculations. Table Top Pro also has a separate weight calculator, so match the tool to the measurement method on your label.",
-      links: [
-        { label: "MAS Epoxies Resin Calculator", url: "https://masepoxies.com/pages/resin-calculator" },
-        { label: "MAS Table Top Pro kit sizes and coverage", url: "https://masepoxies.com/products/table-top-epoxy" }
-      ]
-    },
-    {
-      title: "Promise Epoxy Calculator",
-      body: "Enter the dimensions of the area taking resin. On a river table, measure the channel between the slabs. If its width changes along the length, use the [segmented river table calculator](river-table-epoxy-calculator) to estimate the cavity before choosing a kit.",
-      links: [
-        { label: "Promise Epoxy Calculator", url: "https://promiseepoxy.com/pages/epoxy-calculator" },
-        { label: "Promise Table Top Epoxy kit sizes", url: "https://promiseepoxy.com/products/tabletop" }
-      ]
-    },
-    {
-      title: "How many kits for a 3 × 6 ft tabletop?",
-      body: "A 1/8 in coat on the flat top needs 324 cubic inches, or 1.40 US gal of mixed epoxy. With an illustrative 8% allowance, plan for about 1.51 US gal. The example covers the top surface. Enter edge runoff separately in the [table top epoxy calculator](table-top-epoxy-calculator) if your project coats the edges.",
+      title: "Mixed yield, ratio and application for three exact products",
       table: {
-        headers: ["Product", "Using 1 US gal kits", "Using 2 US gal kits"],
+        headers: ["Product", "Published kits used here", "A:B by volume", "Application to verify", "Calculate"],
         rows: [
-          ["TotalBoat TableTop", "2 kits", "1 kit"],
-          ["MAS Table Top Pro", "2 kits", "1 kit"],
-          ["Promise Table Top", "2 kits", "1 kit"]
+          ["TotalBoat TableTop", "2 US qt, 1 and 2 US gal", "1:1", "Surface coats. Use the TableTop technical sheet to choose film thickness and batch volume.", { label: "Compare TableTop kit combinations", url: "/totalboat-epoxy-kit-calculator/#calculator" }],
+          [POUR_PRODUCTS.fathom.label, "1.5, 3 and 6 US gal", "2:1", "Up to 2 in per lift for a river or slab. The 3 in limit applies to small castings of up to 1 US gal. Published application range is 60–80°F.", { label: "Fathom kit estimate", url: "/river-table-epoxy-calculator/?pourProduct=fathom#calculator" }],
+          [POUR_PRODUCTS.flowcast.label, "6, 12, 30 and 60 L", "2:1", "13–38 mm per lift up to 30 L without additional cooling. The manufacturer specifies 20–25°C for the resin, mold and workspace.", { label: "FlowCast kit estimate", url: "/river-table-epoxy-calculator/?pourProduct=flowcast#calculator" }]
         ],
-        note: "Both purchase options supply 2 US gal, about 0.49 gal above the buffered estimate. Confirm the combined A + B yield on the package you buy."
+        note: "Manufacturer references checked November 17, 2026. Confirm local kit availability and the current instructions. A per-lift volume limit describes the casting, while a mixed batch limit describes what to mix at once."
       },
-      points: [
-        "When the product lists coverage for your coat thickness, you can estimate from that rate. For example, MAS lists about 12 sq ft per gallon at 1/8 in. Divide 18 sq ft by 12 to get 1.50 US gal before any additional project allowance. The coverage rate and the geometry are two ways to estimate the same coat.",
-        "For a thick casting, use the [deep pour epoxy calculator](deep-pour-epoxy-calculator) with the limits for your casting product. A whole-kit purchase may cover several mixing batches."
+      links: [
+        { label: "TotalBoat TableTop instruction sheet and technical data", url: "https://support.totalboat.com/hc/en-us/articles/42950167264923-TotalBoat-TableTop-Epoxy-Instruction-Sheet-and-TDS" },
+        { label: "TotalBoat Fathom instruction sheet and technical data", url: POUR_PRODUCTS.fathom.source },
+        { label: "EcoPoxy FlowCast specifications and technical data", url: POUR_PRODUCTS.flowcast.source }
+      ]
+    },
+    {
+      title: "Compare whole kits for the same river volume",
+      body: "The [segmented river example](river-table-epoxy-calculator) calls for 5.14 US gal, about 19.47 L, including 10% waste. These choices cover that same quantity using packages of one size. Check the applicable casting limits before choosing between products.",
+      table: {
+        headers: ["Product", "Example package choice", "Mixed yield", "Spare after allowance"],
+        rows: [
+          ["TotalBoat Fathom", "2 × 3 US gal", "6 US gal", "About 0.86 US gal"],
+          ["TotalBoat Fathom", "1 × 6 US gal", "6 US gal", "About 0.86 US gal"],
+          ["EcoPoxy FlowCast", "2 × 12 L", "24 L", "About 4.53 L"],
+          ["EcoPoxy FlowCast", "1 × 30 L", "30 L", "About 10.53 L"]
+        ]
+      }
+    },
+    {
+      title: "Check your dimensions against the manufacturer's calculator",
+      body: "Compare the volume without allowances first. Check whether the manufacturer's tool already includes a margin, and use the product label to identify what is included in the kit.",
+      links: [
+        { label: "TotalBoat epoxy calculator", url: "https://www.totalboat.com/pages/epoxy-calculator" },
+        { label: "EcoPoxy volume calculator", url: "https://www.ecopoxy.com/pages/volume-calculator" },
+        { label: "MAS Epoxies resin calculator", url: "https://masepoxies.com/pages/resin-calculator" },
+        { label: "Promise epoxy calculator", url: "https://promiseepoxy.com/pages/epoxy-calculator" }
       ]
     }
   ],
@@ -81,5 +83,6 @@ export const epoxyResinCalculatorsByBrand = {
   ],
   generalFaq: [],
   related: ["epoxy-calculator", "table-top-epoxy-calculator", "deep-pour-epoxy-calculator", "epoxy-kit-size-guide"],
-  lastmod: "2026-11-16"
+  lastmod: "2026-11-17",
+  reviewedOn: "2026-11-17"
 };

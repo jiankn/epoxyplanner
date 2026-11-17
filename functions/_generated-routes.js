@@ -68,9 +68,7 @@ export const HTML_ROUTES = new Set([
   "/resin-art-pricing-calculator/",
   "/resin-coaster-calculator/",
   "/resin-dice-calculator/",
-  "/resin-jewelry-calculator/",
   "/resin-mold-calculator/",
-  "/resin-tray-calculator/",
   "/river-table-epoxy-calculator/",
   "/river-table-epoxy-cost/",
   "/seal-coat-vs-flood-coat/",
@@ -78,7 +76,6 @@ export const HTML_ROUTES = new Set([
   "/table-top-epoxy-calculator/",
   "/terms/",
   "/totalboat-epoxy-kit-calculator/",
-  "/two-car-garage-epoxy-calculator/",
   "/void-fill-epoxy-calculator/"
 ]);
 
@@ -120,12 +117,18 @@ export const REDIRECTS = new Map([
   ["/pt-br/quanta-resina-epoxi-para-garagem/", "/pt-br/calculadora-piso-epoxi/"],
   ["/pt-br/quanta-resina-epoxi-preciso/", "/pt-br/"],
   ["/resin-calculator/", "/epoxy-calculator/"],
-  ["/round-epoxy-table-calculator/", "/table-top-epoxy-calculator/"]
+  ["/resin-jewelry-calculator/", "/resin-mold-calculator/"],
+  ["/resin-tray-calculator/", "/resin-mold-calculator/"],
+  ["/round-epoxy-table-calculator/", "/table-top-epoxy-calculator/"],
+  ["/two-car-garage-epoxy-calculator/", "/epoxy-floor-coverage-calculator/"]
 ]);
 
 export const REDIRECT_PRESETS = new Map([
   ["/epoxy-calculator-metric/", {"unit":"metric"}],
   ["/epoxy-rectangle-calculator/", {"shape":"rectangle"}],
   ["/epoxy-circle-calculator/", {"shape":"round"}],
-  ["/round-epoxy-table-calculator/", {"dimensionMode":"dimensions","shape":"round"}]
+  ["/round-epoxy-table-calculator/", {"dimensionMode":"dimensions","shape":"round"}],
+  ["/two-car-garage-epoxy-calculator/", {"sizePreset":"20x20"}],
+  ["/resin-jewelry-calculator/", {"moldPreset":"jewelry"}],
+  ["/resin-tray-calculator/", {"moldPreset":"tray"}]
 ]);

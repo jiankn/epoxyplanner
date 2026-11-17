@@ -2,16 +2,17 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { onRequest } from "../functions/_middleware.js";
 import { remediationRedirects, redirectPresets } from "../src/data/remediation-2026-10.mjs";
+import { reviewRedirects, reviewRedirectPresets } from "../src/data/remediation-2026-11.mjs";
 
 const request = url => onRequest({ request: new Request(url), next: () => new Response("content", { status: 200 }) });
 
 test("all consolidated pages reach a live target in one redirect with their task presets", async () => {
-  for (const [from, to] of Object.entries(remediationRedirects)) {
+  for (const [from, to] of Object.entries({ ...remediationRedirects, ...reviewRedirects })) {
     const response = await request(`https://epoxyplanner.com/${from}/`);
     assert.equal(response.status, 301, from);
     const location = new URL(response.headers.get("location"));
     assert.equal(location.pathname, `/${to}/`);
-    for (const [key, value] of Object.entries(redirectPresets[from] || {})) assert.equal(location.searchParams.get(key), value);
+    for (const [key, value] of Object.entries(redirectPresets[from] || reviewRedirectPresets[from] || {})) assert.equal(location.searchParams.get(key), value);
     assert.equal((await request(location.href)).status, 200);
   }
 });

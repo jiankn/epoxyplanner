@@ -61,10 +61,56 @@ test("deep pours calculate batches within each lift and show a partial final lif
   const plan = calculate("deep-pour", data);
   assert.equal(plan.liftCount, 3);
   assert.equal(plan.totalBatches, 5);
+  assert.match(plan.layersText, /3 lifts · 5 mixing batches/);
   assert.deepEqual(plan.detailRows.map((row) => row.at(-1)), ["2", "2", "1"]);
   assert.equal(plan.detailRows.at(-1)[1], "0.5 in");
   assert.equal(calculate("deep-pour", { ...data, depth: 2 }).detailRows.length, 2);
   assert.equal(calculate("deep-pour", { ...data, maxBatchLiters: "" }).totalBatches, null);
   assert.equal(calculate("deep-pour", { ...data, maxDepth: "" }).detailRows, undefined);
+  assert.match(calculate("deep-pour", { ...data, maxDepth: "" }).layersText, /At least 3 mixing batches/);
   assert.equal(calculate("deep-pour", { ...data, maxDepth: 0.01 }).detailRows.length, 2);
+});
+
+test("segmented river plans use one cavity volume for lifts and a buffered quantity for kits", () => {
+  const data = {
+    riverMode: "segment", length: 72, depth: 3, segmentWidth1: 3, segmentWidth2: 5, segmentWidth3: 7,
+    wastePct: 10, maxDepth: 1, maxLayerLiters: 6, maxBatchLiters: 4, mixRatio: "2:1", pourProduct: "fathom"
+  };
+  const result = calculate("river", data);
+  assert.ok(Math.abs(result.rawLiters - 17.69802912) < 1e-8);
+  assert.equal(result.primary, "5.14 gal");
+  assert.equal(result.totalBatches, 6);
+  assert.deepEqual(result.detailRows.map(row => row.at(-1)), ["2", "2", "2"]);
+  assert.match(result.splitText, /3\.12 gal A \/ 1\.56 gal B/);
+  assert.ok(result.kitRows.some(([size, count, total]) => size === "3 US gal" && count === "2" && total === "6 US gal"));
+  assert.equal(calculate("river", { ...data, maxDepth: 2, maxLayerLiters: 5 }).liftCount, 4);
+});
+
+test("countertop takeoff subtracts the opening and measures vertical faces", () => {
+  const data = {
+    surfaceArea: 16, runLength: 36, runWidth: 24, cutoutLength: 24, cutoutWidth: 24, edgeLength: 120, edgeHeight: 1.5,
+    coats: 1, thickness: 0.125, thicknessUnit: "in", wastePct: 8
+  };
+  const result = calculate("countertop", data);
+  assert.deepEqual(result.detailRows.at(-1), ["Total coated area", "19.25 ft²"]);
+  assert.equal(result.primary, "1.62 gal");
+  assert.throws(() => calculate("countertop", { ...data, cutoutWidth: 160 }), /cutout/);
+  assert.throws(() => calculate("countertop", { ...data, edgeHeight: "" }));
+});
+
+test("a mold batch combines groups with different capacities", () => {
+  const data = { moldMethod: "capacity", unit: "metric", capacityMl: 3, count: 10, moldCapacity2: 2, moldCount2: 8, wastePct: 15 };
+  const result = calculate("mold", data);
+  assert.ok(Math.abs(result.rawLiters - 0.046) < 1e-12);
+  assert.ok(Math.abs(result.recommendedLiters - 0.0529) < 1e-12);
+  assert.throws(() => calculate("mold", { ...data, moldCount2: 0.5 }));
+});
+
+test("known floor area gives the same takeoff and handoff area as a dimension preset", () => {
+  const data = { length: 20, width: 20, coats: 2, coverageRate: 160, wastePct: 7, kitSize: 3, kitUnit: "gallons" };
+  const preset = calculate("garage-floor", data);
+  const measured = calculate("garage-floor", { ...data, floorMeasure: "area", floorArea: 400 });
+  assert.equal(measured.floorAreaSqFt, 400);
+  assert.equal(measured.primary, preset.primary);
+  assert.equal(measured.kits, 2);
 });

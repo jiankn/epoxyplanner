@@ -119,7 +119,7 @@ test("depth and batch volume are separate confirmed product limits", () => {
   assert.match(calculate("deep-pour", data).layersText, /Confirm product/);
   const r = calculate("deep-pour", { ...data, maxDepth: 1, maxBatchLiters: 10 });
   assert.match(r.layersText, /3 lifts/);
-  assert.match(r.layersText, /3 batches/);
+  assert.match(r.layersText, /5 mixing batches/);
   assert.throws(() => calculate("deep-pour", { ...data, maxDepth: 0 }));
 });
 

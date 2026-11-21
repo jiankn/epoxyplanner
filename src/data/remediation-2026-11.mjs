@@ -1,4 +1,12 @@
+import { floorBudgetExampleLink } from "./project-calculators-2026-11.mjs";
+
 const reviewedOn = "2026-11-17";
+const revisedOn = "2026-11-21";
+
+const riverExampleLink = {
+  label: "Load the segmented river example",
+  href: "/river-table-epoxy-calculator/?example=segmented#calculator"
+};
 
 export const reviewRedirects = {
   "two-car-garage-epoxy-calculator": "epoxy-floor-coverage-calculator",
@@ -22,7 +30,7 @@ const pourPlanLabels = { layers: "Lifts and mixing batches", split: "Part A / Pa
 const riverExample = {
   title: "Worked example for a river with three different widths",
   body: "A 72 in channel measured in three equal 24 in sections is 3, 5 and 7 in wide. At 3 in of uniform depth, the cavity needs 1,080 in³, or 4.68 US gal (17.70 L). With 10% waste, plan to buy 5.14 US gal before kit rounding. This example budgets seal coat separately.",
-  actions: [{ label: "Load this example", href: "/river-table-epoxy-calculator/?example=segmented#calculator" }],
+  actions: [riverExampleLink],
   table: {
     headers: ["Decision", "Inputs", "Result"],
     rows: [
@@ -51,11 +59,21 @@ const floorExample = {
 
 const floorProjectExample = {
   title: "From measured floor area to material takeoff and quote",
-  body: "A 400 ft² garage and a 300 ft² basement total 700 ft². If both use two coats of one product with a label rate of 160 ft²/US gal per coat, the [floor coverage calculator](epoxy-floor-coverage-calculator) gives 8.75 US gal before waste and 9.36 US gal with 7% extra. With a 3 US gal mixed yield, order four kits.",
+  body: "The 400 ft² garage and 300 ft² basement total 700 ft². This material example assumes both floors use two coats of one epoxy at 160 ft² per mixed US gallon per coat. Only the garage receives flake. If the two floors use different epoxy products, calculate the gallons and round to kits for each product separately.",
+  actions: [
+    { label: "Load the 700 ft² kit estimate", href: "/epoxy-floor-coverage-calculator/?example=garage-basement#calculator" },
+    { label: "Load the 400 ft² flake estimate", href: "/epoxy-flake-calculator/?areaSqFt=400#calculator" }
+  ],
+  table: {
+    headers: ["Material", "Calculation", "Purchase"],
+    rows: [
+      ["Epoxy for both floors", "700 × 2 ÷ 160 = 8.75 US gal, or 9.36 with 7% extra", "Four 3 US gal mixed kits (12 US gal total)"],
+      ["¼ in flake for the garage only", "400 × 12.5 lb/100 ft² = 50 lb, or 55 lb with 10% extra", "Two 40 lb boxes"]
+    ]
+  },
   points: [
-    "If only the garage is getting flake, enter 400 ft² in the [flake calculator](epoxy-flake-calculator). Its example full-broadcast rate for ¼ in vinyl flake gives 55 lb with 10% waste, or two 40 lb boxes.",
-    "For a professional job, compare the full scopes in the quotes above. The two sample quotes total $4,650 for 700 ft². If either quote includes the coating and flake, that material is already included in the project price.",
-    "The rate and kit sizes in this example are assumptions. Use separately priced primers, repairs and topcoats only where your project or quote calls for them."
+    "Use the material list to check the scope of the $4,650 example quote. Add a purchase to the budget only if the quote excludes it and you will buy it separately.",
+    "The coverage rate and package sizes are example inputs. Check the labels for each product. Where a primer or topcoat is specified, estimate its own coverage and cost."
   ]
 };
 
@@ -72,8 +90,30 @@ const localFloorExample = {
   }
 };
 
+const localizedCoverageExamples = {
+  "pt-br/consumo-resina-epoxi-por-m2": {
+    title: "Como converter o consumo da ficha técnica em litros",
+    body: "Para pintura lisa com Sikafloor-264, a Sika Brasil indica cerca de 0,35 kg/m² por demão e densidade da mistura de 1,40 kg/L. Ao dividir 0,35 por 1,40, você obtém 0,25 L/m² por demão. O inverso é o rendimento de 4 m²/L.",
+    points: ["Selecione Rendimento do produto e informe 20 m², 4 m²/L, duas demãos e 10% de sobra. O cálculo dá 10 L antes da sobra e 11 L para a compra. O consumo do primer deve ser calculado à parte, pela ficha dele."],
+    links: localFloorExample["pt-br/preco-piso-epoxi-m2"].links
+  },
+  "es/consumo-resina-epoxi-por-m2": {
+    title: "Cuántos metros cuadrados cubre un litro según la ficha técnica",
+    body: "Para el sellado liso con Sikafloor-264, la ficha española indica un consumo de 0,25 a 0,30 kg/m² por capa y una densidad de la mezcla de 1,40 kg/L. Si tomas 0,28 kg/m² dentro de ese intervalo, el consumo equivale a 0,20 L/m². Con ese valor de ejemplo, un litro cubre 5 m² por capa.",
+    points: ["Elige el rendimiento del producto e introduce 20 m², 5 m²/L, una capa y un 10% de margen. El cálculo da 4 L antes del margen y 4,4 L para la compra. Si vas a poner una imprimación, calcula su consumo con su propia ficha técnica."],
+    links: [{ label: "Sika España · Sikafloor-264, densidad y consumo", url: "https://esp.sika.com/content/dam/dms/es01/p/sikafloor_-264.pdf" }]
+  },
+  "fr/quantite-resine-epoxy-par-m2": {
+    title: "Passer des kg/m² de la fiche technique aux litres à acheter",
+    body: "Pour un revêtement filmogène en Sikafloor-264, Sika France donne une consommation de 0,25 à 0,30 kg/m² par couche et une masse volumique du mélange d’environ 1,40 kg/L à 23 °C. En prenant 0,28 kg/m², une valeur dans cette plage, on obtient 0,20 L/m² par couche, soit un rendement de 5 m²/L.",
+    points: ["Sélectionnez le rendement du produit et saisissez 20 m², 5 m²/L, deux couches et 10 % de marge. Il faut 8 L avant pertes et 8,8 L avec cette marge. Calculez le primaire à partir de sa propre fiche."],
+    links: localFloorExample["fr/calculateur-sol-epoxy"].links
+  }
+};
+
 function updateHome(page) {
   return {
+    lastmod: revisedOn,
     title: "Epoxy Calculator & Project Planners",
     description: "Get a quick epoxy volume estimate or choose a tool for a river table, thick casting, countertop, mold, garage floor or coating project.",
     eyebrow: "Resin Planning Tools",
@@ -90,6 +130,7 @@ function updateHome(page) {
         ...section,
         title: "Choose your project",
         body: "Start with the [river table planner](river-table-epoxy-calculator) for a live-edge channel, [floor coverage](epoxy-floor-coverage-calculator) to price out kits from a manufacturer's spread rate, or the [countertop calculator](countertop-epoxy-calculator) for several runs, cutouts and exposed edges.",
+        actions: [riverExampleLink, floorBudgetExampleLink],
         cards: section.cards.filter(card => !["two-car-garage-epoxy-calculator", "epoxy-calculator"].includes(card.slug)).map(card => card.slug === "river-table-epoxy-calculator"
           ? { ...card, text: "Measure the channel, plan each lift, and download the kit and batch estimate." }
           : card)
@@ -134,6 +175,7 @@ export function applyReviewImprovements(page) {
   if (page.slug === "") changes = updateHome(page);
   if (page.slug === "countertop-epoxy-calculator") changes = updateCountertop(page);
   if (page.slug === "river-table-epoxy-calculator") changes = {
+    lastmod: revisedOn,
     title: "River Table Epoxy Calculator: Volume, Lifts & Kits",
     description: "Measure an irregular river channel, estimate mixed resin and waste, plan lifts from your product limits, and download batches and kit quantities.",
     intro: "Measure a live-edge channel by average width or equal-length segments. Use the same estimate to plan layers, mixing batches and whole kits.",
@@ -157,6 +199,7 @@ export function applyReviewImprovements(page) {
     }, ...page.sections.slice(1)]
   };
   if (page.slug === "epoxy-floor-coverage-calculator") changes = {
+    lastmod: revisedOn,
     title: "Epoxy Floor Coverage Calculator: Gallons, Coats & Kits",
     description: "Estimate epoxy gallons and kits from a measured floor area, number of coats and the product label. Includes two-car garage presets.",
     intro: "Measure the floor or start with a garage preset. Enter how much area one mixed gallon covers per coat, then calculate gallons and whole kits.",
@@ -167,8 +210,16 @@ export function applyReviewImprovements(page) {
     ]
   };
   if (page.slug === "epoxy-flooring-cost-calculator") changes = {
+    lastmod: revisedOn,
     sections: [page.sections[0], floorProjectExample, ...page.sections.slice(1)]
   };
+  if (page.slug === "how-much-epoxy-do-i-need-for-a-river-table" || page.slug === "how-to-measure-a-river-table-for-epoxy") {
+    const title = page.slug === "how-much-epoxy-do-i-need-for-a-river-table" ? "Turn the result into an order" : "An equal-segment measurement sheet";
+    changes = {
+      lastmod: revisedOn,
+      sections: page.sections.map(section => section.title === title ? { ...section, actions: [riverExampleLink] } : section)
+    };
+  }
   if (page.slug === "resin-mold-calculator") changes = {
     title: "Resin Mold Calculator: Volume for Multiple Cavities & Sets",
     description: "Estimate resin for regular molds or different groups of measured cavities. See batch totals in mL and whole kits for trays, pendants and sets.",
@@ -191,6 +242,8 @@ export function applyReviewImprovements(page) {
   };
   const floorSource = localFloorExample[page.slug];
   if (floorSource) changes = { sections: [...page.sections, floorSource] };
+  const coverageSource = localizedCoverageExamples[page.slug];
+  if (coverageSource) changes = { lastmod: revisedOn, sections: [coverageSource, ...page.sections] };
   if (page.locale && page.locale !== "en" && page.pageType === "calculator" && !changes) changes = {};
-  return changes ? { ...page, ...changes, lastmod: reviewedOn, reviewedOn } : page;
+  return changes ? { ...page, lastmod: reviewedOn, ...changes, reviewedOn: changes.lastmod || reviewedOn } : page;
 }

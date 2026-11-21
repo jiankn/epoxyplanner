@@ -1,3 +1,12 @@
+import { FLOOR_BUDGET_EXAMPLE } from "../assets/floor-cost-rates.js";
+
+export const floorBudgetExampleLink = {
+  label: "Load the garage and basement quote example",
+  href: "/epoxy-flooring-cost-calculator/?example=garage-basement#calculator"
+};
+
+const usd = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+
 export const epoxyFlooringCostCalculator = {
   slug: "epoxy-flooring-cost-calculator",
   title: "Epoxy Flooring Cost Calculator for Multiple Areas",
@@ -6,6 +15,7 @@ export const epoxyFlooringCostCalculator = {
   intro: "Add each floor area, choose its coating and slab preparation, and see the cost for the whole project. Use a U.S. benchmark or enter your own itemized quote amounts.",
   primaryKeyword: "epoxy flooring cost calculator",
   calculatorType: "floor-budget",
+  taskLinks: [floorBudgetExampleLink],
   resultEyebrow: "Total project budget",
   statLabels: { raw: "Average price per sq ft" },
   ui: { calculatorHeading: "Enter your floor areas", currentRecommendation: "Project budget", estimatedCost: "Area rate" },
@@ -19,7 +29,9 @@ export const epoxyFlooringCostCalculator = {
       body: "Suppose the 400 ft² garage quote lists $2,400 for flake epoxy and $300 for prep. The 300 ft² basement quote lists $1,500 for a solid epoxy coating and $450 for preparation. The two areas add up to $4,650 for 700 ft², or $6.64 per ft². These are example quotes.",
       table: {
         headers: ["Area", "Size", "Coating quote", "Prep quote", "Subtotal"],
-        rows: [["Garage", "400 ft²", "$2,400", "$300", "$2,700"], ["Basement", "300 ft²", "$1,500", "$450", "$1,950"]]
+        rows: FLOOR_BUDGET_EXAMPLE.map(({ zoneName, surfaceArea, coatingQuote, prepQuote }) => [
+          zoneName, `${surfaceArea} ft²`, usd.format(coatingQuote), usd.format(prepQuote), usd.format(coatingQuote + prepQuote)
+        ])
       }
     },
     {

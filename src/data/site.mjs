@@ -1087,8 +1087,8 @@ const basePages = [
       layers: "DIY vs pro"
     },
     nextStepLinks: [
-      { label: "Gallons & Kits Calculator", slug: "epoxy-floor-coverage-calculator" },
-      { label: "Budget several floor areas", slug: "epoxy-flooring-cost-calculator" }
+      { label: "Gallons & Kits Calculator", slug: "epoxy-floor-coverage-calculator", carryArea: true },
+      { label: "Budget several floor areas", slug: "epoxy-flooring-cost-calculator", carryArea: true }
     ],
     ui: {
       calculatorHeading: "Estimate your floor cost",
@@ -1108,7 +1108,7 @@ const basePages = [
       nextStepHeading: "Compare two or three itemized quotes",
       nextStepCopy: "Use the range to check quotes. Ask how the concrete will be prepared, how many coats go down, and what the warranty covers."
     },
-    lastmod: "2026-11-16"
+    lastmod: "2026-11-21"
   }),
   calculatorPage(epoxyFlooringCostCalculator),
   calculatorPage({
@@ -2357,7 +2357,7 @@ const preparedPages = basePages.filter((page) => !Object.hasOwn(redirects, page.
     ...addition,
     sections: [...(page.sections || []), ...(addition.sections || [])],
     faq: [...(addition.faq || []), ...(page.faq || [])],
-    lastmod: "2026-10-03"
+    lastmod: addition.lastmod || "2026-10-03"
   } : page);
 });
 const livePages = fillGuideHub(improvePages(preparedPages).map(applyReviewImprovements).map(rewriteLinks));

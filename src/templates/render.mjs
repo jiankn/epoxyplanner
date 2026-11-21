@@ -888,6 +888,7 @@ function renderGuideSections(sections = [], page = {}) {
           <h2>${escapeHtml(section.title)}</h2>
         </div>
         ${section.body ? `<p class="lead">${richText(section.body)}</p>` : ""}
+        ${renderTaskLinks(section.actions)}
         ${section.points ? `<ul class="bullet-list">${section.points.map((point) => `<li>${richText(point)}</li>`).join("")}</ul>` : ""}
         ${renderTable(section.table)}
         ${renderSourceLinks(section.links)}

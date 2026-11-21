@@ -1,5 +1,7 @@
 // Worked examples and decision aids for the existing English guides.
 // Prices and buffer percentages below are explicitly illustrative inputs.
+import { POUR_PRODUCTS } from "../assets/pour-products.js";
+
 const layerSource = {
   label: "PrimaLoc: maximum thickness for a single layer",
   url: "https://primaloc.helpscoutdocs.com/article/789-maximum-thickness-depth"
@@ -120,6 +122,7 @@ export const guideAdditions = {
     ]
   },
   "river-table-epoxy-cost": {
+    lastmod: "2026-11-21",
     answer: "Calculate the river volume, add chosen allowances, then multiply the mixed quantity by your supplier's price per mixed gallon or liter. A 72 × 6 × 1.5 in channel with 25% total allowances needs 3.51 gal; at an illustrative $100 per mixed gallon that is $350.65 before kit rounding, tax and shipping.",
     sections: [
       {
@@ -131,8 +134,15 @@ export const guideAdditions = {
         }
       },
       {
-        title: "Compare kits on the same mixed-volume basis",
-        body: "For a 2:1 volume-ratio product, 1 gal of resin plus 0.5 gal of hardener makes a nominal 1.5 gal mixed kit. If it costs $150, its comparable price is $100 per mixed gallon, not $150 per gallon. Check the package listing for what its headline quantity means. Weight-based kits cannot be converted to gallons from weight alone without the product's density information."
+        title: "Compare the checkout totals for published kit sizes",
+        body: "Use the 5.14 US gal purchase quantity from the segmented river example. TotalBoat lists Fathom kits with mixed yields of 1.5, 3 and 6 US gal. In this illustrative quote, every option supplies 6 US gal and leaves 0.86 US gal above the buffered quantity. Two 3 gal kits cost $510, while one 6 gal kit costs $525. Compare the total including delivery, tax and any required seal-coat product before you choose.",
+        actions: [{ label: "Load the 5.14 gal river example", href: "/river-table-epoxy-calculator/?example=segmented#calculator" }],
+        table: {
+          headers: ["Kit choice", "Example price per kit", "Mixed yield purchased", "Subtotal"],
+          rows: [["4 × 1.5 US gal", "$135", "6 US gal", "$540"], ["2 × 3 US gal", "$255", "6 US gal", "$510"], ["1 × 6 US gal", "$525", "6 US gal", "$525"]],
+          note: "Only the kit sizes come from the manufacturer. Prices are illustrative. The saved river example uses illustrative casting limits and does not configure Fathom's application conditions."
+        },
+        links: [{ label: "TotalBoat Fathom technical sheet and kit sizes", url: POUR_PRODUCTS.fathom.source }]
       },
       {
         title: "Show uncertainty before committing to an order",
@@ -186,6 +196,7 @@ export const guideAdditions = {
     ]
   },
   "epoxy-pour-depth-guide": {
+    lastmod: "2026-11-21",
     answer: "Plan staged pours from the exact product's permitted layer depth: layers = ceiling(total fill depth / permitted layer depth). A 3 in cavity requires six layers at an illustrative 1/2 in limit or three at a 1 in limit. Those limits are example inputs, not permission to pour any epoxy at that thickness.",
     sections: [
       {
@@ -207,10 +218,21 @@ export const guideAdditions = {
         ]
       },
       {
-        title: "Use a published limit, not a category average",
-        body: "PrimaLoc's bar/tabletop instructions specify a maximum 1/8 in layer. That is one product's coating limit, not a general deep-casting limit. For choosing a product or interpreting limits, use the Maximum Epoxy Pour Depth guide; for a schedule once the limit is known, enter it in the deep-pour calculator.",
-        links: [layerSource],
-        cards: [{ title: "Read a product's maximum pour depth", text: "Distinguish a depth limit from batch-volume and temperature conditions.", slug: "maximum-epoxy-pour-depth" }]
+        title: "Match the manufacturer's limit to the calculator field",
+        body: "In the [deep-pour calculator](deep-pour-epoxy-calculator), a thickness cap limits the height of a lift. A cap on resin placed in the cavity can further reduce that height. A mixing batch cap controls how many separate mixes a lift takes. Fill the batch field only when you can confirm the permitted amount for one mix.",
+        table: {
+          headers: ["Technical sheet", "Published condition", "Which limit it describes"],
+          rows: [
+            ["TotalBoat Fathom, river table or slab", "Up to 2 in per lift", "Application-specific thickness"],
+            ["TotalBoat Fathom, small casting", "Up to 3 in for a mold holding up to 1 US gal of mixed epoxy", "Conditional mold limit. The 1 US gal figure describes the casting covered by this rule."],
+            ["EcoPoxy FlowCast", "13–38 mm per lift, up to 30 L per lift without added cooling", "Lift thickness and lift volume. The 30 L figure describes what goes into a layer."]
+          ],
+          note: "Sources checked November 21, 2026. Check minimum pour size, temperature and recoat conditions in the current sheet. The calculator estimates geometry and batch count from the limits you enter."
+        },
+        links: [
+          { label: "TotalBoat Fathom technical sheet", url: POUR_PRODUCTS.fathom.source },
+          { label: "EcoPoxy FlowCast product specifications", url: POUR_PRODUCTS.flowcast.source }
+        ]
       }
     ]
   },
@@ -279,6 +301,7 @@ export const guideAdditions = {
     ]
   },
   "how-to-calculate-epoxy-pour": {
+    lastmod: "2026-11-21",
     answer: "For a rectangular cavity, use inside length × width × depth in one unit system. Divide cubic inches by 231 for US gallons, or cubic centimeters by 1,000 for liters, then add measured extra work and a chosen loss allowance. Keep the order quantity separate from the permitted batch or layer size.",
     sections: [
       {
@@ -294,12 +317,16 @@ export const guideAdditions = {
         body: "For a circular cavity use π × (diameter / 2)² × depth, not diameter × diameter × depth. A 4 in diameter cavity 1/4 in deep holds π in³, or about 1.74 US fl oz. For several independent pockets, calculate each and add the volumes. Subtract occupied inserts only when their displaced volume can be measured; use segment calculations for an irregular river."
       },
       {
-        title: "Check three common unit mistakes",
-        points: [
-          "Convert feet to inches before multiplying with inch depths. Square feet need a factor of 144 when combined with an inch thickness.",
-          "Use US liquid gallons/fluid ounces for these tools. A weight ounce and an Imperial gallon are different units.",
-          "Keep price per liter with liters and price per mixed gallon with mixed gallons. For a weight-based kit, use the product's own volume or density data."
-        ]
+        title: "Trace a suspicious volume back to the measurements",
+        body: "Write down the inside measurements and their units, then compare the unbuffered result in the [volume calculator](epoxy-calculator). If the result is far from 4.68 US gal for the rectangle above, check these input errors before changing the waste allowance.",
+        table: {
+          headers: ["Input error", "What the result looks like", "What to check"],
+          rows: [
+            ["Read a 4 ft length as 4 in", "90 in³ instead of 1,080 in³", "Convert feet to inches before multiplying by an inch-based width and depth."],
+            ["Type 1.25 cm for a 1.25 in depth", "6.97 L instead of 17.70 L", "Convert the depth to 3.175 cm before multiplying the metric dimensions."],
+            ["Square the diameter of the 4 in round cavity", "6.96 US fl oz instead of 1.74 US fl oz", "Use the 2 in radius in the area formula, or enter the full 4 in diameter in the circular calculator."]
+          ]
+        }
       }
     ]
   },

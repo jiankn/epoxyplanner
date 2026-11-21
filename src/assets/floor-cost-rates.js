@@ -25,6 +25,11 @@ export const FLOOR_CONDITION = {
 export const FLOOR_PRO_MINIMUM = [500, 1000];
 export const FLOOR_GRINDER_RENTAL = [100, 200];
 
+export const FLOOR_BUDGET_EXAMPLE = [
+  { zoneName: "Garage", surfaceArea: 400, system: "pro-flake", coatingQuote: 2400, prepQuote: 300 },
+  { zoneName: "Basement", surfaceArea: 300, system: "pro-epoxy", coatingQuote: 1500, prepQuote: 450 }
+];
+
 // 返回总价区间；请人施工时套用承包商最低收费
 export function floorCostRange(area, systemKey, conditionKey, needsGrinding) {
   const rate = FLOOR_COST_RATES[systemKey] || FLOOR_COST_RATES["pro-epoxy"];

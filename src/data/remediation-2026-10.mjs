@@ -272,8 +272,8 @@ function improvePage(original) {
   }
   if (page.pageType === "guide" && guideNotes[page.slug]) {
     appendSection(page, "Using this guide with the planning tools", guideNotes[page.slug]);
-    page.lastmod = "2026-10-30";
-    page.reviewedOn = "2026-10-30";
+    if (!(page.lastmod > "2026-10-30")) page.lastmod = "2026-10-30";
+    page.reviewedOn = page.lastmod;
     if (page.slug === "epoxy-cost-per-square-foot") page.embeddedCalculator = { calculatorType: "area-cost", resultEyebrow: "Budget per area", statLabels: { cost: "Total budget" } };
     if (page.slug === "how-to-measure-a-river-table-for-epoxy") page.measurement = { kind: "river", caption: guideNotes[page.slug] };
     if (page.slug === "how-to-calculate-epoxy-pour") page.measurement = { kind: "rectangle", caption: guideNotes[page.slug] };

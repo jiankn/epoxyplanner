@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { calculate } from "../src/assets/calculator.js";
+import { FLOOR_BUDGET_EXAMPLE } from "../src/assets/floor-cost-rates.js";
 import { planTotalBoatKits } from "../src/assets/totalboat-tabletop-kits.js";
 
 test("floor budgets combine independently priced areas measured by area and dimensions", () => {
@@ -16,6 +17,7 @@ test("floor budgets combine independently priced areas measured by area and dime
     ["Garage", "Professional flake epoxy", "$2,700"],
     ["Basement", "Professional solid-color epoxy", "$1,950"]
   ]);
+  assert.deepEqual(calculate("floor-budget", { zones: FLOOR_BUDGET_EXAMPLE }), result);
   assert.throws(() => calculate("floor-budget", { zones: [...zones, { surfaceArea: 0 }] }));
   assert.throws(() => calculate("floor-budget", { zones: [{ ...zones[0], prepQuote: -10 }] }));
 });
@@ -113,4 +115,14 @@ test("known floor area gives the same takeoff and handoff area as a dimension pr
   assert.equal(measured.floorAreaSqFt, 400);
   assert.equal(measured.primary, preset.primary);
   assert.equal(measured.kits, 2);
+});
+
+test("garage floor quotes hand off the quoted area to the material takeoff", () => {
+  const quote = calculate("floor-cost", { length: 24, width: 24, system: "pro-epoxy", condition: "good" });
+  assert.equal(quote.floorAreaSqFt, 576);
+  const takeoff = calculate("garage-floor", {
+    floorMeasure: "area", floorArea: quote.floorAreaSqFt, coats: 2, coverageRate: 160, wastePct: 7, kitSize: 3, kitUnit: "gallons"
+  });
+  assert.equal(takeoff.primary, "7.7 gal");
+  assert.equal(takeoff.kits, 3);
 });

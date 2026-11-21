@@ -1,4 +1,4 @@
-import { FLOOR_COST_RATES, FLOOR_PRO_MINIMUM, floorCostRange } from "./floor-cost-rates.js";
+import { FLOOR_BUDGET_EXAMPLE, FLOOR_COST_RATES, FLOOR_PRO_MINIMUM, floorCostRange } from "./floor-cost-rates.js";
 import { plannerText } from "./planner-text.js";
 import { planTotalBoatKits, TOTALBOAT_TABLETOP_KITS } from "./totalboat-tabletop-kits.js";
 import { POUR_PRODUCTS } from "./pour-products.js";
@@ -2369,6 +2369,7 @@ function computeFloorCost(data) {
   ];
 
   return {
+    floorAreaSqFt: area,
     primary: usdRange(low, high),
     secondary: `${areaText}, ${rate.label}: about ${perSqFt(low / area)} – ${perSqFt(high / area)} per sq ft including prep.`,
     rawText: `${perSqFt(low / area)} – ${perSqFt(high / area)}`,
@@ -2618,13 +2619,13 @@ function addSegmentField(form) {
   list.append(wrapper);
 }
 
-function setupBudgetZones(form) {
+function setupBudgetZones(form, loadExample) {
   const list = form.querySelector("[data-budget-zones]");
   if (!list) return;
   const template = form.querySelector("[data-budget-template]");
   const add = form.querySelector("[data-add-budget-zone]");
 
-  const refresh = () => {
+  const updateControls = () => {
     const zones = [...list.children];
     zones.forEach((zone, index) => {
       const label = `Area ${index + 1}`;
@@ -2633,9 +2634,25 @@ function setupBudgetZones(form) {
       remove.hidden = zones.length === 1;
       remove.setAttribute("aria-label", `Remove ${label.toLowerCase()}`);
     });
+  };
+
+  const refresh = () => {
+    updateControls();
     updateConditionalGroups(form);
     compute(form);
   };
+
+  if (loadExample) {
+    for (const [index, fields] of FLOOR_BUDGET_EXAMPLE.entries()) {
+      if (index > 0) list.append(template.content.cloneNode(true));
+      const zone = list.lastElementChild;
+      for (const [name, value] of Object.entries(fields)) {
+        zone.querySelector(`[name="${name}"]`).value = value;
+      }
+      zone.querySelector('[name="coatingQuote"]').closest("details").open = true;
+    }
+  }
+  updateControls();
 
   add.addEventListener("click", () => {
     list.append(template.content.cloneNode(true));
@@ -2911,9 +2928,11 @@ function applyQueryPresets(form, params) {
   const type = form.dataset.calculatorType;
   const slug = document.body.dataset.pageSlug;
   const loadRiverExample = type === "river" && params.get("example") === "segmented";
+  const floorCoverage = slug === "epoxy-floor-coverage-calculator";
+  const loadFloorExample = floorCoverage && params.get("example") === "garage-basement";
   const allowedPresets = { unit: ["metric", "imperial"], shape: ["round", "rectangle"], dimensionMode: ["area", "dimensions"], moldMethod: ["geometry", "capacity", "cube"], coverageGoal: ["area", "kits"] };
   for (const [name, values] of Object.entries(allowedPresets)) {
-    const value = name === "unit" && loadRiverExample ? "imperial" : params.get(name);
+    const value = name === "unit" && (loadRiverExample || loadFloorExample) ? "imperial" : params.get(name);
     const input = form.querySelector(`[name="${name}"]`);
     if (input && values.includes(value)) input.value = value;
   }
@@ -2931,14 +2950,29 @@ function applyQueryPresets(form, params) {
     }
   }
   const preset = params.get("sizePreset");
-  if (slug === "epoxy-floor-coverage-calculator" && ["20x20", "22x22", "24x24"].includes(preset)) {
+  if (floorCoverage && ["20x20", "22x22", "24x24"].includes(preset)) {
     set("sizePreset", preset);
     applySizePreset(form, preset);
   }
-  const areaSqFt = Number(params.get("areaSqFt"));
-  if (Number.isFinite(areaSqFt) && areaSqFt > 0 && (type === "flake" || type === "floor-budget")) {
-    set("areaUnit", "sqft");
-    set("surfaceArea", roundForInput(areaSqFt));
+  const areaSqFt = loadFloorExample
+    ? FLOOR_BUDGET_EXAMPLE.reduce((total, zone) => total + zone.surfaceArea, 0)
+    : Number(params.get("areaSqFt"));
+  if (Number.isFinite(areaSqFt) && areaSqFt > 0) {
+    if (floorCoverage) {
+      const metric = form.dataset.unitState === "metric";
+      set("floorMeasure", "area");
+      set("floorArea", roundForInput(metric ? areaSqFt / SQUARE_FEET_PER_SQUARE_METER : areaSqFt));
+    } else if (type === "flake" || type === "floor-budget") {
+      set("areaUnit", "sqft");
+      set("surfaceArea", roundForInput(areaSqFt));
+    }
+  }
+  if (loadFloorExample) {
+    set("coats", 2);
+    set("coverageRate", 160);
+    set("wastePct", 7);
+    set("kitUnit", "gallons");
+    set("kitSize", 3).closest("details").open = true;
   }
   const product = params.get("pourProduct");
   if (Object.hasOwn(POUR_PRODUCTS, product)) set("pourProduct", product)?.closest("details")?.setAttribute("open", "");
@@ -2969,7 +3003,9 @@ function initCalculator(form) {
   capturePanelFallbacks(shell);
   const unit = form.querySelector('[name="unit"]');
   form.dataset.unitState = unit?.value || "";
-  applyQueryPresets(form, new URLSearchParams(window.location.search));
+  const params = new URLSearchParams(window.location.search);
+  applyQueryPresets(form, params);
+  setupBudgetZones(form, params.get("example") === "garage-basement");
   form.querySelectorAll("[data-pill-toggle]").forEach((toggle) => {
     const value = toggle.querySelector("input")?.value;
     toggle.querySelectorAll(".pill-toggle__btn").forEach((button) => {
@@ -3032,7 +3068,6 @@ function initCalculator(form) {
     compute(form);
   });
 
-  setupBudgetZones(form);
   panelRoot(shell).querySelector("[data-download-pour-plan]")?.addEventListener("click", () => downloadPourPlan(form));
 
   const addSegmentButton = form.querySelector("[data-add-segment]");

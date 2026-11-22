@@ -2,6 +2,7 @@ import { floorBudgetExampleLink } from "./project-calculators-2026-11.mjs";
 
 const reviewedOn = "2026-11-17";
 const revisedOn = "2026-11-21";
+const brazilFloorDataUpdatedOn = "2026-11-22";
 
 const riverExampleLink = {
   label: "Load the segmented river example",
@@ -80,7 +81,8 @@ const floorProjectExample = {
 const localFloorExample = {
   "pt-br/preco-piso-epoxi-m2": {
     title: "Da ficha técnica ao custo por m²",
-    body: "Para pintura lisa, a Sika Brasil informa aproximadamente 0,35 kg/m² por demão de Sikafloor-264 e densidade da mistura de 1,40 kg/L. A conversão dá 0,25 L/m² por demão, ou 4 m²/L. Para conferir no cálculo, escolha o rendimento do rótulo, digite 20 m², 4 m²/L, duas demãos e 10% de sobra. São 11 L. Com um preço hipotético de R$ 28/L, o revestimento custa R$ 308, ou R$ 15,40/m². Calcule primer e outras etapas em separado.",
+    body: "Para pintura lisa, a Sika Brasil informa de 0,25 a 0,30 kg/m² por demão de Sikafloor-264 e densidade da mistura de cerca de 1,40 kg/L. Com 0,28 kg/m², a conversão dá 0,20 L/m² por demão, ou 5 m²/L. Na calculadora, selecione o rendimento do produto e informe 20 m², 5 m²/L, duas demãos e 10% de sobra. São 8,8 L. Com um preço hipotético de R$ 28/L, o revestimento custa R$ 246,40, ou R$ 12,32/m². Calcule o primer e as outras etapas à parte.",
+    lastmod: brazilFloorDataUpdatedOn,
     links: [{ label: "Sika Brasil · Sikafloor-264 para pintura, consumo e densidade", url: "https://bra.sika.com/pt/construcao/pisos-industriais/revestimento-epoxi/pinturas-altos-solidos/sikafloor-264.html" }]
   },
   "fr/calculateur-sol-epoxy": {
@@ -92,9 +94,10 @@ const localFloorExample = {
 
 const localizedCoverageExamples = {
   "pt-br/consumo-resina-epoxi-por-m2": {
-    title: "Como converter o consumo da ficha técnica em litros",
-    body: "Para pintura lisa com Sikafloor-264, a Sika Brasil indica cerca de 0,35 kg/m² por demão e densidade da mistura de 1,40 kg/L. Ao dividir 0,35 por 1,40, você obtém 0,25 L/m² por demão. O inverso é o rendimento de 4 m²/L.",
-    points: ["Selecione Rendimento do produto e informe 20 m², 4 m²/L, duas demãos e 10% de sobra. O cálculo dá 10 L antes da sobra e 11 L para a compra. O consumo do primer deve ser calculado à parte, pela ficha dele."],
+    title: "Como calcular o rendimento por demão",
+    body: "Para o sistema de pintura lisa com Sikafloor-264, a Sika Brasil especifica duas demãos, com consumo de 0,25 a 0,30 kg/m² por demão. Divida o peso da mistura pelo consumo por demão e pelo número de demãos. Usando 0,28 kg/m², 1 kg cobre cerca de 3,57 m² em uma demão ou 1,79 m² em duas. Para estimar a compra pelo limite de maior consumo, use 0,30 kg/m² e acrescente uma margem para perdas.",
+    points: ["Para usar a calculadora em litros, divida 0,28 kg/m² pela densidade da mistura, 1,40 kg/L. Isso dá 0,20 L/m² por demão, equivalente a 5 m²/L. Em Rendimento do produto, informe 20 m², 5 m²/L, duas demãos e 10% de sobra. São 8 L antes da sobra e 8,8 L para a compra. Calcule o primer à parte com a ficha dele."],
+    lastmod: brazilFloorDataUpdatedOn,
     links: localFloorExample["pt-br/preco-piso-epoxi-m2"].links
   },
   "es/consumo-resina-epoxi-por-m2": {
@@ -241,9 +244,9 @@ export function applyReviewImprovements(page) {
     }]
   };
   const floorSource = localFloorExample[page.slug];
-  if (floorSource) changes = { sections: [...page.sections, floorSource] };
+  if (floorSource) changes = { lastmod: floorSource.lastmod || reviewedOn, sections: [...page.sections, floorSource] };
   const coverageSource = localizedCoverageExamples[page.slug];
-  if (coverageSource) changes = { lastmod: revisedOn, sections: [coverageSource, ...page.sections] };
+  if (coverageSource) changes = { lastmod: coverageSource.lastmod || revisedOn, sections: [coverageSource, ...page.sections] };
   if (page.locale && page.locale !== "en" && page.pageType === "calculator" && !changes) changes = {};
   return changes ? { ...page, lastmod: reviewedOn, ...changes, reviewedOn: changes.lastmod || reviewedOn } : page;
 }

@@ -810,12 +810,12 @@ const coverageAnswers = {
     note: "Valeurs brutes, sans marge. Pour les peintures et revêtements de sol époxy, suivez la consommation indiquée sur la fiche technique du fabricant."
   },
   "pt-BR": {
-    title: "Quantos litros de resina epóxi por m²? Tabela de 0,5 a 3 mm",
+    title: "Rendimento da resina epóxi por m²: 1 kg e 1 litro",
     description:
-      "1 litro rende 1 m² a 1 mm. Veja a tabela em litros e kg por espessura, quantos m² rende 1 kg e calcule o total com sobra para a sua área.",
-    answerHeading: "Quantos litros de resina epóxi por m²?",
+      "Veja quantos m² rende 1 kg de resina epóxi em uma ou duas demãos. Consulte a tabela por espessura e calcule quantos litros comprar com margem para perdas.",
+    answerHeading: "1 kg de resina epóxi rende quantos m²?",
     answer:
-      "Cada milímetro de espessura consome 1 litro de resina epóxi por metro quadrado, ou cerca de 1,1 kg, porque a densidade costuma ficar entre 1,1 e 1,2 kg/L. Assim, 1 litro rende cerca de 2 m² a 0,5 mm, 1 m² a 1 mm e 0,5 m² a 2 mm. Some 10–15% de sobra para perdas e absorção.",
+      "Em pintura lisa de piso com Sikafloor-264, 1 kg da mistura rende cerca de 3,3 a 4,0 m² em uma demão ou 1,7 a 2,0 m² em duas demãos, sem contar primer e perdas. Se você calcula pela espessura, 1 litro cobre 1 m² a 1 mm. Nessa espessura, 1 kg cobre cerca de 0,91 m² com densidade de 1,1 kg/L.",
     headers: ["Espessura", "Litros por m²", "Kg por m² (≈1,1 kg/L)", "m² por litro"],
     note: "Valores brutos, sem sobra. Tintas e revestimentos epóxi para piso seguem o rendimento da ficha técnica do fabricante."
   },
@@ -865,7 +865,7 @@ const localeExtras = {
   "pt-BR": {
     coverage: (locale) => [
       {
-        title: "1 kg de resina epóxi rende quantos m²?",
+        title: "Rendimento de 1 kg por espessura",
         body:
           "Depende da espessura e da densidade do produto. Com a densidade típica de 1,1 kg/L, 1 kg equivale a cerca de 0,9 litro: rende perto de 1,8 m² com 0,5 mm, 0,9 m² com 1 mm e 0,45 m² com 2 mm. Se a ficha técnica indicar outra densidade, divida o peso por ela para obter os litros.",
         table: kgCoverageTable(locale, {

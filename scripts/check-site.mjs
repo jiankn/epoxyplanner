@@ -14,6 +14,9 @@ const issues = [];
 const check = (condition, message) => { if (!condition) issues.push(message); };
 const decode = value => value.replaceAll("&amp;", "&").replaceAll("&quot;", '"').replaceAll("&#39;", "'");
 const attr = (tag, name) => decode(tag.match(new RegExp(`\\b${name}="([^"]*)"`))?.[1] || "");
+const searchIndexUrl = attr(html.get(""), "data-site-search");
+const versionedSearchIndex = /^\/assets\/search-index\.[a-f0-9]{12}\.json$/.test(searchIndexUrl);
+check(versionedSearchIndex, "Missing versioned search index URL");
 
 for (const key of ["slug", "title", "description"]) {
   const values = pages.map(page => page[key]);
@@ -27,7 +30,8 @@ for (const page of pages) {
   check(!doc.includes('aria-label="Breadcrumb"'), `${name}: visible breadcrumb`);
   check(doc.includes(`<link rel="canonical" href="${url(page.slug)}"`), `${name}: canonical`);
   check(doc.includes(`<meta name="robots" content="${page.indexable === false ? "noindex, follow" : "index, follow"}"`), `${name}: robots`);
-  check(!doc.includes('"@type":"SearchAction"'), `${name}: non-existent search markup`);
+  check(!doc.includes('"@type":"SearchAction"'), `${name}: unexpected SearchAction markup`);
+  check(attr(doc, "data-site-search") === searchIndexUrl, `${name}: wrong search index URL`);
   for (const block of doc.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) {
     try { JSON.parse(block[1]); } catch { issues.push(`${name}: invalid JSON-LD`); }
   }
@@ -89,6 +93,12 @@ const locations = sitemapFiles.flatMap(file => [...fs.readFileSync(path.join(dis
 const expected = pages.filter(page => page.indexable !== false && page.includeInSitemap !== false).map(page => url(page.slug));
 check(new Set(locations).size === locations.length, "Duplicate sitemap URL");
 check(locations.length === expected.length && expected.every(location => locations.includes(location)), "Sitemap differs from canonical indexable pages");
+if (versionedSearchIndex) {
+  const index = fs.readFileSync(path.join(dist, searchIndexUrl), "utf8");
+  const indexedUrls = JSON.parse(index).map(({ path: entryPath }) => `${site.origin}${entryPath}`);
+  check(indexedUrls.length === expected.length && new Set(indexedUrls).size === expected.length && expected.every((location) => indexedUrls.includes(location)), "Search index differs from canonical indexable pages");
+  check(index === fs.readFileSync(path.join(dist, "assets", "search-index.json"), "utf8"), "Search index fallback is out of date");
+}
 for (const [from, to] of Object.entries(redirects)) {
   check(!pageMap.has(from), `${from}: both redirect and page`);
   check(pageMap.has(to) && !redirects[to], `${from}: missing target or redirect chain`);

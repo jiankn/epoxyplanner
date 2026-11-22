@@ -89,14 +89,41 @@ function versionAssetReferences(html, assets) {
     assets.has(file) ? `${attribute}="/assets/${assets.get(file)}"` : match);
 }
 
-function buildPages({ site, pages, renderPage, assets }) {
+function buildPages({ site, pages, renderPage, assets, searchIndexUrl }) {
   const pageMap = new Map(pages.map((page) => [page.slug, page]));
+  const context = { site, pages, pageMap, searchIndexUrl, urlForPath: (slug = "") => urlForPath(site, slug) };
 
   for (const page of pages) {
-    const html = renderPage(page, { site, pages, pageMap, urlForPath: (slug = "") => urlForPath(site, slug) });
+    const html = renderPage(page, context);
     const outputDir = page.slug ? path.join(distRoot, page.slug) : distRoot;
     writeFile(path.join(outputDir, "index.html"), versionAssetReferences(html, assets));
   }
+}
+
+function buildSearchIndex(pages) {
+  const aliases = {
+    "garage-floor-epoxy-calculator": ["garage cost", "garage quote"],
+    "epoxy-floor-coverage-calculator": ["floor coverage", "floor paint coverage"],
+    "river-table-epoxy-calculator": ["river table", "live edge river"],
+    "epoxy-mixing-ratio-guide": ["mix ratio", "mixing ratio calculator", "resin hardener calculator"],
+    "epoxy-flake-calculator": ["floor paint chips", "vinyl flakes"]
+  };
+  const entries = pages
+    .filter((page) => page.indexable !== false && page.includeInSitemap !== false)
+    .map((page) => ({
+      path: page.slug ? `/${page.slug}/` : "/",
+      title: page.h1,
+      description: page.description,
+      type: page.category,
+      locale: page.locale || "en",
+      keywords: [...new Set([page.title, page.primaryKeyword, ...(page.supportingKeywords || []), ...(aliases[page.slug] || [])].filter(Boolean))]
+    }));
+  const index = JSON.stringify(entries);
+  const version = createHash("sha256").update(index).digest("hex").slice(0, 12);
+  const file = `assets/search-index.${version}.json`;
+  writeFile(path.join(distRoot, file), index);
+  writeFile(path.join(distRoot, "assets", "search-index.json"), index);
+  return `/${file}`;
 }
 
 // 嵌入版计算器：不进 sitemap，页面本身 noindex
@@ -108,7 +135,7 @@ function buildEmbeds({ site, pages, embeds, renderEmbedPage, assets }) {
 }
 
 function buildAssets() {
-  const files = ["site.css", "site.js", "calculator.js", "planner-text.js", "floor-cost-rates.js", "totalboat-tabletop-kits.js", "pour-products.js"];
+  const files = ["site.css", "site.js", "site-search.js", "calculator.js", "planner-text.js", "floor-cost-rates.js", "totalboat-tabletop-kits.js", "pour-products.js"];
   const sources = new Map(files.map(file => [file, fs.readFileSync(path.join(projectRoot, "src", "assets", file), "utf8").replace(/\r\n/g, "\n")]));
   const hash = createHash("sha256").update("epoxy-assets-v1");
   for (const [file, contents] of sources) hash.update(file).update(contents);
@@ -143,10 +170,11 @@ async function main() {
   ensureDir(distRoot);
   buildFunctionRoutes({ pages, redirects, redirectPresets, embeds });
   const assets = buildAssets();
-  buildPages({ site, pages, renderPage, assets });
+  const searchIndexUrl = buildSearchIndex(pages);
+  buildPages({ site, pages, renderPage, assets, searchIndexUrl });
   buildEmbeds({ site, pages, embeds, renderEmbedPage, assets });
   buildSitemaps({ site, pages, renderSitemapIndex, renderSitemapSection });
-  writeFile(path.join(distRoot, "404.html"), versionAssetReferences(renderNotFound(site), assets));
+  writeFile(path.join(distRoot, "404.html"), versionAssetReferences(renderNotFound(site, searchIndexUrl), assets));
   writeFile(path.join(distRoot, "robots.txt"), renderRobots(site));
   writeFile(path.join(distRoot, "ads.txt"), "google.com, pub-3562784107542460, DIRECT, f08c47fec0942fa0\n");
   writeFile(path.join(distRoot, ".nojekyll"), "");

@@ -3,6 +3,7 @@ import { TOTALBOAT_TABLETOP_KITS } from "../assets/totalboat-tabletop-kits.js";
 import { POUR_PRODUCTS } from "../assets/pour-products.js";
 import { MIX_RATIO_UNITS } from "../assets/calculator.js";
 import { renderMeasurement } from "./measurement.mjs";
+import { siteSearchCopy } from "../assets/site-search.js";
 
 const FORM_TEMPLATES = {
   general: ({ page }) => `
@@ -1342,7 +1343,31 @@ function renderNavItem(item) {
   return `<a href="${hrefFor(item.slug)}">${escapeHtml(item.label)}</a>`;
 }
 
-function renderHeader(site, page = {}) {
+function renderSiteSearch(page, searchIndexUrl) {
+  if (!searchIndexUrl) return "";
+  const { label, placeholder = label, retry } = siteSearchCopy(page.locale);
+  return `
+    <div class="site-search" data-site-search="${escapeHtml(searchIndexUrl)}" hidden>
+      <button class="site-search__toggle" type="button" aria-label="${escapeHtml(label)}" aria-expanded="false" aria-controls="site-search-panel" data-search-toggle>
+        <span class="site-search__icon" aria-hidden="true"></span>
+      </button>
+      <div class="site-search__panel" id="site-search-panel">
+        <form class="site-search__form" role="search" aria-label="${escapeHtml(label)}">
+          <span class="site-search__icon" aria-hidden="true"></span>
+          <input type="search" aria-label="${escapeHtml(label)}" aria-controls="site-search-results" placeholder="${escapeHtml(placeholder)}" maxlength="120" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" />
+        </form>
+        <div class="site-search__results" id="site-search-results" data-search-results hidden>
+          <p class="site-search__message" data-search-message hidden></p>
+          <ul class="site-search__list" role="list"></ul>
+          <button type="button" class="site-search__retry" data-search-retry hidden>${escapeHtml(retry)}</button>
+        </div>
+      </div>
+      <span class="site-search__announcer" role="status"></span>
+    </div>
+  `;
+}
+
+function renderHeader(site, page = {}, searchIndexUrl) {
   const navItems = page.nav || site.nav;
   return `
     <header class="site-header">
@@ -1365,6 +1390,7 @@ function renderHeader(site, page = {}) {
         <nav class="site-nav" id="site-nav" data-nav>
           ${navItems.map((item) => renderNavItem(item)).join("")}
         </nav>
+        ${renderSiteSearch(page, searchIndexUrl)}
         ${renderLanguageSwitcher(site, page)}
       </div>
     </header>
@@ -1486,7 +1512,7 @@ function renderAlternateLinks(page, { urlForPath }) {
 }
 
 export function renderPage(page, context) {
-  const { site, urlForPath } = context;
+  const { site, urlForPath, searchIndexUrl } = context;
   const canonical = urlForPath(page.slug);
   const pageTitle = `${page.title} | ${site.shortName}`;
   const pageBody = renderPageBody(page, context);
@@ -1529,7 +1555,7 @@ export function renderPage(page, context) {
   </head>
   <body data-page-type="${escapeHtml(page.pageType)}" data-page-slug="${escapeHtml(page.slug)}" data-locale="${escapeHtml(page.locale || "en")}" data-has-calculator="${Boolean(page.pageType === "calculator" || page.quickCalculator || page.embeddedCalculator)}">
     <a class="skip-link" href="#main-content">${escapeHtml(plannerText(page.locale, "skip"))}</a>
-    ${renderHeader(site, page)}
+    ${renderHeader(site, page, searchIndexUrl)}
     <main class="page-shell page-shell--compact" id="main-content">
       ${pageBody}
       ${page.reviewedOn ? `<p class="review-note">${escapeHtml(plannerText(page.locale, "updated"))} <time datetime="${escapeHtml(page.reviewedOn)}">${escapeHtml(new Intl.DateTimeFormat(page.numberLocale || "en-US", { dateStyle: "medium", timeZone: "UTC" }).format(new Date(`${page.reviewedOn}T00:00:00Z`)))}</time> · <a href="/methodology/">${escapeHtml(plannerText(page.locale, "revision"))}</a></p>` : ""}
@@ -1537,12 +1563,13 @@ export function renderPage(page, context) {
     ${renderFooter(site, page)}
     ${renderPrivacyUi()}
     <script type="module" src="/assets/site.js"></script>
+    ${searchIndexUrl ? '<script type="module" src="/assets/site-search.js"></script>' : ""}
     ${calculatorScript}
   </body>
 </html>`;
 }
 
-export function renderNotFound(site) {
+export function renderNotFound(site, searchIndexUrl) {
   const title = `Page Not Found | ${site.shortName}`;
   return `<!DOCTYPE html>
 <html lang="en">
@@ -1557,7 +1584,7 @@ export function renderNotFound(site) {
     <link rel="stylesheet" href="/assets/site.css" />
   </head>
   <body data-page-type="error" data-page-slug="404">
-    ${renderHeader(site)}
+    ${renderHeader(site, {}, searchIndexUrl)}
     <main class="page-shell">
       <section class="hero">
         <div class="hero__copy">
@@ -1573,6 +1600,7 @@ export function renderNotFound(site) {
       </section>
     </main>
     ${renderFooter(site)}
+    ${searchIndexUrl ? '<script type="module" src="/assets/site-search.js"></script>' : ""}
   </body>
 </html>`;
 }

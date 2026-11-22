@@ -553,7 +553,6 @@ button {
   gap: 0.72rem;
 }
 
-.card-grid,
 .answer-grid,
 .compare-grid,
 .stat-grid {
@@ -561,32 +560,137 @@ button {
   gap: 1rem;
 }
 
-.card-grid {
+.section:has(> .link-directory) > .lead {
+  max-width: 51rem;
+  font-size: 1rem;
+  text-wrap: pretty;
+}
+
+.link-directory {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 1rem;
+  gap: 1rem 1.375rem;
+  margin-top: 1.5rem;
 }
 
-@media (min-width: 680px) and (max-width: 999px) {
-  .card-grid {
-    grid-template-columns: repeat(2, 1fr);
+.link-directory__group,
+.link-directory__item {
+  min-width: 0;
+}
+
+.link-directory__label {
+  margin: 0;
+  padding: 0.625rem 0.75rem;
+  border-radius: 7px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.link-directory__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.link-directory__item {
+  position: relative;
+  min-height: 44px;
+  padding: 0.75rem;
+  overflow-wrap: anywhere;
+}
+
+.link-directory__item + .link-directory__item {
+  border-top: 1px solid var(--line);
+}
+
+.link-directory__item h3 {
+  margin: 0;
+  font-size: 1.0625rem;
+  line-height: 1.25;
+}
+
+.link-directory__item h3:has(a) {
+  padding-right: 1.625rem;
+}
+
+.link-directory__item p {
+  margin: 0.3125rem 0 0;
+  color: var(--muted);
+  font-size: 0.9375rem;
+  line-height: 1.45;
+}
+
+.link-directory__item a {
+  color: var(--accent);
+  text-underline-offset: 0.2em;
+}
+
+.link-directory__item a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 5px;
+}
+
+.link-directory__item:has(a:hover, a:focus-visible) {
+  background: var(--result-bg);
+}
+
+.link-directory__item a:hover,
+.link-directory__item a:focus-visible {
+  text-decoration: underline;
+}
+
+.link-directory__item a:focus-visible::after {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.link-directory__arrow {
+  position: absolute;
+  top: 1rem;
+  right: 0.875rem;
+  width: 0.625rem;
+  height: 0.5625rem;
+  border-bottom: 1.5px solid var(--accent);
+  transform: translateY(-0.25rem);
+  pointer-events: none;
+}
+
+.link-directory__arrow::after {
+  content: "";
+  position: absolute;
+  top: calc(100% - 2px);
+  right: 0;
+  width: 0.375rem;
+  height: 0.375rem;
+  border-top: 1.5px solid var(--accent);
+  border-right: 1.5px solid var(--accent);
+  transform: rotate(45deg);
+}
+
+@media (min-width: 54rem) {
+  .link-directory:not(.link-directory--flat) {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  }
+
+  .link-directory--flat .link-directory__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
+    column-gap: 1.375rem;
+  }
+
+  .link-directory--flat .link-directory__item + .link-directory__item {
+    border-top: 0;
+  }
+
+  .link-directory--flat .link-directory__item:not(:only-child) {
+    border-bottom: 1px solid var(--line);
   }
 }
 
-@media (min-width: 1000px) {
-  .card-grid {
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    max-width: 100%;
-  }
-}
-
-@media (max-width: 679px) {
-  .card-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-.mini-card,
 .stat-card,
 .compare-card,
 .answer-card {
@@ -600,58 +704,6 @@ button {
   flex-direction: column;
 }
 
-.mini-card .text-link {
-  margin-top: auto;
-}
-
-/* Card hover micro-animation */
-.mini-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 32px rgba(15, 27, 38, 0.12);
-}
-
-/* Primary card variant for top calculators */
-.mini-card--primary .mini-card__header {
-  background: linear-gradient(135deg, var(--accent), #1a3d4d);
-}
-
-.mini-card--primary .mini-card__header h3 {
-  color: white;
-}
-
-.mini-card__header {
-  padding: 1rem 1rem 0.8rem;
-  background: linear-gradient(135deg, #1a3d4d, var(--accent));
-  position: relative;
-}
-
-.mini-card__header::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 24px;
-  background: var(--surface-strong);
-  clip-path: polygon(0 100%, 100% 0, 100% 100%);
-}
-
-.mini-card__header h3 {
-  color: white;
-  margin: 0;
-  position: relative;
-  z-index: 1;
-}
-
-.mini-card__body {
-  padding: 0.75rem 1rem 1rem;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-
-.mini-card h3,
 .answer-card {
   padding: 1.25rem;
 }
@@ -661,22 +713,6 @@ button {
   margin: 0;
 }
 
-/* Cards without __header/__body structure (e.g. related cards) */
-.mini-card > h3 {
-  padding: 1rem 1rem 0;
-}
-
-.mini-card > p {
-  padding: 0.4rem 1rem 0;
-}
-
-.mini-card > .text-link {
-  margin-left: 1rem;
-  margin-bottom: 1rem;
-  margin-top: auto;
-}
-
-.mini-card p,
 .stat-card p,
 .compare-card p,
 .answer-card p {
@@ -1818,187 +1854,6 @@ body[data-cookie-modal="open"] {
   color: var(--muted);
 }
 
-.mini-card h3 a {
-  color: inherit;
-  text-decoration: none;
-}
-
-.mini-card h3 a:hover {
-  text-decoration: underline;
-}
-
-/* 卡片只保留标题一个链接，用伪元素把点击区域铺满整张卡片。
-   标题和标题区不能再做定位容器，所以斜角装饰从标题区底部挪到正文区顶部 */
-.mini-card {
-  position: relative;
-}
-
-.mini-card__header,
-.mini-card__header h3 {
-  position: static;
-}
-
-.mini-card__header {
-  padding-bottom: 1.6rem;
-}
-
-.mini-card__header::after {
-  content: none;
-}
-
-.mini-card__header + .mini-card__body::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: -24px;
-  height: 24px;
-  background: var(--surface-strong);
-  clip-path: polygon(0 100%, 100% 0, 100% 100%);
-}
-
-.mini-card h3 a::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-}
-
-.mini-card:hover h3 a {
-  text-decoration: underline;
-}
-
-/* Homepage cards: the blueprint direction, including guides and language hubs. */
-body[data-page-slug=""] .card-grid {
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
-  margin-top: 1rem;
-}
-
-.mini-card--blueprint {
-  min-width: 0;
-  min-height: 340px;
-  padding: 1.5rem;
-  border: 1px solid #3c667b;
-  border-radius: 18px;
-  background-color: #214c60;
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
-  background-size: 22px 22px;
-  color: #f7fafc;
-  transition: border-color 180ms ease, box-shadow 180ms ease;
-}
-
-.mini-card--blueprint .mini-card__header {
-  padding: 0;
-  background: none;
-}
-
-.mini-card--blueprint .mini-card__topline {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  margin-bottom: 1.4rem;
-  color: #d0e0e8;
-}
-
-.mini-card--blueprint .mini-card__eyebrow {
-  padding: 0.3rem 0.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.24);
-  border-radius: 4px;
-  background: #214c60;
-  font-size: 0.625rem;
-  font-weight: 500;
-  line-height: 1.4;
-  letter-spacing: 0.1em;
-}
-
-.mini-card--blueprint .mini-card__topline svg {
-  width: 28px;
-  height: 28px;
-  flex: 0 0 auto;
-}
-
-.mini-card--blueprint .mini-card__header h3 {
-  padding: 0;
-  color: inherit;
-  font-size: clamp(1.25rem, 1.8vw, 1.625rem);
-  font-weight: 600;
-  line-height: 1.18;
-  letter-spacing: -0.025em;
-  overflow-wrap: anywhere;
-}
-
-.mini-card--blueprint .mini-card__body {
-  position: static;
-  padding: 0;
-}
-
-.mini-card--blueprint .mini-card__header + .mini-card__body::before {
-  content: none;
-}
-
-.mini-card--blueprint .mini-card__body p {
-  margin-top: 0.9rem;
-  margin-bottom: 1.5rem;
-  color: #c2d4dd;
-  font-size: 0.875rem;
-  line-height: 1.65;
-}
-
-.mini-card--blueprint .text-link {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  min-height: 46px;
-  padding: 0.7rem 0.85rem;
-  border-radius: 7px;
-  background: #eff5f7;
-  color: #214c60;
-  font-size: 0.8125rem;
-  font-weight: 600;
-}
-
-.mini-card--blueprint .text-link svg {
-  width: 19px;
-  height: 19px;
-  flex: 0 0 auto;
-}
-
-.mini-card--blueprint h3 a::after {
-  cursor: pointer;
-}
-
-.mini-card--blueprint:hover,
-.mini-card--blueprint:focus-within {
-  transform: none;
-  border-color: #8bb5c9;
-  box-shadow: 0 12px 28px rgba(23, 58, 81, 0.17);
-}
-
-.mini-card--blueprint:focus-within {
-  outline: 3px solid var(--accent);
-  outline-offset: 4px;
-}
-
-.mini-card--blueprint:hover h3 a {
-  text-decoration: none;
-}
-
-.mini-card--blueprint:hover .text-link,
-.mini-card--blueprint:focus-within .text-link {
-  background: #ffffff;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .mini-card--blueprint,
-  .mini-card--blueprint .text-link {
-    transition: none;
-  }
-}
-
 /* ============================================
    EMBED — 可嵌入版计算器与嵌入代码区
    ============================================ */
@@ -2091,6 +1946,27 @@ body[data-page-type="calculator"] .hero h1 {
   color: var(--accent);
   text-decoration: underline;
   text-underline-offset: 0.22em;
+}
+
+.task-links--labeled {
+  align-items: baseline;
+  gap: 0 1.125rem;
+  margin-top: 1.25rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.9rem;
+}
+
+.task-links__label {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+@media (max-width: 35rem) {
+  .task-links--labeled {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 
 #calculator,

@@ -425,10 +425,10 @@ function uiText(page, key, fallback) {
   return page?.ui?.[key] || fallback;
 }
 
-function categoryLabel(page) {
-  if (page.pageType === "guide") return uiText(page, "guides", "Guides");
-  if (page.pageType === "calculator") return uiText(page, "calculators", "Calculators");
-  return uiText(page, "site", "Site");
+function categoryLabel(page, localePage = page) {
+  if (page?.pageType === "guide") return uiText(localePage, "guides", "Guides");
+  if (page?.pageType === "calculator") return uiText(localePage, "calculators", "Calculators");
+  return uiText(localePage, "site", "Site");
 }
 
 function localizeFormMarkup(markup, page) {
@@ -753,92 +753,59 @@ function renderFaqs(faqs = [], page = {}) {
   `;
 }
 
-function renderCards(cards = [], page = {}, pageMap) {
-  if (!cards?.length) return "";
-  const blueprint = page.slug === "";
-  const blueprintLabels = {
-    calculator: ["CALCULATOR", "Open calculator"],
-    guide: ["GUIDE", "Read guide"],
-    language: ["METRIC TOOLS", "Explore tools"],
-    reference: ["REFERENCE", "Learn more"]
-  };
+function renderDirectoryList(cards) {
   return `
-    <div class="card-grid">
-      ${cards
-        .map((card) => {
-          const href = card.slug ? hrefFor(card.slug) : "#";
-          const primaryClass = card.primary ? " mini-card--primary" : "";
-          if (blueprint) {
-            const target = pageMap?.get(card.slug);
-            const isLanguageHub = target?.locale && target.locale !== "en" && target.slug === target.localeRootSlug;
-            const kind = isLanguageHub ? "language"
-              : ["calculator", "guide"].includes(target?.pageType) ? target.pageType : "reference";
-            const [category, action] = blueprintLabels[kind];
-            const isStartingPoint = card.slug === "epoxy-calculator";
-            return `
-            <article class="mini-card mini-card--blueprint${primaryClass}">
-              <div class="mini-card__header">
-                <div class="mini-card__topline" aria-hidden="true">
-                  <span class="mini-card__eyebrow">${isStartingPoint ? "START HERE" : category}</span>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5M12 22V12M7.5 4.3l9 5.2"/></svg>
-                </div>
-                <h3>${card.slug ? `<a href="${href}">${escapeHtml(card.title)}</a>` : escapeHtml(card.title)}</h3>
-              </div>
-              <div class="mini-card__body">
-                <p>${escapeHtml(card.text)}</p>
-                ${card.slug ? `<span class="text-link" aria-hidden="true"><span>${isStartingPoint ? "Calculate resin" : action}</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M7 7h10v10"/></svg></span>` : ""}
-              </div>
-            </article>
-            `;
-          }
-          const icon = card.icon ? `<span class="hero-action__icon">${card.icon}</span>` : "";
-          return `
-            <article class="mini-card${primaryClass}">
-              <div class="mini-card__header">
-                <h3>${icon}${card.slug ? `<a href="${href}">${escapeHtml(card.title)}</a>` : escapeHtml(card.title)}</h3>
-              </div>
-              <div class="mini-card__body">
-                <p>${escapeHtml(card.text)}</p>
-                ${card.slug ? `<span class="text-link" aria-hidden="true">${escapeHtml(uiText(page, "openPage", "Open page"))}</span>` : ""}
-              </div>
-            </article>
-          `;
-        })
-        .join("")}
+    <ul class="link-directory__list" role="list">
+      ${cards.map((card) => `
+        <li class="link-directory__item">
+          <h3>${card.slug ? `<a href="${hrefFor(card.slug)}">${escapeHtml(card.title)}</a>` : escapeHtml(card.title)}</h3>
+          ${card.text ? `<p>${escapeHtml(card.text)}</p>` : ""}
+          ${card.slug ? '<span class="link-directory__arrow" aria-hidden="true"></span>' : ""}
+        </li>
+      `).join("")}
+    </ul>
+  `;
+}
+
+function renderLinkDirectory(cards, page, pageMap) {
+  if (!cards?.length) return "";
+
+  const groups = new Map();
+  for (const card of cards) {
+    const label = card.group || categoryLabel(pageMap.get(card.slug), page);
+    if (!groups.has(label)) groups.set(label, []);
+    groups.get(label).push(card);
+  }
+
+  if (groups.size === 1) {
+    return `<div class="link-directory link-directory--flat">${renderDirectoryList(cards)}</div>`;
+  }
+
+  return `
+    <div class="link-directory">
+      ${Array.from(groups, ([label, entries]) => `
+        <div class="link-directory__group" role="group" aria-label="${escapeHtml(label)}">
+          <p class="link-directory__label" aria-hidden="true">${escapeHtml(label)}</p>
+          ${renderDirectoryList(entries)}
+        </div>
+      `).join("")}
     </div>
   `;
 }
 
 function renderRelated(page, pageMap) {
-  const relatedPages = (page.related || [])
+  const cards = (page.related || [])
     .map((slug) => pageMap.get(slug))
-    .filter(Boolean);
+    .filter(Boolean)
+    .map(({ slug, h1, description }) => ({ slug, title: h1, text: description }));
 
-  if (!relatedPages.length) return "";
-
+  if (!cards.length) return "";
   return `
     <section class="section">
       <div class="section-heading">
-        <p class="eyebrow">${escapeHtml(uiText(page, "relatedEyebrow", "Related Pages"))}</p>
         <h2>${escapeHtml(uiText(page, "relatedHeading", "Related calculators and guides"))}</h2>
       </div>
-      <div class="card-grid">
-        ${relatedPages
-          .map(
-            (relatedPage) => `
-            <article class="mini-card">
-              <div class="mini-card__header">
-                <h3><a href="${hrefFor(relatedPage.slug)}">${escapeHtml(relatedPage.h1)}</a></h3>
-              </div>
-              <div class="mini-card__body">
-                <p>${escapeHtml(relatedPage.description)}</p>
-                <span class="text-link" aria-hidden="true">${escapeHtml(uiText(page, "openPage", "Open page"))}</span>
-              </div>
-            </article>
-          `
-          )
-          .join("")}
-      </div>
+      ${renderLinkDirectory(cards, page, pageMap)}
     </section>
   `;
 }
@@ -889,7 +856,7 @@ function renderAnswerBlock(page) {
   `;
 }
 
-function renderGuideSections(sections = [], page = {}) {
+function renderGuideSections(sections = [], page, pageMap) {
   return sections
     .map((section) => `
       <section class="section">
@@ -897,12 +864,13 @@ function renderGuideSections(sections = [], page = {}) {
           <h2>${escapeHtml(section.title)}</h2>
         </div>
         ${section.body ? `<p class="lead">${richText(section.body)}</p>` : ""}
-        ${renderTaskLinks(section.actions)}
+        ${section.cards?.length ? "" : renderTaskLinks(section.actions)}
         ${section.points ? `<ul class="bullet-list">${section.points.map((point) => `<li>${richText(point)}</li>`).join("")}</ul>` : ""}
         ${renderTable(section.table)}
         ${renderSourceLinks(section.links)}
         ${section.faqs ? renderFaqs(section.faqs, page) : ""}
-        ${section.cards ? renderCards(section.cards, page) : ""}
+        ${renderLinkDirectory(section.cards, page, pageMap)}
+        ${section.cards?.length ? renderTaskLinks(section.actions, section.actionsLabel) : ""}
         ${section.contactEmail ? `<p><a class="text-link" href="mailto:${escapeHtml(section.contactEmail)}">${escapeHtml(section.contactEmail)}</a></p>` : ""}
       </section>
     `)
@@ -976,9 +944,11 @@ function resultRows(page) {
   return rows;
 }
 
-function renderTaskLinks(links) {
+function renderTaskLinks(links, heading) {
   if (!links?.length) return "";
-  return `<div class="task-links">${links.map(({ label, href }) => `<a href="${escapeHtml(href)}">${escapeHtml(label)}</a>`).join("")}</div>`;
+  const label = heading ? `<span class="task-links__label">${escapeHtml(heading)}</span>` : "";
+  const anchors = links.map(({ label, href }) => `<a href="${escapeHtml(href)}">${escapeHtml(label)}</a>`).join("");
+  return `<div class="task-links${heading ? " task-links--labeled" : ""}">${label}${anchors}</div>`;
 }
 
 function renderCalculationTable(table, id, dataAttr) {
@@ -1074,7 +1044,7 @@ function renderInfoSections(page, pageMap) {
         <h2>${escapeHtml(section.title)}</h2>
       </div>
       ${section.body ? `<p class="lead">${richText(section.body)}</p>` : ""}
-      ${renderTaskLinks(section.actions)}
+      ${section.cards?.length ? "" : renderTaskLinks(section.actions)}
       ${section.points ? `
         <ul class="bullet-list">
           ${section.points.map((point) => `<li>${richText(point)}</li>`).join("")}
@@ -1082,7 +1052,8 @@ function renderInfoSections(page, pageMap) {
       ` : ""}
       ${renderTable(section.table)}
       ${renderSourceLinks(section.links)}
-      ${section.cards ? renderCards(section.cards, page, pageMap) : ""}
+      ${renderLinkDirectory(section.cards, page, pageMap)}
+      ${section.cards?.length ? renderTaskLinks(section.actions, section.actionsLabel) : ""}
       ${section.faqs ? renderFaqs(section.faqs, page) : ""}
       ${section.contactEmail ? `<p><a class="text-link" href="mailto:${escapeHtml(section.contactEmail)}">${escapeHtml(section.contactEmail)}</a></p>` : ""}
     </section>
@@ -1311,7 +1282,7 @@ function renderPageBody(page, context) {
       renderCalculator(page),
       renderMeasurement(page),
       renderAnswerBlock(page),
-      page.sections ? renderInfoSections(page) : "",
+      page.sections ? renderInfoSections(page, pageMap) : "",
       renderBullets(uiText(page, "whyTitle", "What this calculator covers"), page.bullets),
       renderBullets(uiText(page, "howToTitle", "How to measure or set the inputs"), page.howTo),
       renderBullets(uiText(page, "mistakesTitle", "Common mistakes that cost money"), page.mistakes),
@@ -1342,7 +1313,7 @@ function renderPageBody(page, context) {
           </article>
         </div>
       </section>
-      ${renderGuideSections(page.sections, page)}
+      ${renderGuideSections(page.sections, page, pageMap)}
       ${renderFaqs(page.faq, page)}
       ${renderRelated(page, pageMap)}
     `;

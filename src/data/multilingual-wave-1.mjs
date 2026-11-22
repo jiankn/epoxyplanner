@@ -27,7 +27,6 @@ const locales = {
       { label: "Methodik", slug: "methodology" }
     ],
     ui: {
-      openPage: "Seite öffnen",
       home: "Start",
       site: "Website",
       calculators: "Rechner",
@@ -35,7 +34,6 @@ const locales = {
       menu: "Menü",
       faqEyebrow: "FAQ",
       faqHeading: "Fragen vor dem Kauf von Epoxidharz",
-      relatedEyebrow: "Verwandte Seiten",
       relatedHeading: "Weiter im gleichen Suchthema",
       whyTitle: "Was der Rechner berücksichtigt",
       howToTitle: "So misst du die Eingaben",
@@ -144,7 +142,6 @@ const locales = {
       { label: "Méthode", slug: "methodology" }
     ],
     ui: {
-      openPage: "Ouvrir la page",
       home: "Accueil",
       site: "Site",
       calculators: "Calculateurs",
@@ -152,7 +149,6 @@ const locales = {
       menu: "Menu",
       faqEyebrow: "FAQ",
       faqHeading: "Questions avant d’acheter la résine",
-      relatedEyebrow: "Pages liées",
       relatedHeading: "Continuer dans la même intention",
       whyTitle: "Ce que le calculateur prend en compte",
       howToTitle: "Comment mesurer les valeurs",
@@ -262,7 +258,6 @@ const locales = {
       { label: "Metodologia", slug: "methodology" }
     ],
     ui: {
-      openPage: "Abrir página",
       home: "Início",
       site: "Site",
       calculators: "Calculadoras",
@@ -270,7 +265,6 @@ const locales = {
       menu: "Menu",
       faqEyebrow: "FAQ",
       faqHeading: "Perguntas antes de comprar resina",
-      relatedEyebrow: "Páginas relacionadas",
       relatedHeading: "Continue no mesmo tipo de busca",
       whyTitle: "O que a calculadora considera",
       howToTitle: "Como medir os dados",
@@ -379,7 +373,6 @@ const locales = {
       { label: "Método", slug: "methodology" }
     ],
     ui: {
-      openPage: "Abrir página",
       home: "Inicio",
       site: "Sitio",
       calculators: "Calculadoras",
@@ -387,7 +380,6 @@ const locales = {
       menu: "Menú",
       faqEyebrow: "FAQ",
       faqHeading: "Preguntas antes de comprar resina",
-      relatedEyebrow: "Páginas relacionadas",
       relatedHeading: "Seguir con la misma intención",
       whyTitle: "Qué tiene en cuenta la calculadora",
       howToTitle: "Cómo medir los datos",
@@ -496,7 +488,6 @@ const locales = {
       { label: "Metodo", slug: "methodology" }
     ],
     ui: {
-      openPage: "Apri pagina",
       home: "Home",
       site: "Sito",
       calculators: "Calcolatori",
@@ -504,7 +495,6 @@ const locales = {
       menu: "Menu",
       faqEyebrow: "FAQ",
       faqHeading: "Domande prima di comprare resina",
-      relatedEyebrow: "Pagine correlate",
       relatedHeading: "Continua nello stesso intento di ricerca",
       whyTitle: "Cosa considera il calcolatore",
       howToTitle: "Come misurare i dati",
@@ -1233,8 +1223,7 @@ function hubSections(locale) {
       return {
         title: spec[0],
         text: hubCardText[locale.code]?.[group.key] || spec[3],
-        slug: group.byLocale[locale.code],
-        primary: ["core", "coverage", "costM2", "garageCost"].includes(group.key)
+        slug: group.byLocale[locale.code]
       };
     });
 
@@ -1330,8 +1319,7 @@ export function createLanguageMarketCards() {
     return {
       title: locale.hub.title,
       text: locale.hub.description,
-      slug: locale.prefix,
-      primary: true
+      slug: locale.prefix
     };
   });
 }

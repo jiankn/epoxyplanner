@@ -477,73 +477,73 @@ const basePages = [
             title: "Epoxy Flooring Cost Calculator",
             text: "Estimate several floor areas together, with coating and slab preparation costs for each area.",
             slug: "epoxy-flooring-cost-calculator",
-            primary: true
+            group: "Floors & garages"
           },
           {
             title: "Epoxy Garage Floor Cost Calculator",
             text: "Price a garage by its size, flooring system and slab condition. Compare DIY materials and professional installation.",
             slug: "garage-floor-epoxy-calculator",
-            primary: true
-          },
-          {
-            title: "Epoxy Volume Calculator",
-            text: "Pour volume for regular shapes, with worked examples, depth limits, and estimates in gallons or liters.",
-            slug: "epoxy-calculator",
-            primary: true
-          },
-          {
-            title: "River Table Calculator",
-            text: "Use quick mode or segment mode for live-edge rivers, plus seepage, seal-coat, and cost planning.",
-            slug: "river-table-epoxy-calculator",
-            primary: true
-          },
-          {
-            title: "Deep Pour Calculator",
-            text: "Calculate volume and pour layers from your cavity dimensions and the product's maximum layer depth.",
-            slug: "deep-pour-epoxy-calculator",
-            primary: true
-          },
-          {
-            title: "Coverage Calculator",
-            text: "Use surface area and coat thickness for tabletops, bar tops, and countertop finishes.",
-            slug: "epoxy-coverage-calculator",
-            primary: true
-          },
-          {
-            title: "Cost Calculator",
-            text: "Pressure-test the budget after you know the resin quantity, waste factor, and kit price.",
-            slug: "epoxy-cost-calculator",
-            primary: true
-          },
-          {
-            title: "Void Fill Calculator",
-            text: "Estimate cracks, knots, and small cavity fills where ounces and milliliters matter.",
-            slug: "void-fill-epoxy-calculator",
-            primary: true
+            group: "Floors & garages"
           },
           {
             title: "Floor Coverage Calculator",
             text: "Gallons and kits for a garage or basement floor from square footage, coats, and kit coverage.",
             slug: "epoxy-floor-coverage-calculator",
-            primary: true
+            group: "Floors & garages"
           },
           {
             title: "Two-Car Garage Epoxy Calculator",
             text: "Gallons and kits for two coats on a 20 × 20 to 24 × 24 ft garage floor.",
             slug: "two-car-garage-epoxy-calculator",
-            primary: true
+            group: "Floors & garages"
           },
           {
             title: "Epoxy Flake Calculator",
             text: "Pounds of vinyl flake and boxes for a full or partial broadcast floor.",
             slug: "epoxy-flake-calculator",
-            primary: true
+            group: "Floors & garages"
+          },
+          {
+            title: "Epoxy Volume Calculator",
+            text: "Pour volume for regular shapes, with worked examples, depth limits, and estimates in gallons or liters.",
+            slug: "epoxy-calculator",
+            group: "Casting & repairs"
+          },
+          {
+            title: "River Table Calculator",
+            text: "Use quick mode or segment mode for live-edge rivers, plus seepage, seal-coat, and cost planning.",
+            slug: "river-table-epoxy-calculator",
+            group: "Casting & repairs"
+          },
+          {
+            title: "Deep Pour Calculator",
+            text: "Calculate volume and pour layers from your cavity dimensions and the product's maximum layer depth.",
+            slug: "deep-pour-epoxy-calculator",
+            group: "Casting & repairs"
           },
           {
             title: "Resin Mold Calculator",
             text: "Plan silicone molds, craft cavities, cube, cylinder, and sphere casts.",
             slug: "resin-mold-calculator",
-            primary: true
+            group: "Casting & repairs"
+          },
+          {
+            title: "Void Fill Calculator",
+            text: "Estimate cracks, knots, and small cavity fills where ounces and milliliters matter.",
+            slug: "void-fill-epoxy-calculator",
+            group: "Casting & repairs"
+          },
+          {
+            title: "Coverage Calculator",
+            text: "Use surface area and coat thickness for tabletops, bar tops, and countertop finishes.",
+            slug: "epoxy-coverage-calculator",
+            group: "Surface finishes & cost"
+          },
+          {
+            title: "Cost Calculator",
+            text: "Pressure-test the budget after you know the resin quantity, waste factor, and kit price.",
+            slug: "epoxy-cost-calculator",
+            group: "Surface finishes & cost"
           }
         ]
       },
@@ -597,19 +597,19 @@ const basePages = [
         body:
           "Most buyers need more than a formula: how much extra to buy, how to measure an irregular river, and when a deep-pour resin is required instead of a top coat.",
         cards: [
-          { title: "How Much Epoxy Do I Need?", text: "Short answer first, then the right calculator path.", slug: "how-much-epoxy-do-i-need" },
-          { title: "How Much Epoxy for a River Table?", text: "Estimate quantity, waste, and kit count for a live-edge river build.", slug: "how-much-epoxy-do-i-need-for-a-river-table" },
-          { title: "How to Measure a River Table", text: "A practical segment method for irregular channels.", slug: "how-to-measure-a-river-table-for-epoxy" },
-          { title: "Deep Pour vs Table Top Epoxy", text: "Know when the resin class is the real bottleneck.", slug: "deep-pour-vs-table-top-epoxy" },
-          { title: "Waste Factor Guide", text: "Decide how much extra resin to buy and why.", slug: "epoxy-waste-factor-guide" },
-          { title: "Epoxy Thickness & Coverage Chart", text: "Typical thickness by job and square feet per gallon at each thickness.", slug: "epoxy-coverage-chart" },
-          { title: "Polyaspartic vs Epoxy", text: "Compare price, cure time, and yellowing before you take a floor quote.", slug: "polyaspartic-vs-epoxy" },
-          { title: "How Thick Is Epoxy Flooring?", text: "Mils and mm for each floor system, from DIY kits to troweled mortar.", slug: "epoxy-floor-thickness" },
-          { title: "Mixing Ratio Guide", text: "Plan Part A / Part B and batch size after the quantity is known.", slug: "epoxy-mixing-ratio-guide" },
-          { title: "How Much Epoxy Per Square Foot?", text: "Answer coverage by thickness before choosing a kit.", slug: "how-much-epoxy-per-square-foot" },
-          { title: "One Gallon Coverage", text: "Understand why a gallon covers different areas at different thicknesses.", slug: "how-much-does-a-gallon-of-epoxy-cover" },
-          { title: "Kit Size Guide", text: "Match calculated quantity to real gallons, liters, and kit listings.", slug: "epoxy-kit-size-guide" },
-          { title: "Seal Coat vs Flood Coat", text: "Decide whether the first coat and finish coat need separate estimates.", slug: "seal-coat-vs-flood-coat" }
+          { title: "How Much Epoxy Do I Need?", text: "Short answer first, then the right calculator path.", slug: "how-much-epoxy-do-i-need", group: "Resin quantities & kits" },
+          { title: "How Much Epoxy for a River Table?", text: "Estimate quantity, waste, and kit count for a live-edge river build.", slug: "how-much-epoxy-do-i-need-for-a-river-table", group: "River tables & pours" },
+          { title: "How to Measure a River Table", text: "A practical segment method for irregular channels.", slug: "how-to-measure-a-river-table-for-epoxy", group: "River tables & pours" },
+          { title: "Deep Pour vs Table Top Epoxy", text: "Know when the resin class is the real bottleneck.", slug: "deep-pour-vs-table-top-epoxy", group: "River tables & pours" },
+          { title: "Waste Factor Guide", text: "Decide how much extra resin to buy and why.", slug: "epoxy-waste-factor-guide", group: "Resin quantities & kits" },
+          { title: "Epoxy Thickness & Coverage Chart", text: "Typical thickness by job and square feet per gallon at each thickness.", slug: "epoxy-coverage-chart", group: "Coatings & coverage" },
+          { title: "Polyaspartic vs Epoxy", text: "Compare price, cure time, and yellowing before you take a floor quote.", slug: "polyaspartic-vs-epoxy", group: "Coatings & coverage" },
+          { title: "How Thick Is Epoxy Flooring?", text: "Mils and mm for each floor system, from DIY kits to troweled mortar.", slug: "epoxy-floor-thickness", group: "Coatings & coverage" },
+          { title: "Mixing Ratio Guide", text: "Plan Part A / Part B and batch size after the quantity is known.", slug: "epoxy-mixing-ratio-guide", group: "Resin quantities & kits" },
+          { title: "How Much Epoxy Per Square Foot?", text: "Answer coverage by thickness before choosing a kit.", slug: "how-much-epoxy-per-square-foot", group: "Coatings & coverage" },
+          { title: "One Gallon Coverage", text: "Understand why a gallon covers different areas at different thicknesses.", slug: "how-much-does-a-gallon-of-epoxy-cover", group: "Coatings & coverage" },
+          { title: "Kit Size Guide", text: "Match calculated quantity to real gallons, liters, and kit listings.", slug: "epoxy-kit-size-guide", group: "Resin quantities & kits" },
+          { title: "Seal Coat vs Flood Coat", text: "Decide whether the first coat and finish coat need separate estimates.", slug: "seal-coat-vs-flood-coat", group: "River tables & pours" }
         ]
       },
       {

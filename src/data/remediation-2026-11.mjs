@@ -135,6 +135,7 @@ function updateHome(page) {
         title: "Choose your project",
         body: "Start with the [river table planner](river-table-epoxy-calculator) for a live-edge channel, [floor coverage](epoxy-floor-coverage-calculator) to price out kits from a manufacturer's spread rate, or the [countertop calculator](countertop-epoxy-calculator) for several runs, cutouts and exposed edges.",
         actions: [riverExampleLink, floorBudgetExampleLink],
+        actionsLabel: "Examples",
         cards: section.cards.filter(card => !["two-car-garage-epoxy-calculator", "epoxy-calculator"].includes(card.slug)).map(card => card.slug === "river-table-epoxy-calculator"
           ? { ...card, text: "Measure the channel, plan each lift, and download the kit and batch estimate." }
           : card)

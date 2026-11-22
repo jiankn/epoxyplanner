@@ -26,7 +26,12 @@ const fullQuarter = FLAKE_RATES.full["1/4"][1];
 const fullEighth = FLAKE_RATES.full["1/8"][1];
 const medium = FLAKE_RATES.medium[1];
 
+const fullSystemArea = 400;
+const standardCoatingRate = 225;
+const standardCoatingGallons = fmt(fullSystemArea / standardCoatingRate * flakeWaste, 2);
+
 export const flakeCalculatorContent = {
+  taskLinks: [{ label: "See the 400 sq ft full-system shopping list", href: "#full-system-example" }],
   answerHeading: "How many pounds of flake do I need for an epoxy floor?",
   answer: `For a full broadcast of 1/4 in flake, plan about ${fmt(fullQuarter * 100, 1)} lb per 100 sq ft. A 400 sq ft two-car garage needs roughly ${flakeLb(400, fullQuarter)} with 10% waste, or ${boxes(400, fullQuarter)} boxes of 40 lb. Smaller 1/8 in flake takes about ${fmt(fullEighth * 100)} lb per 100 sq ft. A partial broadcast needs far less, around ${per100([FLAKE_RATES.light[0], 0, FLAKE_RATES.heavy[2]])} per 100 sq ft.`,
   answerTable: {
@@ -41,6 +46,28 @@ export const flakeCalculatorContent = {
     note: "Planning rates with a 10% waste allowance. Your flake supplier's rate for the exact blend and size takes priority."
   },
   sections: [
+    {
+      id: "full-system-example",
+      title: "Shopping list for a 400 sq ft full-broadcast flake floor",
+      body: "This 20 × 20 ft garage example uses the Miracote MiraFlor Chip Binder Standard Duty system, with 1/4 in vinyl flake and one clear lock coat. Work out each product separately because the coverage and package sizes differ. The table adds 10% for waste before rounding up to whole packages.",
+      table: {
+        headers: ["Material", "Coverage used", "Needed with 10% extra", "Buy in this example"],
+        rows: [
+          ["MiraPrime MVERS Plus moisture primer, if specified", "145 sq ft per US gal at 80% slab RH", `${fmt(fullSystemArea / 145 * flakeWaste, 2)} US gal`, "One 5.5 US gal kit"],
+          ["MiraFlor Chip Binder base coat", `${standardCoatingRate} sq ft per mixed US gal`, `${standardCoatingGallons} US gal`, "One 2 US gal kit"],
+          ["1/4 in vinyl flake, full broadcast", "12 lb per 100 sq ft", `${fmt(fullSystemArea * 0.12 * flakeWaste)} lb`, "Two 40 lb boxes"],
+          ["MiraFlor CQ Clear lock coat", `${standardCoatingRate} sq ft per mixed US gal`, `${standardCoatingGallons} US gal`, "One 3 US gal kit"]
+        ],
+        note: "Primer quantities apply only if the slab test and system specification call for moisture mitigation. Use the coverage rate for your measured moisture, then check which package sizes your supplier has."
+      },
+      points: ["To reproduce the base and lock coat estimates in the [floor coverage calculator](epoxy-floor-coverage-calculator), run each coat separately at 400 sq ft, 225 sq ft per gallon, one coat and 10% waste. Use the corresponding kit size for each product."],
+      links: [
+        { label: "Miracote: Standard Duty full-broadcast system", url: "https://miracote.com/wp-content/uploads/2022/01/MiraFlor-Chip-Binder-Full-Flake-Broadcast_STD-System-MIR.-Rev-12-28-21.pdf" },
+        { label: "Miracote: Chip Binder kit sizes", url: "https://miracote.com/wp-content/uploads/2022/10/MiraFlor-Chip-Binder-Flake-Epoxy-Broadcast-PTDS-Rev-12.27.21rev.pdf" },
+        { label: "Miracote: CQ Clear kit sizes", url: "https://miracote.com/wp-content/uploads/2019/07/MiraFlorCQClear-PTDS.pdf" },
+        { label: "Miracote: MVERS Plus coverage by slab moisture", url: "https://miracote.com/wp-content/uploads/2020/10/MiraPrime-MVERS-Plus-IG-Rev.-10-8-2020.pdf" }
+      ]
+    },
     {
       title: "Flake broadcast rates by density and flake size",
       body: "A full broadcast covers the base coat completely, so the amount depends on chip size: smaller chips pack tighter and weigh more per square foot. A partial broadcast leaves the base color showing, and the amount depends on how much of it you want to see.",

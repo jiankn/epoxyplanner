@@ -1300,6 +1300,14 @@ function productLayerPlan(data, depthInches, rawCubicInches) {
   return parts.join(" · ") || planningMessage(data, "layersUnknown");
 }
 
+function splitRatio(quantity, a, b) {
+  const scale = Math.max(a, b);
+  const scaledA = a / scale;
+  const scaledB = b / scale;
+  const total = scaledA + scaledB;
+  return [quantity * (scaledA / total), quantity * (scaledB / total)];
+}
+
 function productMixSplit(data, quantity, unit, text) {
   if (!data.mixRatio || data.mixRatio === "unknown") return planningMessage(data, "ratioUnknown");
   if (data.ratioBasis === "weight") return planningMessage(data, "weightRatio");
@@ -1311,9 +1319,8 @@ function productMixSplit(data, quantity, unit, text) {
     if (!["1:1", "2:1", "3:1"].includes(data.mixRatio)) throw new Error(planningMessage(data, "ratioUnknown"));
     [a, b] = data.mixRatio.split(":").map(Number);
   }
-  const scale = Math.max(a, b);
-  const total = a / scale + b / scale;
-  return planningMessage(data, "split", { a: text.volume(quantity * (a / scale) / total, unit), b: text.volume(quantity * (b / scale) / total, unit), ratio: `${a}:${b}` });
+  const [partA, partB] = splitRatio(quantity, a, b);
+  return planningMessage(data, "split", { a: text.volume(partA, unit), b: text.volume(partB, unit), ratio: `${a}:${b}` });
 }
 
 function roundUpCount(quantity, capacity) {
@@ -2224,6 +2231,42 @@ function computePricing(data) {
   };
 }
 
+export const MIX_RATIO_UNITS = {
+  mL: { label: "Milliliters (mL)", basis: "volume" },
+  L: { label: "Liters (L)", basis: "volume" },
+  "fl oz": { label: "US fluid ounces (fl oz)", basis: "volume" },
+  "US gal": { label: "US gallons", basis: "volume" },
+  g: { label: "Grams (g)", basis: "weight" },
+  kg: { label: "Kilograms (kg)", basis: "weight" },
+  oz: { label: "Ounces (oz)", basis: "weight" },
+  lb: { label: "Pounds (lb)", basis: "weight" }
+};
+
+function computeMixRatio(data) {
+  const { mixUnit } = data;
+  if (!Object.hasOwn(MIX_RATIO_UNITS, mixUnit)) throw new Error("Choose a unit for the total batch.");
+  const quantity = positiveInput(data, "quantity");
+  const a = positiveInput(data, "ratioA");
+  const b = positiveInput(data, "ratioB");
+  const [partA, partB] = splitRatio(quantity, a, b);
+  if (!(partA > 0 && partB > 0)) throw new Error("Enter a total and ratio that give a measurable amount of each part.");
+  const display = value => `${Number(value.toPrecision(8))} ${mixUnit}`;
+  const { basis } = MIX_RATIO_UNITS[mixUnit];
+  return {
+    primary: `${display(partA)} + ${display(partB)}`,
+    secondary: `Part A (resin) + Part B (hardener) by ${basis}.`,
+    rawText: display(quantity),
+    breakdown: [
+      `Part A = total × A ÷ (A + B) = ${display(partA)}.`,
+      `Part B = total × B ÷ (A + B) = ${display(partB)}.`
+    ],
+    product: {
+      heading: "Check the basis on the product label",
+      copy: "Use a scale for a weight ratio and a graduated measure for a volume ratio. Keep the same units for both parts."
+    }
+  };
+}
+
 function computeConverter(data) {
   const runtime = runtimeOptions(data);
   const text = createResultText(runtime);
@@ -2558,6 +2601,7 @@ const COMPUTERS = {
   cylinder: computeCylinder,
   cube: computeCube,
   cost: computeCost,
+  "mix-ratio": computeMixRatio,
   converter: computeConverter
 };
 

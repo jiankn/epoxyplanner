@@ -1165,7 +1165,7 @@ const basePages = [
       breakdownFallback: "Enter the floor area to see the rate, waste, and boxes.",
       nextStepHeading: "Plan the base coat and topcoat with the flake"
     },
-    lastmod: floorSystemsLastmod
+    lastmod: "2026-11-22"
   }),
   calculatorPage({
     slug: "void-fill-epoxy-calculator",
@@ -1615,15 +1615,28 @@ const basePages = [
   guidePage(epoxyResinCalculatorsByBrand),
   guidePage({
     slug: "epoxy-mixing-ratio-guide",
-    title: "Epoxy Mix Ratio Guide: Resin to Hardener Chart (1:1, 2:1, 3:1)",
+    title: "Epoxy Mixing Ratio Calculator & Resin-to-Hardener Chart",
     h1: "Epoxy Mix Ratio: Resin to Hardener Chart",
     description:
-      "How to split epoxy resin and hardener at 1:1, 2:1, and 3:1 in ounces and milliliters, when to measure by weight, and what happens if the ratio is off.",
+      "Split a batch into resin and hardener using the ratio on your label, by volume or weight. See the 1:1, 2:1, and 3:1 charts for common batch sizes.",
     eyebrow: "Mixing Guide",
     intro:
-      "The mix ratio on your resin's label tells you how to split the total into Part A (resin) and Part B (hardener). The charts below do the split for common batch sizes, and the steps cover how to measure and mix so the epoxy cures fully.",
+      "Enter a batch size and the A:B ratio on your epoxy label to calculate each part. Use the charts below to look up common batches, or check when to measure by volume and when to weigh each part.",
     primaryKeyword: "epoxy mix ratio",
     supportingKeywords: ["resin to hardener ratio", "resin mix ratio", "epoxy mixing ratio chart", "how to mix epoxy resin"],
+    embeddedCalculator: {
+      calculatorType: "mix-ratio",
+      resultEyebrow: "Resin and hardener amounts",
+      note: "Select a volume unit for a label that gives a ratio by volume, or a weight unit for a ratio by weight. Enter the total for both parts together.",
+      nextStepLinks: [{ label: "Compare volume and weight ratios", slug: "epoxy-mix-ratio-by-volume-vs-weight" }],
+      ui: {
+        calculatorHeading: "Epoxy mixing ratio calculator",
+        currentRecommendation: "Resin and hardener",
+        resultFallback: "Enter a total and the A:B ratio from your product label.",
+        whyChangedEyebrow: "Calculation",
+        whyChangedHeading: "How the batch is split"
+      }
+    },
     answer: `Use the ratio printed on your product. At 1:1, mix equal parts resin and hardener; at 2:1, two parts resin to one part hardener; at 3:1, three parts to one. A 16 fl oz batch is ${ratioSplit(16, 1, 1, "oz")} at 1:1, ${ratioSplit(16, 2, 1, "oz")} at 2:1, and ${ratioSplit(16, 3, 1, "oz")} at 3:1. If the label gives the ratio by weight, weigh both parts instead of using cups.`,
     takeaways: [
       "The first number is the resin (Part A), the second the hardener (Part B).",
@@ -1690,7 +1703,7 @@ const basePages = [
       "epoxy-unit-converter",
       "void-fill-epoxy-calculator"
     ],
-    lastmod: "2026-10-03"
+    lastmod: "2026-11-22"
   }),
   calculatorPage({
     slug: "epoxy-cost-calculator",

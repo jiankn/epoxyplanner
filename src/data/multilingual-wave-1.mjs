@@ -820,12 +820,12 @@ const coverageAnswers = {
     note: "Valores brutos, sem sobra. Tintas e revestimentos epóxi para piso seguem o rendimento da ficha técnica do fabricante."
   },
   es: {
-    title: "Consumo y rendimiento de resina epoxi por m² (1 litro por mm)",
+    title: "¿Cuánto cubre 1 litro de resina epoxi? Rendimiento por m²",
     description:
-      "Rendimiento de la resina epoxi: 1 litro cubre 1 m² con 1 mm de espesor (≈1,1 kg). Consulta la tabla por espesor y calcula litros, margen y coste para tu superficie.",
-    answerHeading: "¿Cuánta resina epoxi se necesita por m²?",
+      "1 litro de resina epoxi cubre 2 m² a 0,5 mm, 1 m² a 1 mm y 0,5 m² a 2 mm. Calcula cuántos litros necesitas para tu superficie, con margen para pérdidas.",
+    answerHeading: "¿Cuántos metros cuadrados cubre 1 litro de resina epoxi?",
     answer:
-      "Cada milímetro de espesor consume 1 litro de resina epoxi por metro cuadrado, unos 1,1 kg, porque su densidad suele estar entre 1,1 y 1,2 kg/L. Por tanto, 1 litro rinde unos 2 m² a 0,5 mm, 1 m² a 1 mm y 0,5 m² a 2 mm. Añade un 10–15 % de margen para pérdidas y absorción.",
+      "En una capa uniforme, 1 litro de resina epoxi cubre 2 m² a 0,5 mm de espesor, 1 m² a 1 mm o 0,5 m² a 2 mm, antes de pérdidas. Para calcular los litros, multiplica los m² por los mm de espesor. Si vas a pintar un suelo y la ficha indica un rendimiento por capa, usa ese dato en la calculadora.",
     headers: ["Espesor", "Litros por m²", "Kg por m² (≈1,1 kg/L)", "m² por litro"],
     note: "Valores brutos, sin margen. Las pinturas y recubrimientos epoxi para suelos se calculan con el rendimiento de la ficha técnica del fabricante."
   },

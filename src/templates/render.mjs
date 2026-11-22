@@ -1,6 +1,7 @@
 import { plannerText } from "../assets/planner-text.js";
 import { TOTALBOAT_TABLETOP_KITS } from "../assets/totalboat-tabletop-kits.js";
 import { POUR_PRODUCTS } from "../assets/pour-products.js";
+import { MIX_RATIO_UNITS } from "../assets/calculator.js";
 import { renderMeasurement } from "./measurement.mjs";
 
 const FORM_TEMPLATES = {
@@ -358,6 +359,14 @@ const FORM_TEMPLATES = {
       ${numberField("Quantity needed", "quantity", "3", "0.01")}
       ${numberField("Waste buffer (%)", "wastePct", "8", "0.1")}
       ${numberField("Price / gallon", "pricePerGallon", "95", "0.01")}
+    </div>
+  `,
+  "mix-ratio": () => `
+    <div class="field-grid field-grid--two">
+      ${numberField("Total mixed batch", "quantity", "300", "any")}
+      ${shapeSelect("Batch unit and ratio basis", "mixUnit", Object.entries(MIX_RATIO_UNITS).map(([unit, { label, basis }]) => [unit, `${label} · ${basis}`]))}
+      ${numberField("Part A ratio (resin)", "ratioA", "2", "any")}
+      ${numberField("Part B ratio (hardener)", "ratioB", "1", "any")}
     </div>
   `,
   converter: () => `
@@ -954,6 +963,7 @@ function defaultNextSteps(page) {
 function resultRows(page) {
   const t = (key) => plannerText(page.locale, key);
   if (page.compactEstimate) return [["Raw volume", "data-stat-raw"]];
+  if (page.calculatorType === "mix-ratio") return [["Total mixed batch", "data-stat-raw"]];
   const rows = [
     [page.statLabels?.raw || uiText(page, "rawVolume", "Raw volume"), "data-stat-raw"],
     [uiText(page, "conservative", "Conservative"), "data-compare-conservative"],

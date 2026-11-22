@@ -97,6 +97,18 @@ test("the material budget leads with money while retaining its volume basis", ()
   assert.match(r.secondary, /3.24 gal/);
 });
 
+test("the mixing ratio calculator splits a total in the selected volume or weight unit", () => {
+  const volume = { quantity: 300, ratioA: 2, ratioB: 1, mixUnit: "mL" };
+  assert.equal(calculate("mix-ratio", volume).primary, "200 mL + 100 mL");
+  const weight = { quantity: 290, ratioA: 100, ratioB: 45, mixUnit: "g" };
+  assert.equal(calculate("mix-ratio", weight).primary, "200 g + 90 g");
+  assert.match(calculate("mix-ratio", weight).secondary, /by weight/);
+  assert.equal(calculate("mix-ratio", { ...volume, quantity: 0.01, mixUnit: "fl oz", ratioA: 1, ratioB: 999 }).primary,
+    "0.00001 fl oz + 0.00999 fl oz");
+  assert.throws(() => calculate("mix-ratio", { ...volume, ratioB: "" }), /positive value/);
+  assert.throws(() => calculate("mix-ratio", { ...volume, mixUnit: "tbsp" }), /Choose a unit/);
+});
+
 test("six real-size coasters are a batch in mL rather than a 28-inch table", () => {
   const r = calculate("coaster", { unit: "imperial", shape: "round", diameter: 4, depth: 0.25, count: 6, wastePct: 8 });
   near(r.rawLiters, Math.PI * 0.016387064 * 6);
